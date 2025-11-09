@@ -1,1 +1,2 @@
-rootProject.name = 'sharebuy'
+rootProject.name = "sharebuy"
+include("back")
