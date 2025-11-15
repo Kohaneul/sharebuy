@@ -1,4 +1,4 @@
-package sharebuy.board.domain;
+package sharebuy.domain.board.domain;
 
 /**
  * 게시글 상태 : 모집 중, 마감, 취소

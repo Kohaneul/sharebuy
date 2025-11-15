@@ -1,4 +1,4 @@
-package sharebuy.board.entity;
+package sharebuy.domain.board.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.order.domain.PayStatus;
+import sharebuy.domain.order.domain.PayStatus;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -23,16 +23,16 @@ public class Participation extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "아이디는 필수입니다.")
+    @NotNull(message = "아이디는 필수입니다.")
     @Column(nullable = false,unique = true)
     private UUID userId;
 
-    @NotBlank(message = "게시글 정보는 필수입니다.")
+    @NotNull(message = "게시글 정보는 필수입니다.")
     @Column(nullable = false,unique = true)
     private UUID postId;
 
 
-    @NotBlank(message = "상대방 아이디 정보는 필수입니다.")
+    @NotNull(message = "상대방 아이디 정보는 필수입니다.")
     @Column(nullable = false,unique = true)
     private UUID buyerId;
 

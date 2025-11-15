@@ -1,4 +1,4 @@
-package sharebuy.board.domain;
+package sharebuy.domain.board.domain;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;

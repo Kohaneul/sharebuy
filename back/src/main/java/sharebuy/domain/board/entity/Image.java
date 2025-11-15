@@ -1,4 +1,4 @@
-package sharebuy.board.entity;
+package sharebuy.domain.board.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

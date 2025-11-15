@@ -1,4 +1,4 @@
-package sharebuy.board.entity;
+package sharebuy.domain.board.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import sharebuy.board.domain.Appointment;
+import sharebuy.domain.board.domain.Appointment;
+import sharebuy.domain.board.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
 
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class Post extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "아이디는 필수입니다.")
+    @NotNull(message = "아이디는 필수입니다.")
     @Column(nullable = false)
     private UUID userId;
 

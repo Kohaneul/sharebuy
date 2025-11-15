@@ -1,15 +1,14 @@
-package sharebuy.user.entity;
+package sharebuy.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.Location;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "user_profile")
-public class UserProfile {
+public class UserProfile extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,10 +38,5 @@ public class UserProfile {
     @Column(nullable = false, unique = true)
     private String nickName;
 
-    @NotNull
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
 }

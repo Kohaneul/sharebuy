@@ -1,6 +1,6 @@
-package sharebuy.board.domain;
+package sharebuy.domain.order.domain;
 
-public enum PostCategory {
+public enum PayStatus {
     // 상품 종류별 카테고리
     FOOD("식품/음료"),
     BEAUTY("뷰티/화장품"),
@@ -10,7 +10,7 @@ public enum PostCategory {
 
     private final String description;
 
-    PostCategory(String description) {
+    PayStatus(String description) {
         this.description = description;
     }
 }

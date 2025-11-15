@@ -1,4 +1,4 @@
-package sharebuy.user.domain;
+package sharebuy.domain.user.domain;
 
 import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.DecimalMax;
