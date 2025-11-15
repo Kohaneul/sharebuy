@@ -1,0 +1,50 @@
+package sharebuy.board.entity;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
+import sharebuy.board.domain.Appointment;
+import sharebuy.common.domain.BaseTimeEntity;
+
+import java.util.UUID;
+
+
+@Entity
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "post")
+public class Post extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @NotBlank(message = "아이디는 필수입니다.")
+    @Column(nullable = false)
+    private UUID userId;
+
+    @NotBlank(message = "게시글 아이디는 필수입니다.")
+    @Length(min = 2, max = 100, message = "제목은 2자 이상 100자 이하로 입력해야 합니다.")
+    @Column(nullable = false)
+    private String title;
+
+    @NotBlank(message = "게시글 아이디는 필수입니다.")
+    @Column(nullable = false)
+    private String content;
+
+    @NotNull
+    @Column(nullable = false)
+    private PostStatus status;
+
+    @NotNull
+    @Column(nullable = false)
+    private Appointment appointment;
+
+
+}
