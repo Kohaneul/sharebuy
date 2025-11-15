@@ -18,8 +18,8 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
-public class User extends BaseTimeEntity {
+@Table(name = "users")
+public class Users extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -34,6 +34,7 @@ public class User extends BaseTimeEntity {
     private String password;
 
     @NotNull(message = "주소는 필수입니다.")
+    @Embedded
     private Address address;
 
     @NotBlank(message = "연락처는 필수입니다.")
