@@ -20,7 +20,8 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "payment")
 public class Payment extends BaseTimeEntity {
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotNull

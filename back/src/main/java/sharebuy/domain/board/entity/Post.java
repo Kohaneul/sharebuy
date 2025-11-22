@@ -23,7 +23,8 @@ import java.util.UUID;
 public class Post extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotNull(message = "아이디는 필수입니다.")

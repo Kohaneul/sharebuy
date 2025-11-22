@@ -20,7 +20,8 @@ import static jakarta.persistence.GenerationType.UUID;
 public class UserActivityStats extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = UUID)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotNull

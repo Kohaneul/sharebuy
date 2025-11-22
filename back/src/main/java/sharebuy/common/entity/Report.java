@@ -18,8 +18,8 @@ import static jakarta.persistence.GenerationType.UUID;
 public class Report extends BaseTimeEntity {
 
     @Id
-    @NotNull
-    @GeneratedValue(strategy = UUID)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotNull

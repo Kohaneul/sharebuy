@@ -20,8 +20,11 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "order_group")
 public class OrderGroup extends BaseTimeEntity {
+
+
     @Id
-    @GeneratedValue(strategy = IDENTITY)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotNull

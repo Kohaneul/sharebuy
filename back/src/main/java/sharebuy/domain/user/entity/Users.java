@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.domain.Gen;
@@ -22,7 +23,8 @@ import java.util.UUID;
 public class Users extends BaseTimeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue
+    @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @NotBlank(message = "아이디는 필수입니다.")
