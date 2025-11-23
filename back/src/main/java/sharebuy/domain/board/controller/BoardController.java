@@ -12,7 +12,6 @@ public class BoardController {
     
     @GetMapping
     public Map<String,Object> test(){
-        Map<String,Object> map = Map.of("hi","hello");
-        return map;
+        return Map.of("hi","hello");
     }
 }

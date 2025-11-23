@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    /* 기본 옵션 */
+    "target": "ES2020",             /* 컴파일할 JavaScript 버전: import.meta 지원 */
+    "module": "ESNext",             /* 사용할 모듈 시스템: ES Modules 사용 */
+    "moduleResolution": "Node",     /* 모듈 해석 방식: Node.js와 호환되게 설정 */
+    
+    /* 코드 검사 옵션 */
+    "strict": true,                 /* 엄격한 타입 검사 활성화 (권장) */
+    "esModuleInterop": true,        /* CommonJS 모듈을 ES Module처럼 사용 허용 */
+    "skipLibCheck": true,           /* 라이브러리 파일의 타입 검사 건너뛰기 */
+    "forceConsistentCasingInFileNames": true, /* 파일 이름의 대소문자 일치 강제 */
+    "resolveJsonModule": true,      /* JSON 파일 임포트 허용 */
+
+    /* 경로 별칭 옵션 */
+    "baseUrl": ".",                 /* 경로의 기준 디렉토리 */
+    "paths": {
+      "@/*": ["src/*"]              /* '@/...'를 'src/...'로 매핑하여 IDE가 인식하도록 설정 */
+    },
+
+    /* Vite/Vue 관련 */
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], /* 환경에서 사용할 라이브러리 타입 지정 */
+    "jsx": "preserve"               /* JSX (TSX) 처리 방식 */
+  },
+  
+  /* TypeScript가 어떤 파일들을 컴파일할지 지정 */
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  
+  /* 컴파일에서 제외할 파일 */
+  "exclude": ["node_modules"],
+
+  /* Vite 빌드 설정에 필요한 참조 파일 */
+  "references": [
+    { "path": "./tsconfig.json" } 
+  ]
+}
