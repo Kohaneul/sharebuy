@@ -12,6 +12,7 @@ import sharebuy.domain.board.domain.Appointment;
 import sharebuy.domain.board.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
 
+import java.util.List;
 import java.util.UUID;
 
 
@@ -48,5 +49,7 @@ public class Post extends BaseTimeEntity {
     @Column(nullable = false)
     private Appointment appointment;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Purchase> purchases; // 해당 게시글의 공동구매 참여 목록
 
 }
