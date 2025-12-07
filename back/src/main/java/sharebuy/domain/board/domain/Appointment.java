@@ -20,7 +20,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Appointment{
 
     @Embedded
-    @NotNull(message = "약속 일시는 필수입니다.")
+    @NotNull(message = "장소는 필수입니다.")
     private Place place;
 
     @NotNull(message = "약속 일시는 필수입니다.")

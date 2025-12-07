@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.Length;
 import sharebuy.domain.board.domain.Appointment;
 import sharebuy.domain.board.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.domain.user.entity.Users;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,9 +29,9 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull(message = "아이디는 필수입니다.")
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Users user;
 
     @NotBlank(message = "게시글 아이디는 필수입니다.")
     @Length(min = 2, max = 100, message = "제목은 2자 이상 100자 이하로 입력해야 합니다.")

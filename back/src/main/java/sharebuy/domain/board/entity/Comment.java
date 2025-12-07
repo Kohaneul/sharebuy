@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
 @Entity
@@ -21,13 +22,13 @@ public class Comment extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Users user;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID postId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Post post;
 
     @NotNull
     @Column(nullable = false)

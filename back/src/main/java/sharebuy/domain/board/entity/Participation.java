@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.order.domain.PayStatus;
+import sharebuy.domain.user.entity.Users;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,14 +30,13 @@ public class Participation extends BaseTimeEntity {
     @Column(nullable = false,unique = true)
     private UUID userId;
 
-    @NotNull(message = "게시글 정보는 필수입니다.")
-    @Column(nullable = false,unique = true)
-    private UUID postId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Post post;
 
-
-    @NotNull(message = "상대방 아이디 정보는 필수입니다.")
-    @Column(nullable = false,unique = true)
-    private UUID buyerId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Users user;
 
     @NotBlank(message = "금액 정보는 필수입니다.")
     @Column(nullable = false,unique = true)

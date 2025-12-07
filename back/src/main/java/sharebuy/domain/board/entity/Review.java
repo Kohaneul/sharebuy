@@ -2,6 +2,7 @@ package sharebuy.domain.board.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
 
@@ -12,19 +13,21 @@ public class Review {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID boardId;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Post post;
+
+
+    @ManyToOne
+    @JoinColumn(name = "id")
+    private Users user;
 
     private Integer rating;
     private String comment;
 
     @ManyToOne
-    @JoinColumn(name = "purchase_id")
+    @JoinColumn(name = "id")
     private Purchase purchase; // 어떤 참여 건에 대한 후기인지
 
 
