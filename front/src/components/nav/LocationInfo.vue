@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { ref, defineProps, defineEmits } from 'vue'
-import { Button } from 'ant-design-vue';
+import { SearchOutlined,BellOutlined,MenuOutlined } from '@ant-design/icons-vue'
 
 const props = defineProps({
   location: { type: String, default: '서울시 강남구' },

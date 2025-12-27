@@ -10,34 +10,20 @@
         />
         </Button>
       </div>
-
+      
       <LocationInfo ></LocationInfo>
     
     </div>
 
     <!-- 가운데: 검색창 -->
     <div class="center">
-        <a-input
-        v-model:value="searchQuery"
-        placeholder="상품명, 공동구매명, 카테고리 등을 검색하세요"
-        @pressEnter="onSearch">
-    <template #prefix>
-      <SearchOutlined />
-    </template>
-    </a-input>
+       <SearchForm></SearchForm>
     </div>
 
     <!-- 오른쪽: 알림 + 메뉴 -->
       <div class="right">
-        <a-badge :count="3">
-          <Button type="text" @click="onNotificationClick">
-            <BellOutlined class="nav-icon"/>
-          </Button>
-        </a-badge>
-
-        <Button type="text" @click="onMenuClick">
-          <MenuOutlined class="nav-icon" />
-        </Button>
+        <Bell></Bell>
+        <Menu></Menu>
     </div>
   </a-layout-header>
 </template>
@@ -45,8 +31,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { Button } from 'ant-design-vue';
-import LocationInfo from './LocationInfo.vue';
-import { SearchOutlined,BellOutlined,MenuOutlined } from '@ant-design/icons-vue'
+import LocationInfo from './nav/LocationInfo.vue';
+import SearchForm from './nav/SearchForm.vue';
+import Bell from './nav/Bell.vue';
+import Menu from './nav/Menu.vue';
 
 
 const props = defineProps({
@@ -100,7 +88,7 @@ function onMenuClick() { emit('menuClick') }
 }
 
 .button-image {
-  max-width: 150%; 
+  /* max-width: 150%;  */
   max-height: 150%;
   padding:0;
   margin-top:-10px;

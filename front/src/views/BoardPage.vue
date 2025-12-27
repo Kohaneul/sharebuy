@@ -16,6 +16,5 @@ const boardData = ref({})
 onMounted(async () => {
 const res = await commonGet(`/board`);
 boardData.value = res;
-
 })
 </script>
