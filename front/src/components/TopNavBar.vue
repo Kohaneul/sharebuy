@@ -3,13 +3,12 @@
     <!-- 왼쪽: 로고 + 위치 -->
     <div class="left">
       <div>
-      <a-button type="text" @click="onLogoClick" >
+      <Button type="text" @click="onLogoClick" >
         <img 
           src="/main-logo.png"
-          alt="버튼 이미지" 
           class="button-image" 
         />
-        </a-button>
+        </Button>
       </div>
 
       <LocationInfo ></LocationInfo>
@@ -18,28 +17,37 @@
 
     <!-- 가운데: 검색창 -->
     <div class="center">
-      <a-input
-        v-model="searchQuery"
+        <a-input
+        v-model:value="searchQuery"
         placeholder="상품명, 공동구매명, 카테고리 등을 검색하세요"
-        prefix-icon="search"
-        @pressEnter="onSearch"
-      />
+        @pressEnter="onSearch">
+    <template #prefix>
+      <SearchOutlined />
+    </template>
+    </a-input>
     </div>
 
     <!-- 오른쪽: 알림 + 메뉴 -->
-    <div class="right">
-      <a-badge :count="notificationCount">
-        <a-button type="text" icon="bell" @click="onNotificationClick" />
-      </a-badge>
-      <a-button type="text" icon="menu" @click="onMenuClick" />
+      <div class="right">
+        <a-badge :count="3">
+          <Button type="text" @click="onNotificationClick">
+            <BellOutlined class="nav-icon"/>
+          </Button>
+        </a-badge>
+
+        <Button type="text" @click="onMenuClick">
+          <MenuOutlined class="nav-icon" />
+        </Button>
     </div>
   </a-layout-header>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref } from 'vue'
 import { Button } from 'ant-design-vue';
 import LocationInfo from './LocationInfo.vue';
+import { SearchOutlined,BellOutlined,MenuOutlined } from '@ant-design/icons-vue'
+
 
 const props = defineProps({
   location: { type: String, default: '서울시 강남구' },
@@ -96,5 +104,14 @@ function onMenuClick() { emit('menuClick') }
   max-height: 150%;
   padding:0;
   margin-top:-10px;
+}
+
+.nav-icon {
+  font-size: 20px;   /* 크기 */
+  color: #fff;       /* 흰색 */
+}
+
+.nav-icon:hover {
+  color: #40a9ff; /* ant primary blue */
 }
 </style>
