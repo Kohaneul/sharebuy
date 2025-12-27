@@ -30,7 +30,7 @@ public class Post extends BaseTimeEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id",nullable = false)
     private Users user;
 
     @NotBlank(message = "게시글 아이디는 필수입니다.")
@@ -44,10 +44,12 @@ public class Post extends BaseTimeEntity {
 
     @NotNull
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PostStatus status;
 
     @NotNull
     @Column(nullable = false)
+    @Embedded
     private Appointment appointment;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)

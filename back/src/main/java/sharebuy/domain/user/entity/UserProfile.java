@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.Location;
+import sharebuy.domain.board.entity.Post;
 
 import java.util.UUID;
 
@@ -24,13 +25,13 @@ public class UserProfile extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @NotBlank(message = "아이디는 필수입니다.")
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private Users user;
 
-    @NotBlank(message = "게시글 아이디는 필수입니다.")
-    @Column(nullable = false)
-    private String boardId;
+    @ManyToOne
+    @JoinColumn(name = "post_id",nullable = false)
+    private Post post;
 
     @Embedded
     private Location location;

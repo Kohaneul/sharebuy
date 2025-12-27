@@ -20,9 +20,8 @@ public class Image {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @NotBlank

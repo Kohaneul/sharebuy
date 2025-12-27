@@ -26,16 +26,12 @@ public class Participation extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull(message = "아이디는 필수입니다.")
-    @Column(nullable = false,unique = true)
-    private UUID userId;
-
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @NotBlank(message = "금액 정보는 필수입니다.")
@@ -43,11 +39,12 @@ public class Participation extends BaseTimeEntity {
     private int amount;
 
     @NotNull
-    @Column(nullable = false, updatable = false)
+    @Column(name = "pay_at", nullable = false, updatable = false)
     private LocalDateTime payAt;
 
     @NotNull
     @Column(nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private PayStatus status;
 
 }

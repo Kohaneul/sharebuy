@@ -14,7 +14,7 @@ public class Purchase {
     private UUID id;
     
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id",nullable = false)
     private Users user;       // 참여한 사용자
 
     private Integer quantity;// 참여 수량
@@ -23,6 +23,6 @@ public class Purchase {
     private PurchaseStatus status;     // 예: 참여중, 완료 등
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "post_id",nullable = false)
     private Post post;         // 어떤 게시글에 참여했는지 연결
 }

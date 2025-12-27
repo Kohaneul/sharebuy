@@ -10,8 +10,6 @@ import sharebuy.common.domain.BaseTimeEntity;
 
 import java.util.UUID;
 
-import static jakarta.persistence.GenerationType.UUID;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,9 +22,9 @@ public class UserActivityStats extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @NotNull
-    @Column(nullable = false)
-    private UUID userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
 
     // 평판
     @NotNull

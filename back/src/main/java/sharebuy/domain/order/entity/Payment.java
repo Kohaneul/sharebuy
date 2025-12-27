@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.domain.board.entity.Participation;
+import sharebuy.domain.board.entity.Post;
+import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
 
@@ -25,12 +28,14 @@ public class Payment extends BaseTimeEntity {
     private UUID id;
 
     @NotNull
-    @Column(nullable = false)
-    private UUID userId;    //참여자
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private Users user;    //참여자
 
     @NotNull
-    @Column(nullable = false)
-    private UUID participantId;
+    @ManyToOne
+    @JoinColumn(name = "participant_id",nullable = false)
+    private Participation participant;
 
     @NotBlank
     @Column(nullable = false)
@@ -41,12 +46,14 @@ public class Payment extends BaseTimeEntity {
     private String pg_tid;
 
     @NotNull
-    @Column(nullable = false)
-    private UUID postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id",nullable = false)
+    private Post post;
 
     @NotNull
-    @Column(nullable = false)
-    private UUID groupId;
+    @ManyToOne
+    @JoinColumn(name = "group_id",nullable = false)
+    private OrderGroup orderGroup;
 
 
     //참여자

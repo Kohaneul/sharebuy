@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.ReportType;
+import sharebuy.domain.board.entity.Post;
+import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
 import static jakarta.persistence.GenerationType.UUID;
@@ -23,23 +25,28 @@ public class Report extends BaseTimeEntity {
     private UUID id;
 
     @NotNull
-    @Column(nullable = false)
-    private UUID reporterUserId;
+    @ManyToOne
+    @JoinColumn(name = "reporter_user_id", nullable = false)
+    private Users reporterUser;   //신고자
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "reported_user_id", nullable = false)
+    private Users reportedUser; //신고 대상
 
     @NotNull
     @Column(nullable = false)
-    private UUID reportedUserId;
-
-    @NotNull
-    @Column(nullable = false)
-    private UUID postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     @NotNull
     @Column(nullable = false)
     private boolean isProcessed;
 
     @NotNull
-    @Column(nullable = false, length = 1000)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ReportType reportType;
 
 }

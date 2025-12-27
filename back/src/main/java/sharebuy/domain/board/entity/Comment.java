@@ -23,11 +23,11 @@ public class Comment extends BaseTimeEntity {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "user_id")
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @NotNull
