@@ -41,7 +41,7 @@ public class Report extends BaseTimeEntity {
 
     @NotNull
     @Column(nullable = false)
-    private boolean isProcessed;
+    private int isProcessed;
 
     @NotNull
     @Enumerated(EnumType.STRING)
