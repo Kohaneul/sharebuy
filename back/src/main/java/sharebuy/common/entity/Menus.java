@@ -1,13 +1,12 @@
 package sharebuy.common.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.common.domain.ReportType;
 
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -21,5 +20,21 @@ public class Menus extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
+    private String name;
+    private String icon;
+    private String route;
+    private String type;
+
+    @Column(name = "top_nav")
+    private int topNav; // 0 또는 1
+
+    @Column(name = "is_active")
+    private int isActive;
+
+    @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
+    private List<MenuRoles> roles;
+
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
 }

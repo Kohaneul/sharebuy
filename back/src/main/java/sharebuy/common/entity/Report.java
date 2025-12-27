@@ -35,7 +35,6 @@ public class Report extends BaseTimeEntity {
     private Users reportedUser; //신고 대상
 
     @NotNull
-    @Column(nullable = false)
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
