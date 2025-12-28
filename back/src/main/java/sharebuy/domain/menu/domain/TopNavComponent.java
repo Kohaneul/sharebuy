@@ -1,7 +1,6 @@
 package sharebuy.domain.menu.domain;
 
 public enum TopNavComponent {
-    PAGE_TITLE(true),
     LOCATION_INFO(true),
     SEARCH_FORM(false),
     ALARM(true),
@@ -14,3 +13,5 @@ public enum TopNavComponent {
     }
 
 }
+
+

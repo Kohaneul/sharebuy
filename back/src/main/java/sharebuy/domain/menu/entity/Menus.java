@@ -26,7 +26,6 @@ public class Menus extends BaseTimeEntity {
     private String route;
     private MenuType type;
 
-
     @Column(name = "is_active")
     private int isActive;
 

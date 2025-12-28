@@ -34,7 +34,7 @@ public class TopNavMenus extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private List<TopNavComponent> right;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "menu_id",nullable = false)
     private Menus menu;
 
