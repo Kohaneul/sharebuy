@@ -1,10 +1,12 @@
-package sharebuy.common.entity;
+package sharebuy.domain.menu.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.domain.menu.domain.MenuType;
+import sharebuy.common.domain.RoleType;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,14 +21,11 @@ public class Menus extends BaseTimeEntity {
     @GeneratedValue
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
-
     private String name;
     private String icon;
     private String route;
-    private String type;
+    private MenuType type;
 
-    @Column(name = "top_nav")
-    private int topNav; // 0 또는 1
 
     @Column(name = "is_active")
     private int isActive;
@@ -36,5 +35,16 @@ public class Menus extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
+
+    @Column(name = "parent_id")
+    private UUID parentId;
+
+    @Column(name = "menu_order",nullable = false)
+    private int menuOrder;
+
+    public boolean isActive(){
+        return isActive==1;
+    }
+
 
 }

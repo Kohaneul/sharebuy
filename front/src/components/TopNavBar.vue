@@ -22,7 +22,7 @@
 
     <!-- 오른쪽: 알림 + 메뉴 -->
       <div class="right">
-        <Bell></Bell>
+        <Alarm></Alarm>
         <Menu></Menu>
     </div>
   </a-layout-header>
@@ -33,7 +33,7 @@ import { ref } from 'vue'
 import { Button } from 'ant-design-vue';
 import LocationInfo from './nav/LocationInfo.vue';
 import SearchForm from './nav/SearchForm.vue';
-import Bell from './nav/Bell.vue';
+import Alarm from './nav/Alarm.vue';
 import Menu from './nav/Menu.vue';
 
 

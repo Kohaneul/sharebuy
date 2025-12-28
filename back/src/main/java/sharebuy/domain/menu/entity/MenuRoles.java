@@ -1,4 +1,4 @@
-package sharebuy.common.entity;
+package sharebuy.domain.menu.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
