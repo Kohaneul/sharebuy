@@ -1,0 +1,8 @@
+.nav-icon {
+  font-size: 20px;   /* 크기 */
+  color: #fff;       /* 흰색 */
+}
+
+.nav-icon:hover {
+  color: #40a9ff; /* ant primary blue */
+}

@@ -1,0 +1,37 @@
+/* src/components/TopNavBar.css */
+.top-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px; /* 좌우 여백 살짝 추가 */
+  height: 56px;
+  line-height: 56px; /* Antd Header 기본 높이 정렬 */
+  background-color: #1f3b57; /* 이미지 기준 네이비 */
+  color: #fff;
+}
+
+.left, .center, .right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.center {
+  flex: 1;
+  margin: 0 16px;
+}
+
+.right > * {
+  margin-left: 12px;
+}
+
+.button-image {
+  max-height: 40px; /* 150% 대신 구체적인 픽셀로 잡는게 안전합니다 */
+  vertical-align: middle;
+}
+
+.logo-button {
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
