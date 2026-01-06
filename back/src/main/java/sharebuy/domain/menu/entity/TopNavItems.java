@@ -7,38 +7,40 @@ import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.domain.TopNavComponent;
+import sharebuy.domain.menu.domain.TopNavPosition;
 
-import java.util.List;
 import java.util.UUID;
+
+import static jakarta.persistence.EnumType.STRING;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "top_nav_menus")
-public class TopNavMenus extends BaseTimeEntity {
+@Table(name = "top_nav_items")
+public class TopNavItems extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "left_col" ,columnDefinition = "text")
-    @Enumerated
-    private List<TopNavComponent> left;
+    @Column(name = "position")
+    @Enumerated(STRING)
+    private TopNavPosition position;
 
-    @Column(name = "center_col" ,columnDefinition = "text")
-    @Enumerated(EnumType.STRING)
-    private List<TopNavComponent> center;
+    @Column(name = "component" ,columnDefinition = "text")
+    @Enumerated(STRING)
+    private TopNavComponent component;
 
-    @Column(name = "right_col" ,columnDefinition = "text")
-    @Enumerated(EnumType.STRING)
-    private List<TopNavComponent> right;
+    @Column(name = "display_order",nullable = false)
+    private Integer displayOrder;
 
-    @OneToOne
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "menu_id",nullable = false)
     private Menus menu;
 
-    @Enumerated
+    @Enumerated(STRING)
     private RoleType roleType;
 
 }

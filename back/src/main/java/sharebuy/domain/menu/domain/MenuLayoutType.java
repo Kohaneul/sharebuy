@@ -1,6 +1,6 @@
 package sharebuy.domain.menu.domain;
 
-public enum MenuType {
+public enum MenuLayoutType {
     TOP_NAV,      // 상단 컨트롤 바
     BOTTOM_TAB,   // 하단 고정 탭
     DRAWER,       // 햄버거 메뉴

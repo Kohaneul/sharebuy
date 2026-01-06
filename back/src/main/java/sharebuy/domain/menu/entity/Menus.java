@@ -5,11 +5,13 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.menu.domain.MenuType;
+import sharebuy.domain.menu.domain.MenuLayoutType;
 import sharebuy.common.domain.RoleType;
 
 import java.util.List;
 import java.util.UUID;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -24,7 +26,10 @@ public class Menus extends BaseTimeEntity {
     private String name;
     private String icon;
     private String route;
-    private MenuType type;
+
+    @Column(name = "menu_layout_type")
+    @Enumerated(STRING)
+    private MenuLayoutType menuLayoutType;
 
     @Column(name = "is_active")
     private int isActive;
@@ -32,7 +37,8 @@ public class Menus extends BaseTimeEntity {
     @OneToMany(mappedBy = "menu", fetch = FetchType.LAZY)
     private List<MenuRoles> roles;
 
-    @Enumerated(EnumType.STRING)
+    @Column(name = "role_type")
+    @Enumerated(STRING)
     private RoleType roleType;
 
     @Column(name = "parent_id")
