@@ -47,6 +47,9 @@ public class Menus extends BaseTimeEntity {
     @Column(name = "menu_order",nullable = false)
     private int menuOrder;
 
+    @OneToMany(mappedBy = "menu",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<TopNavItems> topNavItems;
+
     public boolean isActive(){
         return isActive==1;
     }
