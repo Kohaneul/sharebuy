@@ -8,13 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.board.entity.Participation;
-import sharebuy.domain.board.entity.Post;
+import sharebuy.domain.post.entity.Participation;
+import sharebuy.domain.post.entity.Post;
 import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter

@@ -1,4 +1,4 @@
-package sharebuy.domain.board.domain;
+package sharebuy.domain.post.domain;
 
 public enum PostCategory {
     // 상품 종류별 카테고리

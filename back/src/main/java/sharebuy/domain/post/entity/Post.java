@@ -1,4 +1,4 @@
-package sharebuy.domain.board.entity;
+package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,13 +8,18 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import sharebuy.domain.board.domain.Appointment;
-import sharebuy.domain.board.domain.PostStatus;
+import org.springframework.context.annotation.Lazy;
+import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.post.domain.Appointment;
+import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.user.entity.Users;
 
 import java.util.List;
 import java.util.UUID;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 
 @Entity
@@ -52,7 +57,11 @@ public class Post extends BaseTimeEntity {
     @Embedded
     private Appointment appointment;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "menu_id",nullable = false)
+    private Menus menu;
+
+    @OneToMany(mappedBy = "post", cascade = ALL)
     private List<Purchase> purchases; // 해당 게시글의 공동구매 참여 목록
 
 }

@@ -5,8 +5,11 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.common.domain.RoleType;
 
 import java.util.UUID;
+
+import static jakarta.persistence.EnumType.STRING;
 
 @Entity
 @Getter
@@ -19,7 +22,9 @@ public class MenuRoles extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    private String role;
+    @Enumerated(STRING)
+    @Column(name = "role_type")
+    private RoleType roleType;
 
     @ManyToOne
     @JoinColumn(name = "menu_id", nullable = false)

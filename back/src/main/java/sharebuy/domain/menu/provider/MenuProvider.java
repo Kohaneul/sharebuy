@@ -1,20 +1,26 @@
 package sharebuy.domain.menu.provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.repository.MenuRepository;
 import sharebuy.domain.user.entity.Users;
 
-import java.util.List;
+@Component
+public final class MenuProvider implements TopNavProvider {
 
-public final class MenuProvider implements TopNavProvider<List<String>> {
+    @Autowired
+    private MenuRepository menuRepository;
+
     @Override
     public TopNavComponent getType() {
         return TopNavComponent.MENU;
     }
 
     @Override
-    public List<String> getValue(Users user, Menus menu) {
-        return List.of();
+    public Object getValue(Users user, Menus menu) {
+        return menuRepository.findMenuItemsByMenu(user,menu.getId());
     }
 
 }

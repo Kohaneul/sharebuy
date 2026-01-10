@@ -1,18 +1,23 @@
 package sharebuy.domain.menu.provider;
 
+import org.springframework.stereotype.Component;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
 import sharebuy.domain.user.entity.Users;
 
-public final class LocationInfoProvider implements TopNavProvider<String> {
+import static sharebuy.domain.menu.domain.TopNavComponent.LOCATION_INFO;
+@Component
+public final class LocationInfoProvider implements TopNavProvider {
+
+
     @Override
     public TopNavComponent getType() {
-        return TopNavComponent.LOCATION_INFO;
+        return LOCATION_INFO;
     }
 
     @Override
-    public String getValue(Users user, Menus menu) {
-        return "";
+    public Object getValue(Users user, Menus menu) {
+        return value;
     }
 
 

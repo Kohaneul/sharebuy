@@ -7,12 +7,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sharebuy.domain.board.domain.Place;
+import sharebuy.domain.post.domain.Place;
 import sharebuy.common.domain.BaseTimeEntity;
 
 import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
 @Getter

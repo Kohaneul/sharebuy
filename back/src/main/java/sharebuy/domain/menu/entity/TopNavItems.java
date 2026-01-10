@@ -41,6 +41,7 @@ public class TopNavItems extends BaseTimeEntity {
     private Menus menu;
 
     @Enumerated(STRING)
+    @Column(name = "role_type",nullable = false)
     private RoleType roleType;
 
 }

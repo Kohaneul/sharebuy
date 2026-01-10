@@ -1,7 +1,6 @@
-package sharebuy.domain.board.entity;
+package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;

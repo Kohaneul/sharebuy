@@ -1,7 +1,7 @@
-package sharebuy.domain.board.entity;
+package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
-import sharebuy.domain.board.domain.PurchaseStatus;
+import sharebuy.domain.post.domain.PurchaseStatus;
 import sharebuy.domain.user.entity.Users;
 
 import java.util.UUID;
