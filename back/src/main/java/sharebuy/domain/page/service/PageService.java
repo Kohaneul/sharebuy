@@ -45,7 +45,7 @@ public class PageService {
         PageMeta pageMeta = getPageMeta(menu.getId());
         TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
 
-        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user, menu);
+        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getRoleType(), menu);
 
         return new PageContextResponse(topNavMeta,pageMeta,permissionMeta);
     }

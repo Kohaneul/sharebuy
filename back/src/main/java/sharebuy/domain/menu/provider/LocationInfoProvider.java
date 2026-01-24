@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
-import sharebuy.domain.menu.repository.UserRepository;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.repository.UserRepository;
 
 import static sharebuy.domain.menu.domain.TopNavComponent.LOCATION_INFO;
 @Component
