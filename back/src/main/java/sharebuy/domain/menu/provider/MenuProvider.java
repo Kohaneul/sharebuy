@@ -20,7 +20,7 @@ public final class MenuProvider implements TopNavProvider {
 
     @Override
     public Object getValue(Users user, Menus menu) {
-        return menuRepository.findMenuItemsByMenu(user,menu.getId());
+        return menuRepository.findMenuItemsByUser(user,menu.getId());
     }
 
 }

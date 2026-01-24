@@ -14,7 +14,7 @@ public class MenuService {
     private MenuRepository menuRepository;
 
     public Menus findById(UUID id){
-        return menuRepository.findById(id).orElseThrow(()->new IllegalStateException("없습니다."));
+        return menuRepository.findById(id).orElseThrow(()->new IllegalStateException("정보가 존재하지 않습니다."));
     }
 
 }

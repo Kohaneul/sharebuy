@@ -1,9 +1,5 @@
 package sharebuy.domain.menu.domain;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public enum TopNavComponent {
     LOCATION_INFO(true),
     SEARCH_FORM(false),

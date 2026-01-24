@@ -1,21 +1,18 @@
 package sharebuy.domain.page.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
 import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.menu.service.MenuService;
-import sharebuy.domain.page.dto.PageContextResponse;
-import sharebuy.domain.page.dto.PageMeta;
-import sharebuy.domain.page.dto.TopNavMeta;
+import sharebuy.domain.page.dto.*;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.user.entity.Users;
-import sharebuy.domain.user.repository.UserRepository;
 import sharebuy.domain.user.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -28,6 +25,9 @@ public class PageService {
     private UserService userService;
     @Autowired
     private PageRepository pageRepository;
+
+    @Autowired
+    private PermissionMetaAssembler permissionMetaAssembler;
 
 
     private final List<TopNavProvider> topNavProviders;
@@ -45,9 +45,11 @@ public class PageService {
         PageMeta pageMeta = getPageMeta(menu.getId());
         TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
 
+        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user, menu);
 
-        return new PageContextResponse(topNavMeta,null,null);
+        return new PageContextResponse(topNavMeta,pageMeta,permissionMeta);
     }
+
 
     private PageMeta getPageMeta(UUID menuId) {
         List<Page> page = pageRepository.findByMenuId(menuId);

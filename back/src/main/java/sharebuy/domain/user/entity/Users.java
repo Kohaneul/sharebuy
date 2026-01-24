@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.common.domain.RoleType;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.domain.Gen;
 import java.time.LocalDate;
@@ -57,6 +58,9 @@ public class Users extends BaseTimeEntity {
     @Column(nullable = false)
     private Gen gen;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RoleType roleType;
 
 
 }

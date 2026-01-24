@@ -1,14 +1,19 @@
 package sharebuy.domain.menu.provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.repository.UserRepository;
+import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.Users;
 
 import static sharebuy.domain.menu.domain.TopNavComponent.LOCATION_INFO;
 @Component
 public final class LocationInfoProvider implements TopNavProvider {
 
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public TopNavComponent getType() {
@@ -17,7 +22,8 @@ public final class LocationInfoProvider implements TopNavProvider {
 
     @Override
     public Object getValue(Users user, Menus menu) {
-        return value;
+        Address address = userRepository.findByAddress(user.getId());
+        return address.getPrimaryAddress()+" "+address.getDetailAddress();
     }
 
 
