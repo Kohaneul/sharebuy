@@ -8,7 +8,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.user.domain.Address;
@@ -29,8 +28,8 @@ public class Users extends BaseTimeEntity {
     private UUID id;
 
     @NotBlank(message = "아이디는 필수입니다.")
-    @Column(nullable = false,unique = true)
-    private String userId;
+    @Column(name = "login_id", nullable = false,unique = true)
+    private String loginId;
 
     @NotBlank(message = "비밀번호는 필수입니다.")
     @Column(nullable = false)
@@ -59,7 +58,7 @@ public class Users extends BaseTimeEntity {
     private Gen gen;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "role_type", nullable = false)
     private RoleType roleType;
 
 

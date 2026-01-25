@@ -1,13 +1,13 @@
 package sharebuy.domain.page.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menus;
 import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.menu.service.MenuService;
 import sharebuy.domain.page.dto.*;
+import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.user.entity.Users;
@@ -41,7 +41,7 @@ public class PageService {
         Menus menu = menuService.findById(menuId);
         Users user = userService.findById(userId);
 
-        List<TopNavMeta.TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+        List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
         PageMeta pageMeta = getPageMeta(menu.getId());
         TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
 
@@ -59,24 +59,23 @@ public class PageService {
     }
 
 
-    private List<TopNavMeta.TopNavItemMeta> getTopNavItemMetaList(Menus menu, Users user) {
-        List<TopNavMeta.TopNavItemMeta> topNavItemMetas = menu.getTopNavItems()
+    private List<TopNavItemMeta> getTopNavItemMetaList(Menus menu, Users user) {
+        return menu.getTopNavItems()
                 .stream()
                 .filter(item -> TopNavComponent.isNeedValue(item.getComponent()))
                 .map(item -> {
                     boolean needValue = true;
                     TopNavComponent component = item.getComponent();
 
-                    TopNavProvider topNavProvider = topNavProviders.stream()
+                TopNavProvider topNavProvider = topNavProviders.stream()
                             .filter(p -> p.getType() == component).findFirst()
                             .orElseThrow(() -> new IllegalStateException("없는 타입입니다."));
 
                     Object value = topNavProvider.getValue(user, menu);
 
-                    return new TopNavMeta.TopNavItemMeta(component, needValue, item.getPosition(), value);
+                    return new TopNavItemMeta(component, needValue, item.getPosition(), value);
 
                 }).toList();
-        return topNavItemMetas;
     }
 
 }
