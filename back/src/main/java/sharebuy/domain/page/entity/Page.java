@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.menu.entity.Menu;
-import sharebuy.domain.post.type.PageSectionType;
 
 import java.util.List;
 import java.util.UUID;

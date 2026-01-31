@@ -2,18 +2,15 @@ package sharebuy.domain.page.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.PERMISSION;
-
+@RequiredArgsConstructor
 public final class PermissionMeta implements UiMeta {
     private final List<PermissionItemMeta> permissionItemMetaList;
-
-    public PermissionMeta(List<PermissionItemMeta> permissionItemMetaList) {
-        this.permissionItemMetaList = permissionItemMetaList;
-    }
 
     @Override
     public PageType type() {

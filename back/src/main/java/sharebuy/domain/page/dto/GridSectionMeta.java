@@ -2,6 +2,7 @@ package sharebuy.domain.page.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import sharebuy.domain.post.type.GridType;
 import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.post.type.PageType;
@@ -12,13 +13,11 @@ import static sharebuy.domain.page.dto.GridSectionMeta.*;
 import static sharebuy.domain.post.type.PageSectionType.GRID;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
+@RequiredArgsConstructor
 public final class GridSectionMeta implements PageSectionMeta<GridItemMeta> {
 
     private final List<GridItemMeta> gridItemMetaList;
 
-    public GridSectionMeta(List<GridItemMeta> gridItemMetaList) {
-        this.gridItemMetaList = gridItemMetaList;
-    }
 
     @Override
     public PageType type() {
@@ -37,7 +36,7 @@ public final class GridSectionMeta implements PageSectionMeta<GridItemMeta> {
 
     @AllArgsConstructor
     @Getter
-    static class GridItemMeta {
+    public static class GridItemMeta {
         private String column;
         private String value;
         private boolean readonly;

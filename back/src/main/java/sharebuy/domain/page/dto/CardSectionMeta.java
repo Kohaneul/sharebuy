@@ -3,6 +3,7 @@ package sharebuy.domain.page.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.post.type.PageType;
 
@@ -12,13 +13,10 @@ import static sharebuy.domain.page.dto.CardSectionMeta.*;
 import static sharebuy.domain.post.type.PageSectionType.CARD;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
+@RequiredArgsConstructor
 public final class CardSectionMeta implements PageSectionMeta<CardItemMeta> {
 
     private final List<CardItemMeta> cardItemMetaList;
-
-    public CardSectionMeta(List<CardItemMeta> cardItemMetaList) {
-        this.cardItemMetaList = cardItemMetaList;
-    }
 
     @Override
     public PageType type() {
@@ -35,10 +33,9 @@ public final class CardSectionMeta implements PageSectionMeta<CardItemMeta> {
         return cardItemMetaList;
     }
 
-
     @AllArgsConstructor
     @Getter
-    static class CardItemMeta {
+    public static class CardItemMeta {
         private String title;
         private String key;
         private String value;

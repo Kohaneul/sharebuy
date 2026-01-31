@@ -2,6 +2,7 @@ package sharebuy.domain.page.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import sharebuy.domain.post.type.InputType;
 import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.post.type.PageType;
@@ -12,12 +13,9 @@ import static sharebuy.domain.page.dto.InputSectionMeta.*;
 import static sharebuy.domain.post.type.PageSectionType.INPUT;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
+@RequiredArgsConstructor
 public final class InputSectionMeta implements PageSectionMeta<InputItem> {
     private final List<InputItem> inputItemList;
-
-    public InputSectionMeta(List<InputItem> inputItemList) {
-        this.inputItemList = inputItemList;
-    }
 
     @Override
     public PageType type() {
@@ -36,7 +34,7 @@ public final class InputSectionMeta implements PageSectionMeta<InputItem> {
 
     @AllArgsConstructor
     @Getter
-    static class InputItem {
+    public static class InputItem {
         private String key;
         private InputType inputType;
         private boolean readonly;
