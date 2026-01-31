@@ -8,13 +8,12 @@ import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.PERMISSION;
 
-public final class PermissionMeta implements PageMeta<PermissionMeta.PermissionItemMeta> {
+public final class PermissionMeta implements UiMeta {
     private final List<PermissionItemMeta> permissionItemMetaList;
 
     public PermissionMeta(List<PermissionItemMeta> permissionItemMetaList) {
         this.permissionItemMetaList = permissionItemMetaList;
     }
-
 
     @Override
     public PageType type() {

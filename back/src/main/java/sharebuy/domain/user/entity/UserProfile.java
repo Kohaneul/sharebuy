@@ -27,7 +27,7 @@ public class UserProfile extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private Users user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "post_id",nullable = false)

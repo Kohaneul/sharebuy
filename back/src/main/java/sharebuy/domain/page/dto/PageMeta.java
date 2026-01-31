@@ -4,9 +4,21 @@ import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
 
-public sealed interface PageMeta<T>
-        permits CardSectionMeta, GridSectionMeta, InputSectionMeta, PermissionMeta, SearchFormSectionMeta, TopNavMeta {
+import static sharebuy.domain.post.type.PageType.PAGE;
 
-    PageType type();
-    List<T> items();
+public final class PageMeta implements UiMeta{
+
+    private List<PageSectionMeta<?>> pageItemMetaList;
+
+    @Override
+    public PageType type() {
+        return PAGE;
+    }
+
+    @Override
+    public List<?> items() {
+        return pageItemMetaList;
+    }
+
+
 }

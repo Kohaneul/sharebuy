@@ -3,9 +3,9 @@ package sharebuy.domain.menu.provider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.menu.repository.MenuRepository;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 @Component
 public final class MenuProvider implements TopNavProvider {
@@ -19,8 +19,8 @@ public final class MenuProvider implements TopNavProvider {
     }
 
     @Override
-    public Object getValue(Users user, Menus menu) {
-        return menuRepository.findMenuItemsByUser(user,menu.getId());
+    public Object getValue(User user, Menu menu) {
+        return menuRepository.findMenuByUser(user.getRoleType(),menu.getId());
     }
 
 }

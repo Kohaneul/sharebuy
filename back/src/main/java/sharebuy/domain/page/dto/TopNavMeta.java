@@ -10,7 +10,7 @@ import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.TOP_NAV;
 
-public final class TopNavMeta  implements PageMeta{
+public final class TopNavMeta  implements UiMeta{
     private final List<TopNavItemMeta> topNavItemMetaList;
 
     public TopNavMeta(List<TopNavItemMeta> topNavItemMetaList) {

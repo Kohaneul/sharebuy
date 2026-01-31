@@ -16,8 +16,8 @@ import static jakarta.persistence.EnumType.STRING;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "menus")
-public class Menus extends BaseTimeEntity {
+@Table(name = "menu")
+public class Menu extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

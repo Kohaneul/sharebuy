@@ -1,11 +1,11 @@
 package sharebuy.domain.menu.provider;
 
 import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.entity.Menus;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.menu.entity.Menu;
+import sharebuy.domain.user.entity.User;
 
 public sealed interface TopNavProvider permits LocationInfoProvider,AlarmProvider,MenuProvider{
     TopNavComponent getType();
 
-    Object getValue(Users user, Menus menu);
+    Object getValue(User user, Menu menu);
 }

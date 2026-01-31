@@ -9,7 +9,7 @@ import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.GRID;
 
-public final class GridSectionMeta implements PageMeta<GridSectionMeta.GridItemMeta> {
+public final class GridSectionMeta implements PageSectionMeta<GridSectionMeta.GridItemMeta> {
 
     private final List<GridItemMeta> gridItemMetaList;
 

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 
@@ -28,7 +28,7 @@ public class Payment extends BaseTimeEntity {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private Users user;    //참여자
+    private User user;    //참여자
 
     @NotNull
     @ManyToOne

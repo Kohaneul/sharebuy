@@ -9,7 +9,7 @@ import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.INPUT;
 
-public final class InputSectionMeta implements PageMeta<InputSectionMeta.InputItem> {
+public final class InputSectionMeta implements PageSectionMeta<InputSectionMeta.InputItem> {
     private final List<InputItem> inputItemList;
 
     public InputSectionMeta(List<InputItem> inputItemList) {

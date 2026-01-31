@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sharebuy.domain.alarm.repository.AlarmRepository;
 import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.entity.Menus;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.menu.entity.Menu;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ public final class AlarmProvider implements TopNavProvider {
     }
 
     @Override
-    public Object getValue(Users user, Menus menu) {
+    public Object getValue(User user, Menu menu) {
         UUID userId = user.getId();
         return alarmRepository.countByUserIdAndReadFalse(userId);
     }

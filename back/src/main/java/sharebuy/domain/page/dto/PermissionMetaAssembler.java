@@ -2,7 +2,7 @@ package sharebuy.domain.page.dto;
 
 import org.springframework.stereotype.Component;
 import sharebuy.common.domain.RoleType;
-import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.page.dto.PermissionMeta.PermissionItemMeta;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class PermissionMetaAssembler {
 
-    public PermissionMeta assemble(RoleType userRoleType , Menus menu){
+    public PermissionMeta assemble(RoleType userRoleType , Menu menu){
         RoleType menuRoleType = menu.getRoleType();
         if(!userRoleType.canAccess(menuRoleType)){
             throw new IllegalStateException("메뉴 접근 불가");

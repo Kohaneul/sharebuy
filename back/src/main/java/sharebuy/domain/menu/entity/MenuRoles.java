@@ -28,6 +28,6 @@ public class MenuRoles extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "menu_id", nullable = false)
-    private Menus menu;
+    private Menu menu;
 
 }

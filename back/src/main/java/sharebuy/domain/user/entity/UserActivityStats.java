@@ -24,7 +24,7 @@ public class UserActivityStats extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private Users user;
+    private User user;
 
     // 평판
     @NotNull

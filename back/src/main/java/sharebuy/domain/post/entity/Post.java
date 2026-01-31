@@ -8,12 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.context.annotation.Lazy;
 import sharebuy.domain.menu.entity.Menus;
 import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,7 +35,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private Users user;
+    private User user;
 
     @NotBlank(message = "게시글 아이디는 필수입니다.")
     @Length(min = 2, max = 100, message = "제목은 2자 이상 100자 이하로 입력해야 합니다.")

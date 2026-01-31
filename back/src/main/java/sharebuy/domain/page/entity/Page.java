@@ -5,13 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.menu.entity.Menus;
-import sharebuy.domain.post.type.PageType;
 
 import java.awt.*;
 import java.util.UUID;
 
-import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 
 @AllArgsConstructor
@@ -28,6 +25,6 @@ public class Page extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "menu_id",nullable = false)
-    private Menus menu;
+    private Menu menu;
 
 }

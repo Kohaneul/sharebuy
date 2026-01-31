@@ -6,7 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import sharebuy.common.auth.config.CustomUserDetail;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.repository.UserRepository;
 
 @Service
@@ -16,8 +16,8 @@ public class UserDetailServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Users user = userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException("등록 되지 않은 사용자입니다."));
+    public UserDetails loadUserByUsername(String loginId) throws UsernameNotFoundException {
+        User user = userRepository.findByLoginId(loginId).orElseThrow(()->new UsernameNotFoundException("등록 되지 않은 사용자입니다."));
         return new CustomUserDetail(user);
     }
 }

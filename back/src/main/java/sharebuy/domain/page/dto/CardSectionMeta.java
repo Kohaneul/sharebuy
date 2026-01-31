@@ -7,9 +7,10 @@ import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
 
+import static sharebuy.domain.page.dto.CardSectionMeta.*;
 import static sharebuy.domain.post.type.PageType.CARD;
 
-public final class CardSectionMeta implements PageMeta<CardSectionMeta.CardItemMeta> {
+public final class CardSectionMeta implements PageSectionMeta<CardItemMeta> {
 
     @Override
     public PageType type() {

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 @Entity
@@ -24,7 +24,7 @@ public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private Users user;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "post_id")

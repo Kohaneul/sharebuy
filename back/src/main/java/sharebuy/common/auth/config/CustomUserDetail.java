@@ -4,16 +4,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import sharebuy.common.domain.RoleType;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 public class CustomUserDetail implements UserDetails {
-    private final Users user;
+    private final User user;
 
-    public CustomUserDetail(Users user) {
+    public CustomUserDetail(User user) {
         this.user = user;
     }
 
@@ -59,4 +59,10 @@ public class CustomUserDetail implements UserDetails {
     public UUID getId(){
         return user.getId();
     }
+
+    public User getUser(){
+        return getUser();
+    }
+
+
 }

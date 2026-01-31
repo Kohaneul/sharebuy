@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.ReportType;
 import sharebuy.domain.post.entity.Post;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 
@@ -26,12 +26,12 @@ public class Report extends BaseTimeEntity {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "reporter_user_id", nullable = false)
-    private Users reporterUser;   //신고자
+    private User reporterUser;   //신고자
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "reported_user_id", nullable = false)
-    private Users reportedUser; //신고 대상
+    private User reportedUser; //신고 대상
 
     @NotNull
     @ManyToOne

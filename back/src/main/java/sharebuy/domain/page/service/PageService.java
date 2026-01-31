@@ -2,15 +2,16 @@ package sharebuy.domain.page.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.menu.service.MenuService;
 import sharebuy.domain.page.dto.*;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.repository.PageRepository;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
 
 import java.util.List;
@@ -37,17 +38,18 @@ public class PageService {
     }
 
 
-    public PageContextResponse findById(UUID menuId, UUID userId){
-        Menus menu = menuService.findById(menuId);
-        Users user = userService.findById(userId);
+    public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal){
+        Menu menu = menuService.findById(menuId);
+        User user = principal.getUser();
 
         List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+
         PageMeta pageMeta = getPageMeta(menu.getId());
         TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
 
         PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getRoleType(), menu);
 
-        return new PageContextResponse(topNavMeta,pageMeta,permissionMeta);
+        return new PageContextResponse(topNavMeta, pageMeta,permissionMeta);
     }
 
 
@@ -55,11 +57,11 @@ public class PageService {
         List<Page> page = pageRepository.findByMenuId(menuId);
 
 
-        return null;
+        return null ;
     }
 
 
-    private List<TopNavItemMeta> getTopNavItemMetaList(Menus menu, Users user) {
+    private List<TopNavItemMeta> getTopNavItemMetaList(Menu menu, User user) {
         return menu.getTopNavItems()
                 .stream()
                 .filter(item -> TopNavComponent.isNeedValue(item.getComponent()))

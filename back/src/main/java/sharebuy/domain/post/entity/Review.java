@@ -1,7 +1,7 @@
 package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class Review {
 
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private Users user;
+    private User user;
 
     private Integer rating;
     private String comment;

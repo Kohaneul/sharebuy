@@ -2,7 +2,7 @@ package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
 import sharebuy.domain.post.domain.PurchaseStatus;
-import sharebuy.domain.user.entity.Users;
+import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ public class Purchase {
     
     @ManyToOne
     @JoinColumn(name = "user_id",nullable = false)
-    private Users user;       // 참여한 사용자
+    private User user;       // 참여한 사용자
 
     private Integer quantity;// 참여 수량
 
