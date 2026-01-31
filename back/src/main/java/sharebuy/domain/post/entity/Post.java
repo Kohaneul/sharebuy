@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import sharebuy.domain.menu.entity.Menus;
+import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
@@ -58,7 +58,7 @@ public class Post extends BaseTimeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "menu_id",nullable = false)
-    private Menus menu;
+    private Menu menu;
 
     @OneToMany(mappedBy = "post", cascade = ALL)
     private List<Purchase> purchases; // 해당 게시글의 공동구매 참여 목록

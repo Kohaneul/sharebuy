@@ -48,7 +48,7 @@ public class Menu extends BaseTimeEntity {
     private int menuOrder;
 
     @OneToMany(mappedBy = "menu",cascade = CascadeType.ALL,orphanRemoval = true)
-    private List<TopNavItems> topNavItems;
+    private List<TopNavItem> topNavItems;
 
 
 }

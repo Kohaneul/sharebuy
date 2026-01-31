@@ -17,8 +17,8 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "top_nav_items")
-public class TopNavItems extends BaseTimeEntity {
+@Table(name = "top_nav_item")
+public class TopNavItem extends BaseTimeEntity {
 
     @Id
     @GeneratedValue

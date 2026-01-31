@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.post.type.PageSectionType;
 
-import java.util.List;
 import java.util.UUID;
 
 import static jakarta.persistence.FetchType.LAZY;
@@ -17,20 +15,23 @@ import static jakarta.persistence.FetchType.LAZY;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name = "page")
-public class Page extends BaseTimeEntity {
-
+@Table(name = "page_section")
+public class PageSection  extends BaseTimeEntity {
     @Id
     @GeneratedValue
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_id",nullable = false)
-    private Menu menu;
+    @JoinColumn(name = "page_id", nullable = false)
+    private Page page;
 
-    @OneToMany(mappedBy = "page",cascade = CascadeType.ALL)
-    private List<PageSection> pageSectionList;
+    @Enumerated(EnumType.STRING)
+    private PageSectionType pageSectionType; // GRID, CARD, INPUT, SEARCH_FORM
 
+    @Column(name = "display_order",nullable = false)
+    private Integer displayOrder;
 
+    @Column(name = "name",nullable = false)
+    private String name;
 }
