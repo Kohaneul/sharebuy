@@ -14,11 +14,11 @@ import static sharebuy.domain.post.type.PageSectionType.INPUT;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
 @RequiredArgsConstructor
-public final class InputSectionMeta implements PageSectionMeta<InputItem> {
+public final class InputSectionMeta implements TypeSectionMeta<InputItem> {
     private final List<InputItem> inputItemList;
 
     @Override
-    public PageType type() {
+    public PageType getPageType() {
         return PAGE;
     }
 

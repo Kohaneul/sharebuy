@@ -14,24 +14,25 @@ import static sharebuy.domain.post.type.PageSectionType.CARD;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
 @RequiredArgsConstructor
-public final class CardSectionMeta implements PageSectionMeta<CardItemMeta> {
+public final class CardSectionMeta implements TypeSectionMeta<CardItemMeta> {
 
     private final List<CardItemMeta> cardItemMetaList;
 
     @Override
-    public PageType type() {
+    public List<CardItemMeta> items() {
+        return List.of();
+    }
+
+    @Override
+    public PageType getPageType() {
         return PAGE;
     }
 
     @Override
     public PageSectionType pageSectionType() {
-        return CARD;
+        return null;
     }
 
-    @Override
-    public List<CardItemMeta> items() {
-        return cardItemMetaList;
-    }
 
     @AllArgsConstructor
     @Getter

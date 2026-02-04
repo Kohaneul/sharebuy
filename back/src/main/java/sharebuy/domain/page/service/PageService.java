@@ -14,14 +14,15 @@ import sharebuy.domain.page.dto.GridSectionMeta.GridItemMeta;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
+import sharebuy.domain.page.handler.PageSectionMetaHandler;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PageService {
@@ -36,10 +37,11 @@ public class PageService {
     @Autowired
     private PermissionMetaAssembler permissionMetaAssembler;
 
-
+    private final Map<PageSectionType, PageSectionMetaHandler> pageSectionMetaHandlerMap;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(List<TopNavProvider> topNavProviders) {
+    public PageService(List<PageSectionMetaHandler> pageSectionMetaHandlers, List<TopNavProvider> topNavProviders) {
+        this.pageSectionMetaHandlerMap = pageSectionMetaHandlers.stream().collect(Collectors.toMap(PageSectionMetaHandler::getType,Function.identity()));
         this.topNavProviders = topNavProviders;
     }
 
@@ -55,28 +57,32 @@ public class PageService {
 
         PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getRoleType(), menu);
 
-        return new PageContextResponse(topNavMeta, pageMeta,permissionMeta);
+        return new PageContextResponse(topNavMeta, pageMeta, permissionMeta);
     }
 
 
     private PageMeta getPageMeta(UUID menuId, RoleType userRoleType) {
         Page page = pageRepository.findByMenuId(menuId);
-        List<PageSection> accessiblePageSection = page.getPageSectionList().stream().filter(section -> userRoleType.canAccess(section.getRoleType())).sorted(Comparator.comparing(PageSection::getSortOrder)).toList();
 
-        accessiblePageSection.stream().map(section->{
-            switch(section.getPageSectionType()){
-                case CARD:
-                    return new CardSectionMeta(fetchCardItems(section));
-                case GRID:
-                    return new GridSectionMeta(fetchGridItems(section));
-                case INPUT:
-                    return new InputSectionMeta(fetchInputItems(section));
-                default:
-                    throw new IllegalStateException("Unknown PageType: " + section.getPageSectionType());
+        List<PageSection> accessiblePageSection = page.getPageSectionList().stream()
+                .filter(section -> userRoleType.canAccess(section.getRoleType()))
+                .sorted(Comparator.comparing(PageSection::getSortOrder)).toList();
+
+        List<TypeSectionMeta<?>> list = getTypeSectionMetas(accessiblePageSection);
+
+        return new PageMeta(list);
+    }
+
+    private List<TypeSectionMeta<?>> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
+        List<TypeSectionMeta<?>> list = new ArrayList<>();
+        for (PageSection pageSection : accessiblePageSection) {
+            PageSectionMetaHandler handler = pageSectionMetaHandlerMap.get(pageSection);
+            if(handler==null){
+                throw new IllegalStateException("존재하지 않은 페이지 타입입니다.");
             }
-
-        });
-        return null;
+            list.add(handler.handle(pageSection));
+        }
+        return list;
     }
 
     private List<InputSectionMeta.InputItem> fetchInputItems(PageSection section) {

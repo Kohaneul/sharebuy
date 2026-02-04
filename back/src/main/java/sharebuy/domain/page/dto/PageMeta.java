@@ -9,7 +9,7 @@ import static sharebuy.domain.post.type.PageType.PAGE;
 @RequiredArgsConstructor
 public final class PageMeta implements UiMeta{
 
-    private final List<PageSectionMeta<?>> pageItemMetaList;
+    private final List<TypeSectionMeta<?>> pageItemMetaList;
 
     @Override
     public PageType type() {
@@ -17,7 +17,7 @@ public final class PageMeta implements UiMeta{
     }
 
     @Override
-    public List<?> items() {
+    public List<TypeSectionMeta<?>> items() {
         return pageItemMetaList;
     }
 

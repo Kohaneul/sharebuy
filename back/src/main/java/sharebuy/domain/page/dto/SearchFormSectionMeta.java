@@ -14,11 +14,12 @@ import static sharebuy.domain.post.type.PageSectionType.SEARCH_FORM;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
 @RequiredArgsConstructor
-public final class SearchFormSectionMeta implements PageSectionMeta<SearchFormItemMeta> {
+public final class SearchFormSectionMeta implements TypeSectionMeta<SearchFormItemMeta> {
     private final List<SearchFormItemMeta> searchFormItemList;
 
+
     @Override
-    public PageType type() {
+    public PageType getPageType() {
         return PAGE;
     }
 

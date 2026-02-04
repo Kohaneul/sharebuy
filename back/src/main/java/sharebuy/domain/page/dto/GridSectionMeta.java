@@ -14,14 +14,14 @@ import static sharebuy.domain.post.type.PageSectionType.GRID;
 import static sharebuy.domain.post.type.PageType.PAGE;
 
 @RequiredArgsConstructor
-public final class GridSectionMeta implements PageSectionMeta<GridItemMeta> {
+public final class GridSectionMeta implements TypeSectionMeta<GridItemMeta> {
 
     private final List<GridItemMeta> gridItemMetaList;
 
 
     @Override
-    public PageType type() {
-        return PAGE;
+    public PageType getPageType() {
+        return null;
     }
 
     @Override
