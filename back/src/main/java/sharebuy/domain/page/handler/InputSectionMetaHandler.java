@@ -15,6 +15,7 @@ import sharebuy.domain.post.type.PageSectionType;
 import java.util.List;
 
 import static sharebuy.domain.post.type.PageSectionType.CARD;
+import static sharebuy.domain.post.type.PageSectionType.INPUT;
 
 @RequiredArgsConstructor
 @Component
@@ -22,7 +23,7 @@ public class InputSectionMetaHandler implements PageSectionMetaHandler{
 
     @Override
     public PageSectionType getType() {
-        return CARD;
+        return INPUT;
     }
 
     @Override
