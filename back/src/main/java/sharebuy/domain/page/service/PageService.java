@@ -48,19 +48,33 @@ public class PageService {
 
     public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal){
         Menu menu = menuService.findById(menuId);
-        User user = principal.getUser();
+        User user = (principal!=null) ? principal.getUser() : null;
 
-        List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+        //meta 1 -> top_nav 메타정보 가져오기
+        TopNavMeta topNavMeta = getTopNavMeta(menu, user);
 
+        //meta 2 -> 페이지 랜더링할 메타정보 가져오기
         PageMeta pageMeta = getPageMeta(menu.getId(),user.getRoleType());
-        TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
 
+        //meta 3 -> 권한 정보 관련 메타 가져오기
         PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getRoleType(), menu);
 
+        //전체 response 객체 셋팅해서 조립
         return new PageContextResponse(topNavMeta, pageMeta, permissionMeta);
     }
 
+    private TopNavMeta getTopNavMeta(Menu menu, User user) {
+        List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+        TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
+        return topNavMeta;
+    }
 
+    /**
+     * PageMeta 가져오기
+     * @param menuId
+     * @param userRoleType
+     * @return
+     */
     private PageMeta getPageMeta(UUID menuId, RoleType userRoleType) {
         Page page = pageRepository.findByMenuId(menuId);
 

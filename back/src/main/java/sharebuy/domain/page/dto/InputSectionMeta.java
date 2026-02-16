@@ -28,7 +28,7 @@ public final class InputSectionMeta implements TypeSectionMeta<InputItem> {
     }
 
     @Override
-    public List items() {
+    public List<InputItem> items() {
         return inputItemList;
     }
 

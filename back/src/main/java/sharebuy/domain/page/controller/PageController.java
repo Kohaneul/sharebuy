@@ -19,8 +19,9 @@ public class PageController {
     private final PageService pageService;
 
     @GetMapping("/{menuId}")
-    public PageContextResponse page(@PathVariable("menuId") UUID menuId,@AuthenticationPrincipal(expression = "id") CustomUserDetail principal){
+    public PageContextResponse page(@PathVariable("menuId") UUID menuId,@AuthenticationPrincipal CustomUserDetail principal){
         return pageService.getPageContext(menuId,principal);
     }
+
 
 }

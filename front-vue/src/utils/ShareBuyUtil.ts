@@ -3,13 +3,21 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 // 1. Axios 인스턴스 생성
+// const api: AxiosInstance = axios.create({
+//   baseURL: import.meta.env.BASE_URL, // 환경 변수 사용
+//   timeout: 5000,
+//   headers: {
+//     'Content-Type': 'application/json',
+//   },
+// });
+
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.BASE_URL, // 환경 변수 사용
+  baseURL: 'http://localhost:9011', // Spring Boot 서버 주소
   timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: true, // 세션/쿠키 필요하면 추가
 });
+
 
 /**
  * [commonGet] 범용적인 GET 요청 유틸리티 함수

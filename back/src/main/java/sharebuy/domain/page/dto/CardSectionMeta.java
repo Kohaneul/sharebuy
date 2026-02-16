@@ -20,7 +20,7 @@ public final class CardSectionMeta implements TypeSectionMeta<CardItemMeta> {
 
     @Override
     public List<CardItemMeta> items() {
-        return List.of();
+        return cardItemMetaList;
     }
 
     @Override
@@ -30,7 +30,7 @@ public final class CardSectionMeta implements TypeSectionMeta<CardItemMeta> {
 
     @Override
     public PageSectionType pageSectionType() {
-        return null;
+        return CARD;
     }
 
 

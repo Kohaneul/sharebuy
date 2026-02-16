@@ -21,7 +21,7 @@ public final class GridSectionMeta implements TypeSectionMeta<GridItemMeta> {
 
     @Override
     public PageType getPageType() {
-        return null;
+        return PAGE;
     }
 
     @Override
