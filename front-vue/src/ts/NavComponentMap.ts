@@ -7,8 +7,8 @@ import type { Component } from 'vue'
 
 
 export const NavComponentMap: Record<TopNavComponent, Component> = {
-  [TopNavComponent.LOCATION]: LocationInfo,
-  [TopNavComponent.SEARCH]: SearchForm,
+  [TopNavComponent.LOCATION_INFO]: LocationInfo,
+  [TopNavComponent.SEARCH_FORM]: SearchForm,
   [TopNavComponent.ALARM]: Alarm,
   [TopNavComponent.MENU]: Menu
 }

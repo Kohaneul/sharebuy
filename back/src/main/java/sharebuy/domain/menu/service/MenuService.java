@@ -6,7 +6,6 @@ import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.menu.repository.MenuRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service

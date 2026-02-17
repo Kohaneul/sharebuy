@@ -9,6 +9,7 @@ import java.util.List;
 
 import static sharebuy.domain.post.type.PageType.PERMISSION;
 @RequiredArgsConstructor
+@Getter
 public final class PermissionMeta implements UiMeta {
     private final List<PermissionItemMeta> permissionItemMetaList;
 

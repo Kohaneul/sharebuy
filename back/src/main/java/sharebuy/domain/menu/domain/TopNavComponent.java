@@ -4,7 +4,7 @@ public enum TopNavComponent {
     LOCATION_INFO(true),
     SEARCH_FORM(false),
     ALARM(true),
-    MENU(true);
+    MENU(false);
 
     private final boolean needValue;
 

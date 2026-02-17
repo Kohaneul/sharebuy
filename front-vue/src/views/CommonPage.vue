@@ -25,11 +25,10 @@ const permissionMeta = ref([]);
 
 onMounted(async () => {
 const res = await commonGet(`/rest/page/${menuId}`);
-console.log(res);
 if(res){
-topNavMeta.value = res.top_nav_meta; 
-pageMeta.value = res.page_meta;
-permissionMeta.value = res.permission_meta;
+topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
+pageMeta.value = res.pageMeta.pageItemMetaList;
+permissionMeta.value = res.permissionMeta.permissionItemMetaList;
 }
 })
 </script>

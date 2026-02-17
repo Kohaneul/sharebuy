@@ -15,7 +15,7 @@ public class PermissionMetaAssembler {
     public PermissionMeta assemble(RoleType userRoleType , Menu menu){
         RoleType menuRoleType = menu.getRoleType();
         if(!userRoleType.canAccess(menuRoleType)){
-            throw new IllegalStateException("메뉴 접근 불가");
+            return new PermissionMeta(generatePermission(userRoleType));
         }
         return new PermissionMeta(generatePermission(userRoleType));
     }

@@ -2,10 +2,12 @@ package sharebuy.domain.page.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.entity.Menu;
+import sharebuy.domain.menu.entity.TopNavItem;
 import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.menu.service.MenuService;
 import sharebuy.domain.page.dto.*;
@@ -23,6 +25,8 @@ import sharebuy.domain.user.service.UserService;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static sharebuy.common.domain.RoleType.GUEST;
 
 @Service
 public class PageService {
@@ -45,28 +49,42 @@ public class PageService {
         this.topNavProviders = topNavProviders;
     }
 
-
+    @Transactional(readOnly = true)
     public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal){
         Menu menu = menuService.findById(menuId);
-        User user = (principal!=null) ? principal.getUser() : null;
+        User user = (principal!=null) ? principal.getUser() : User.guest();
+        RoleType roleType = user.getRoleType();
+
+        //해당 메뉴가 접근가능한지 확인
+        validationAccessMenu(roleType,menu.getRoleType());
 
         //meta 1 -> top_nav 메타정보 가져오기
         TopNavMeta topNavMeta = getTopNavMeta(menu, user);
 
         //meta 2 -> 페이지 랜더링할 메타정보 가져오기
-        PageMeta pageMeta = getPageMeta(menu.getId(),user.getRoleType());
+        PageMeta pageMeta = getPageMeta(menu.getId(),roleType);
 
         //meta 3 -> 권한 정보 관련 메타 가져오기
-        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getRoleType(), menu);
+        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(roleType, menu);
 
         //전체 response 객체 셋팅해서 조립
         return new PageContextResponse(topNavMeta, pageMeta, permissionMeta);
     }
 
+    /**
+     * 메뉴가 현 유저가 접근 가능한 메뉴인지 확인
+     * @param userRoleType
+     * @param menuRoleType
+     */
+    private void validationAccessMenu(RoleType userRoleType, RoleType menuRoleType) {
+        if(!userRoleType.canAccess(menuRoleType)){
+            throw new IllegalStateException("["+menuRoleType+"]만 접근가능한 메뉴입니다. 현재 나의 권한:["+userRoleType+"]");
+        }
+    }
+
     private TopNavMeta getTopNavMeta(Menu menu, User user) {
         List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
-        TopNavMeta topNavMeta = new TopNavMeta(topNavItemMetas);
-        return topNavMeta;
+        return new TopNavMeta(topNavItemMetas);
     }
 
     /**
@@ -90,7 +108,7 @@ public class PageService {
     private List<TypeSectionMeta<?>> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
         List<TypeSectionMeta<?>> list = new ArrayList<>();
         for (PageSection pageSection : accessiblePageSection) {
-            PageSectionMetaHandler handler = pageSectionMetaHandlerMap.get(pageSection);
+            PageSectionMetaHandler handler = pageSectionMetaHandlerMap.get(pageSection.getPageSectionType());
             if(handler==null){
                 throw new IllegalStateException("존재하지 않은 페이지 타입입니다.");
             }
@@ -111,25 +129,32 @@ public class PageService {
         return null;
     }
 
-    ;
-
-
+    /**
+     * top_nav 메타데이터 조립
+     * @param menu
+     * @param user
+     * @return
+     */
     private List<TopNavItemMeta> getTopNavItemMetaList(Menu menu, User user) {
         return menu.getTopNavItems()
                 .stream()
-                .filter(item -> TopNavComponent.isNeedValue(item.getComponent()))
+                .filter(item -> user.getRoleType().canAccess(item.getRoleType()))
+                .sorted(Comparator.comparing(TopNavItem::getPosition).thenComparing(TopNavItem::getDisplayOrder))
                 .map(item -> {
-                    boolean needValue = true;
+                    boolean needValue = TopNavComponent.isNeedValue(item.getComponent());
+
                     TopNavComponent component = item.getComponent();
 
-                TopNavProvider topNavProvider = topNavProviders.stream()
-                            .filter(p -> p.getType() == component).findFirst()
-                            .orElseThrow(() -> new IllegalStateException("없는 타입입니다."));
+                    Object value = null;
+                    if(needValue){
+                        TopNavProvider topNavProvider = topNavProviders.stream()
+                                .filter(p -> p.getType() == component).findFirst()
+                                .orElseThrow(() -> new IllegalStateException("없는 타입입니다."));
 
-                    Object value = topNavProvider.getValue(user, menu);
+                        value = topNavProvider.getValue(user, menu);
+                    }
 
                     return new TopNavItemMeta(component, needValue, item.getPosition(), value);
-
                 }).toList();
     }
 

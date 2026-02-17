@@ -1,7 +1,7 @@
 
 export enum TopNavComponent {
-  LOCATION = 'LOCATION',
-  SEARCH = 'SEARCH',
+  LOCATION_INFO = 'LOCATION_INFO',
+  SEARCH_FORM = 'SEARCH_FORM',
   ALARM = 'ALARM',
   MENU = 'MENU'
 }

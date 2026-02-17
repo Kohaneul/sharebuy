@@ -1,6 +1,12 @@
 <template>
   <a-layout-header class="top-nav-bar">
     <div class="left">
+        <Button type="text" @click="onLogoClick" >
+        <img 
+          src="/main-logo.png"
+          class="button-image" 
+        />
+        </Button>
       <component
         v-for="(item, i) in leftItems"
         :key="'l-' + i"
@@ -37,6 +43,7 @@
 import { ref,onMounted,computed, PropType } from 'vue'
 import { NavComponentMap} from '../ts/NavComponentMap'
 import { TopNavComponent} from '../ts/TopNavComponent'
+import { Button } from 'ant-design-vue';
 
 interface TopNavItemMeta {
   component: TopNavComponent
@@ -126,4 +133,13 @@ function onAction(payload: NavActionPayload) {
 .nav-icon:hover {
   color: #40a9ff; /* ant primary blue */
 }
+
+
+.button-image {
+  /* max-width: 150%;  */
+  max-height: 150%;
+  padding:0;
+  margin-top:-10px;
+}
+
 </style>

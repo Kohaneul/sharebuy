@@ -13,12 +13,19 @@ import lombok.*;
 public class Address {
 
     @NotBlank(message = "주소1은 필수입니다.")
+    @Column(name = "primary_address", nullable = false)
     private String primaryAddress;
 
     @NotBlank(message = "상세 주소는 필수입니다.")
+    @Column(name = "detail_address", nullable = false)
     private String detailAddress;
 
     @NotBlank(message = "우편번호는 필수입니다.")
+    @Column(name = "zip_code", nullable = false)
     private String zipCode;
 
+    @Override
+    public String toString() {
+        return primaryAddress + " "+detailAddress;
+    }
 }

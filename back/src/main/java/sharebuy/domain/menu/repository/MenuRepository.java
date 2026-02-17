@@ -10,9 +10,7 @@ import java.util.UUID;
 
 public interface MenuRepository extends JpaRepository<Menu, UUID> {
 
-    @Query("select m from Menu m " +
-            "where roleType = :roleType and m.id = :menuId " +
-            "order by m.name")
+    @Query("select m from Menu m where m.id = :menuId ")
     Optional<Menu> findMenuByUser(@Param("roleType") RoleType roleType, @Param("menuId") UUID menuId);
 
 }

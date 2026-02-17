@@ -1,6 +1,6 @@
 package sharebuy.domain.page.dto;
 
 public record PageContextResponse (
-    TopNavMeta topNav,
+    TopNavMeta topNavMeta,
     PageMeta pageMeta,
-    PermissionMeta permission){}
+    PermissionMeta permissionMeta){}

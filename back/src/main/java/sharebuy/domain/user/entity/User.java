@@ -19,7 +19,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "user")
+@Table(name = "users")
 public class User extends BaseTimeEntity {
 
     @Id
@@ -62,4 +62,10 @@ public class User extends BaseTimeEntity {
     private RoleType roleType;
 
 
+    public static User guest() {
+        User user = new User();
+        user.loginId="guest";
+        user.roleType = RoleType.GUEST;
+        return user;
+    }
 }
