@@ -56,17 +56,25 @@ const {items} = defineProps<{
   items: TopNavItemMeta[]
   menuId?: string
 }>();
-
 const leftItems = computed(() =>
- items.filter(i => i.position === 'LEFT')
+  items.filter(i => i.position === 'LEFT').map(i => ({
+    ...i,
+    props: { value: i.value } 
+  }))
 )
 
 const centerItems = computed(() =>
-  items.filter(i => i.position === 'CENTER')
+  items.filter(i => i.position === 'CENTER').map(i => ({
+    ...i,
+    props: { value: i.value }
+  }))
 )
 
 const rightItems = computed(() =>
-  items.filter(i => i.position === 'RIGHT')
+  items.filter(i => i.position === 'RIGHT').map(i => ({
+    ...i,
+    props: { value: i.value }
+  }))
 )
 
 const emit = defineEmits(['logoClick', 'search', 'notificationClick', 'menuClick'])

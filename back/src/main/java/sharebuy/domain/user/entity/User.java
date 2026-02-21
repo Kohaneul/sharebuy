@@ -62,10 +62,11 @@ public class User extends BaseTimeEntity {
     private RoleType roleType;
 
 
-    public static User guest() {
+    public static User guest(Address address) {
         User user = new User();
         user.loginId="guest";
         user.roleType = RoleType.GUEST;
+        user.address = address;
         return user;
     }
 }

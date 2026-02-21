@@ -1,5 +1,7 @@
 package sharebuy.domain.page.service;
 
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +21,7 @@ import sharebuy.domain.page.entity.PageSection;
 import sharebuy.domain.page.handler.PageSectionMetaHandler;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.post.type.PageSectionType;
+import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
 
@@ -29,12 +32,10 @@ import java.util.stream.Collectors;
 @Service
 public class PageService {
 
-    @Autowired
-    private MenuService menuService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PageRepository pageRepository;
+    private final MenuService menuService;
+    private final UserService userService;
+    private final PageRepository pageRepository;
+    private final GoogleMapService googleMapService; // 구글 API 호출용 서비스
 
     @Autowired
     private PermissionMetaAssembler permissionMetaAssembler;
@@ -42,15 +43,22 @@ public class PageService {
     private final Map<PageSectionType, PageSectionMetaHandler> pageSectionMetaHandlerMap;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(List<PageSectionMetaHandler> pageSectionMetaHandlers, List<TopNavProvider> topNavProviders) {
+    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, List<PageSectionMetaHandler> pageSectionMetaHandlers, List<TopNavProvider> topNavProviders) {
+        this.menuService = menuService;
+        this.userService = userService;
+        this.pageRepository = pageRepository;
+        this.googleMapService = googleMapService;
         this.pageSectionMetaHandlerMap = pageSectionMetaHandlers.stream().collect(Collectors.toMap(PageSectionMetaHandler::getType,Function.identity()));
         this.topNavProviders = topNavProviders;
     }
 
     @Transactional(readOnly = true)
-    public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal){
+    public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal, HttpSession session,Double lat,Double lng){
         Menu menu = menuService.findById(menuId);
-        User user = (principal!=null) ? principal.getUser() : User.guest();
+
+        //user 정보 추출
+        User user = getUser(principal, session,lat,lng);
+
         RoleType roleType = user.getRoleType();
 
         //해당 메뉴가 접근가능한지 확인
@@ -67,6 +75,22 @@ public class PageService {
 
         //전체 response 객체 셋팅해서 조립
         return new PageContextResponse(topNavMeta, pageMeta, permissionMeta);
+    }
+
+    private User getUser(CustomUserDetail principal, HttpSession session,Double lat,Double lng) {
+        if(principal !=null){
+            return principal.getUser();
+        }
+        if(lat != null && lng !=null){
+            Address guestAddress = googleMapService.convertAddressFromGoogleApi(lat, lng);
+            session.setAttribute("GUEST_ADDRESS",guestAddress);
+            return User.guest(guestAddress);
+        }
+        Address cachedAddress = (Address) session.getAttribute("GUEST_ADDRESS");
+        if (cachedAddress == null) {
+            return User.guest(Address.getDefaultAddress());
+        }
+        return User.guest(cachedAddress);
     }
 
     /**

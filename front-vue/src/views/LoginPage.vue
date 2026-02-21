@@ -37,6 +37,33 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 function enterAsGuest() {
+// 1. 브라우저 위치 정보 지원 여부 확인
+  if (!navigator.geolocation) {
+    alert("위치 정보를 지원하지 않는 브라우저입니다.");
+    router.push('/board'); // 좌표 없이 그냥 이동
+    return;
+  }
+
+  // 2. 현재 위치 가져오기
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // 좌표를 쿼리 스트링에 실어서 보냄 (예: /board?lat=37.1&lng=127.1)
+      router.push({
+        path: '/board',
+        query: { lat, lng }
+      });
+    },
+    (error) => {
+      console.error("위치 획득 실패:", error);
+      // 권한 거부 등을 했을 경우에도 일단 입장은 시켜줌
+      router.push('/board');
+    }
+  );
+
+
   // 게시글 조회 페이지로 이동
   router.push('/board');
 }

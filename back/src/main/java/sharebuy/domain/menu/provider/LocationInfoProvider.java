@@ -28,7 +28,7 @@ public final class LocationInfoProvider implements TopNavProvider {
 
         if(roleType.canAccess(menu.getRoleType())){
             Address address = user.getAddress();
-            return address != null ? address.toString() : null;
+            return address != null ? address.getPrimaryAddress() : null;
         }
         return "";
     }

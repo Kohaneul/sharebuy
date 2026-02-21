@@ -7,7 +7,7 @@ import sharebuy.domain.user.entity.User;
 import java.util.Optional;
 import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, UUID>{
-    Address findByAddress(UUID userId);
+//    Address findByAddress_Id(UUID userId);
     Optional<User> findByLoginId(String loginId);
 
 }

@@ -5,12 +5,14 @@ import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Embeddable
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
-public class Address {
+public class Address implements Serializable {
 
     @NotBlank(message = "주소1은 필수입니다.")
     @Column(name = "primary_address", nullable = false)
@@ -33,6 +35,16 @@ public class Address {
 
     @Override
     public String toString() {
-        return primaryAddress + " "+detailAddress;
+        return primaryAddress;
     }
+
+
+    public static Address getDefaultAddress(){
+        return new Address("경기도 군포시 금정동","1234","1234",1232.11,23231.11);
+    }
+
+
+
 }
+
+
