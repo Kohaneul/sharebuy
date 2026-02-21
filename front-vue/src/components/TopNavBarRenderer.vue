@@ -40,7 +40,7 @@
 
 
 <script setup lang="ts">
-import { ref,onMounted,computed, PropType } from 'vue'
+import { ref,computed } from 'vue'
 import { NavComponentMap} from '../ts/NavComponentMap'
 import { TopNavComponent} from '../ts/TopNavComponent'
 import { Button } from 'ant-design-vue';

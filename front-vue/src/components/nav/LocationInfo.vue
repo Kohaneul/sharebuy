@@ -6,7 +6,7 @@
           alt="버튼 이미지" 
            class="w-5 h-5 mr-1"
         />
-        <span style="color:white; padding-left:5px;"class="w-5 h-5 mr-1">{{ locationDisplayData?.locationInfo }}</span>
+        <span style="color:white; padding-left:5px;"class="w-5 h-5 mr-1">{{ displayLocation }}</span>
       </a-button>
     </div>
 
@@ -19,8 +19,8 @@ import { SearchOutlined,BellOutlined,MenuOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 
 
-const {locaionData} = defineProps<{
-  locaionData: LocationData;
+const {value} = defineProps<{
+  value:string;
   menuId?: string;
 }>();
 
@@ -34,88 +34,74 @@ interface LocationResponse {
   recommendedSections: any[]  // API에서 반환하는 구조에 맞게 타입 지정
 }
 
-const location = ref<LocationData | null>(null);
-const locationDisplayData =ref<LocationData | null>(null);
+const displayLocation = ref<string>();
 
 const loading = ref(false)
 const error = ref<string | null>(null)
 
 onMounted(async () => {
-  
-if(!locaionData){
-  // props 에서 받는 정보가 없으면 -> 현위치기반 geometric 호출
-  if (location.value) {
-    locationDisplayData.value = await getAddressFromCoords(location.value.latitude, location.value.longitude)
+  //guest로 진입하면 (=props.value = null) 내 현위치 기반으로 정보 표시한다.
+  if(!value){
+    await fetchCurrentGPSLocation();
   }
+  else{
+    displayLocation.value = value;
+  }
+})
 
+const fetchCurrentGPSLocation = () => {
   if (!navigator.geolocation) {
-    error.value = '위치 정보 사용 불가'
-    return
+    displayLocation.value = "위치 정보 미지원";
+    return;
   }
 
   loading.value = true;
 
   navigator.geolocation.getCurrentPosition(
     async (position) => {
-      locationDisplayData.value = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      }
-
-      try {
-        // 위치 기반 API 호출
-        const response = await axios.post<LocationResponse>('/api/location-based-data', {
-          latitude: location.value.latitude,
-          longitude: location.value.longitude
-        })
-        locationData.value = response.data
-      } catch (err) {
-        console.error(err)
-        error.value = '데이터 조회 실패'
-      } finally {
-        loading.value = false
-      }
+      const { latitude, longitude } = position.coords;
+      
+      // 구글 Geocoding API 등을 통해 좌표를 "주소 문자열"로 변환
+      // (기존에 만드신 getAddressFromCoords 함수 활용)
+      const addressText = await getAddressFromCoords(latitude, longitude);
+      
+      displayLocation.value = addressText;
+      loading.value = false;
     },
     (err) => {
-      console.error(err)
-      error.value = '위치 정보를 가져올 수 없습니다'
-      loading.value = false
+      console.error("GPS 획득 실패:", err);
+      displayLocation.value = "위치 확인 실패";
+      loading.value = false;
     },
-    { enableHighAccuracy: true, timeout: 10000 }
-  )
-}
+    { enableHighAccuracy: true, timeout: 5000 }
+  );
+};
 
-locationDataProps.value.locationInfo = locationDisplayData.value;
+// 좌표 -> 주소 변환 함수 (기존 코드 유지)
+const getAddressFromCoords = async (lat: number, lng: number) => {
+  const apiKey = import.meta.env.VITE_GOOGLE_MAP_KEY;  
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}&language=ko`;
 
-
-})
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.status === 'OK') {
+      const fullAddress =data.results[0].formatted_address;
+      const parts = fullAddress.split(" ").filter(p => p !== "대한민국");
+      const resultAddress =  parts.length <= 3 ? parts.join(" ") : parts.slice(0, 3).join(" ");
+      return resultAddress;
+    }
+    return '현 위치 확인 불가';
+  } catch (err) {
+    return '주소 변환 실패';
+  }
+};
 
 const emit = defineEmits(['logoClick', 'search', 'notificationClick', 'menuClick'])
 
 const searchQuery = ref('')
 
 function onLogoClick() { emit('logoClick') }
-function onSearch() { emit('search', searchQuery.value) }
-function onNotificationClick() { emit('notificationClick') }
-function onMenuClick() { emit('menuClick') }
-
-
-const getAddressFromCoords = async (lat: number, lng: number) => {
-  const apiKey = 'YOUR_GOOGLE_API_KEY'  
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${apiKey}`
-
-  try {
-    const response = await fetch(url)
-    const data = await response.json()
-    if (data.status === 'OK') {
-      return data.results[0].formatted_address
-    }
-    return '주소를 찾을 수 없음'
-  } catch (err) {
-    console.error(err)
-    return '주소 변환 실패'
-  }
-}
 
 
 </script>

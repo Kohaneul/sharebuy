@@ -24,6 +24,13 @@ public class Address {
     @Column(name = "zip_code", nullable = false)
     private String zipCode;
 
+    // --- 좌표 정보 추가 ---
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
+
     @Override
     public String toString() {
         return primaryAddress + " "+detailAddress;
