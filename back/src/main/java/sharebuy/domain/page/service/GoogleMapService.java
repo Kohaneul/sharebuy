@@ -60,6 +60,9 @@ public class GoogleMapService {
         boolean foundSplitPoint = false;
         for (String part : parts) {
             if(!foundSplitPoint){
+                if(part.equals("대한민국")){
+                    continue;
+                }
                 primaryAddress.append(part).append(" ");
                 if(part.endsWith("동")||part.endsWith("읍")||part.endsWith("면")){
                     foundSplitPoint = true;
