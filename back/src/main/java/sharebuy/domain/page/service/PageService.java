@@ -1,7 +1,6 @@
 package sharebuy.domain.page.service;
 
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,12 +12,9 @@ import sharebuy.domain.menu.entity.TopNavItem;
 import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.menu.service.MenuService;
 import sharebuy.domain.page.dto.*;
-import sharebuy.domain.page.dto.CardSectionMeta.CardItemMeta;
-import sharebuy.domain.page.dto.GridSectionMeta.GridItemMeta;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
-import sharebuy.domain.page.handler.PageSectionMetaHandler;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.user.domain.Address;
@@ -40,15 +36,13 @@ public class PageService {
     @Autowired
     private PermissionMetaAssembler permissionMetaAssembler;
 
-    private final Map<PageSectionType, PageSectionMetaHandler> pageSectionMetaHandlerMap;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, List<PageSectionMetaHandler> pageSectionMetaHandlers, List<TopNavProvider> topNavProviders) {
+    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, List<TopNavProvider> topNavProviders) {
         this.menuService = menuService;
         this.userService = userService;
         this.pageRepository = pageRepository;
         this.googleMapService = googleMapService;
-        this.pageSectionMetaHandlerMap = pageSectionMetaHandlers.stream().collect(Collectors.toMap(PageSectionMetaHandler::getType,Function.identity()));
         this.topNavProviders = topNavProviders;
     }
 
@@ -104,6 +98,7 @@ public class PageService {
         }
     }
 
+
     private TopNavMeta getTopNavMeta(Menu menu, User user) {
         List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
         return new TopNavMeta(topNavItemMetas);
@@ -122,33 +117,15 @@ public class PageService {
                 .filter(section -> userRoleType.canAccess(section.getRoleType()))
                 .sorted(Comparator.comparing(PageSection::getSortOrder)).toList();
 
-        List<TypeSectionMeta<?>> list = getTypeSectionMetas(accessiblePageSection);
+        List<PageSectionMeta> list = getTypeSectionMetas(accessiblePageSection);
 
         return new PageMeta(list);
     }
 
-    private List<TypeSectionMeta<?>> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
-        List<TypeSectionMeta<?>> list = new ArrayList<>();
-        for (PageSection pageSection : accessiblePageSection) {
-            PageSectionMetaHandler handler = pageSectionMetaHandlerMap.get(pageSection.getPageSectionType());
-            if(handler==null){
-                throw new IllegalStateException("존재하지 않은 페이지 타입입니다.");
-            }
-            list.add(handler.handle(pageSection));
-        }
-        return list;
-    }
 
-    private List<InputSectionMeta.InputItem> fetchInputItems(PageSection section) {
-        return null;
-    }
-
-    private List<GridItemMeta> fetchGridItems(PageSection section) {
-        return null;
-    }
-
-    private List<CardItemMeta> fetchCardItems(PageSection section) {
-        return null;
+    private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
+        return accessiblePageSection.stream().map(
+                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(), pageSection.getDataUrl())).toList();
     }
 
     /**

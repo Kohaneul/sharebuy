@@ -1,5 +1,5 @@
 <template>
-        <a-badge :count="3">
+        <a-badge :count=countRef>
           <Button type="text" @click="onNotificationClick">
             <BellOutlined class="nav-icon"/>
           </Button>
@@ -15,6 +15,7 @@ const props = defineProps({
   location: { type: String, default: '서울시 강남구' },
   notificationCount: { type: Number, default: 0 }
 })
+const countRef = ref<number>(0);
 
 const emit = defineEmits([ 'notificationClick'])
 

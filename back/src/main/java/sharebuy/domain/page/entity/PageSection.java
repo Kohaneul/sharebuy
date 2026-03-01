@@ -4,14 +4,9 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.post.type.PageSectionType;
-import sharebuy.domain.post.type.PageType;
-
-import java.util.Map;
 import java.util.UUID;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -43,5 +38,6 @@ public class PageSection extends BaseTimeEntity {
     @Column(name = "role_type")
     private RoleType roleType; // 해당 섹션 접근 가능 권한
 
-
+    @Column(name = "data_url")
+    private String dataUrl;
 }
