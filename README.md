@@ -25,7 +25,7 @@
 
 ### Backend
 ```bash
-git clone https://github.com/xxx/sharebuy.git
+git clone https://github.com/Kohaneul/sharebuy.git
 ./gradlew bootRun
 ```
 
