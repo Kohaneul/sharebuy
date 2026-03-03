@@ -1,9 +1,6 @@
 <template>
-  <!-- <TopNavBar></TopNavBar> -->
    <TopNavBarRenderer :items=topNavMeta></TopNavBarRenderer>
-  <div>
-    <pre></pre>
-  </div>
+   <PageRenderer :items="pageMeta"></PageRenderer>
 </template>
 
 <script setup lang="ts">
@@ -12,6 +9,7 @@ import { useRoute } from 'vue-router'
 import {commonGet} from '@/utils/ShareBuyUtil';
 import TopNavBarRenderer from '@/components/TopNavBarRenderer.vue';
 import { PathToMenuIdMap } from '@/constants/MenuMap'
+import PageRenderer from '@/components/PageRenderer.vue';
 const route = useRoute();
 const currentPath = route.path;
 const menuId = PathToMenuIdMap[currentPath] 

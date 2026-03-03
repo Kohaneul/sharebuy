@@ -16,14 +16,11 @@ import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
 import sharebuy.domain.page.repository.PageRepository;
-import sharebuy.domain.post.type.PageSectionType;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class PageService {
