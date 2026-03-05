@@ -24,7 +24,7 @@ public class GoogleMapService {
 
     private final RestTemplate restTemplate;
 
-    @Value("${google.api.key}")
+    @Value("${google.map.key}")
     private String apiKey;
 
     public Address convertAddressFromGoogleApi(Double lat,Double lng){

@@ -8,15 +8,13 @@ import sharebuy.domain.page.dto.PermissionMeta.PermissionItemMeta;
 import java.util.Collections;
 import java.util.List;
 
-
+/**
+ * 권한 관련 메타정보 셋팅
+ */
 @Component
 public class PermissionMetaAssembler {
 
-    public PermissionMeta assemble(RoleType userRoleType , Menu menu){
-        RoleType menuRoleType = menu.getRoleType();
-        if(!userRoleType.canAccess(menuRoleType)){
-            return new PermissionMeta(generatePermission(userRoleType));
-        }
+    public PermissionMeta assemble(RoleType userRoleType){
         return new PermissionMeta(generatePermission(userRoleType));
     }
 
