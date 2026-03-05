@@ -63,4 +63,8 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = ALL)
     private List<Purchase> purchases; // 해당 게시글의 공동구매 참여 목록
 
+    @ElementCollection
+    @Column(name = "img_url")
+    private List<String> imgUrl;
+
 }

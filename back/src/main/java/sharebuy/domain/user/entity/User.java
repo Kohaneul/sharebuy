@@ -31,6 +31,9 @@ public class User extends BaseTimeEntity {
     @Column(name = "login_id", nullable = false,unique = true)
     private String loginId;
 
+    @Column(name = "nickname",nullable = false)
+    private String nickname;
+
     @NotBlank(message = "비밀번호는 필수입니다.")
     @Column(nullable = false)
     private String password;
@@ -61,6 +64,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "role_type", nullable = false)
     private RoleType roleType;
 
+    @Column
+    private String avatar;
 
     public static User guest(Address address) {
         User user = new User();
