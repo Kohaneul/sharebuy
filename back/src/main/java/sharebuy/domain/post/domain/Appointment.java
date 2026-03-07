@@ -1,5 +1,6 @@
 package sharebuy.domain.post.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +25,6 @@ public class Appointment{
     private Place place;
 
     @NotNull(message = "약속 일시는 필수입니다.")
+    @Column(name = "appointment_time")
     private LocalDateTime appointmentTime;
 }
