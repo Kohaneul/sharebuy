@@ -20,9 +20,9 @@ public class Location {
     private double latitude;
 
     // 경도: -180.0 ~ 180.0 범위
-    @NotNull(message = "경도는 필수입니다.") // 👈 메시지 수정
-    @DecimalMin(value = "-180.0", message = "경도 범위(최소 -180.0)를 벗어났습니다.") // 👈 범위 수정
-    @DecimalMax(value = "180.0", message = "경도 범위(최대 180.0)를 벗어났습니다.") // 👈 범위 수정
+    @NotNull(message = "경도는 필수입니다.")
+    @DecimalMin(value = "-180.0", message = "경도 범위(최소 -180.0)를 벗어났습니다.")
+    @DecimalMax(value = "180.0", message = "경도 범위(최대 180.0)를 벗어났습니다.")
     private double longitude;
 
 }

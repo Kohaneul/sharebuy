@@ -12,6 +12,9 @@ import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.domain.Gen;
+
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 

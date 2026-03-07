@@ -23,8 +23,9 @@ dependencies {
 
 	// 🛡️ Spring Security 및 Redis 연동
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.session:spring-session-data-redis'
+//	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+//	implementation 'org.springframework.security:spring-security-jackson2'
 
 	// 🔨 개발 편의
 	compileOnly 'org.projectlombok:lombok'

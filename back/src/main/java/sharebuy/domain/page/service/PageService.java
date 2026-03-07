@@ -79,7 +79,7 @@ public class PageService {
     private User getUser(CustomUserDetail principal, HttpSession session,Double lat,Double lng) {
         //CASE 1 ) 로그인 시 user 정보 가져옴
         if(principal !=null){
-            return principal.getUser();
+            return userService.findById(principal.getId());
         }
 
         //CASE 2) 로그인 x

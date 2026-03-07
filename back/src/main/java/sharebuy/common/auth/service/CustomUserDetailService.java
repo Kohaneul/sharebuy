@@ -11,16 +11,12 @@ import sharebuy.domain.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
-public class UserDetailServiceImpl implements UserDetailsService {
+public class CustomUserDetailService {
 
     private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        if(username.isEmpty()){
-            throw new UsernameNotFoundException("username is null");
-        }
-        User user = userRepository.findByLoginId(username).orElseThrow(()->new UsernameNotFoundException("등록 되지 않은 사용자입니다."));
+    public UserDetails loginUser(String loginId){
+        User user = userRepository.findByLoginId(loginId).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new CustomUserDetail(user);
     }
 }

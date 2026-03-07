@@ -7,15 +7,15 @@
 
       <a-form layout="vertical">
         <a-form-item label="아이디">
-          <a-input placeholder="아이디를 입력하세요" />
+          <a-input placeholder="아이디를 입력하세요" v-model:value="loginId" />
         </a-form-item>
 
         <a-form-item label="비밀번호">
-          <a-input-password placeholder="비밀번호를 입력하세요" />
+          <a-input-password placeholder="비밀번호를 입력하세요" v-model:value="password"  />
         </a-form-item>
 
         <a-form-item>
-          <a-button type="primary" block>
+          <a-button type="primary" block @click="loginUser" @enter="loginUser">
             로그인
           </a-button>
         </a-form-item>
@@ -33,8 +33,36 @@
 
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
+import {commonPostLogin} from '@/utils/ShareBuyUtil';
+import {ref} from 'vue';
 
-const router = useRouter()
+const router = useRouter();
+const loginId = ref<string|null>('');
+const password = ref<string|null>('');
+
+async function loginUser(){
+  if (!loginId.value || !password.value) {
+    alert("아이디와 비밀번호를 입력해주세요.");
+    return;
+  }
+  try{ 
+  const param = new URLSearchParams();
+  param.append('username', loginId.value); 
+  param.append('password', password.value);
+  
+   await commonPostLogin(`/auth/login`,param);
+   router.push("/board")
+  }
+  catch(Error){
+    clearData();
+    console.log(Error);
+  }
+}
+
+function clearData(){
+  loginId.value = null;
+  password.value= null;
+}
 
 function enterAsGuest() {
 // 1. 브라우저 위치 정보 지원 여부 확인
@@ -62,7 +90,6 @@ function enterAsGuest() {
       router.push('/board');
     }
   );
-
 
   // 게시글 조회 페이지로 이동
   router.push('/board');
