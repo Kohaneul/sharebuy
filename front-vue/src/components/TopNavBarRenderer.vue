@@ -37,10 +37,10 @@
       />
 
      <div v-if="roleType !== ROLES.GUEST">
-      <Button @click="onLogin">로그아웃</Button>
+      <Button @click="onLogout">로그아웃</Button>
     </div>
       <div v-else>
-      <Button @click="onLogout">로그인</Button>
+      <Button @click="onLogin">로그인</Button>
     </div>
     </div>
   </a-layout-header>
@@ -100,14 +100,13 @@ const searchQuery = ref('')
 function onLogoClick() { route.replace("/login");}
 
 function onLogin(){
-// 게스트일 때는 로그인 페이지로 이동만 함
     route.push("/login");
-    return;
 }
+
 async function onLogout(){
   try{
     await commonPost(`/auth/logout`,null);
-    route.replace("/login");
+    route.push("/");
   }
   catch(Error){
     console.log(Error);
