@@ -11,11 +11,11 @@
         </a-form-item>
 
         <a-form-item label="비밀번호">
-          <a-input-password placeholder="비밀번호를 입력하세요" v-model:value="password"  />
+          <a-input-password placeholder="비밀번호를 입력하세요" v-model:value="password"  @pressEnter="loginUser" />
         </a-form-item>
 
         <a-form-item>
-          <a-button type="primary" block @click="loginUser" @enter="loginUser">
+          <a-button type="primary" block @click="loginUser">
             로그인
           </a-button>
         </a-form-item>
@@ -68,7 +68,7 @@ function enterAsGuest() {
 // 1. 브라우저 위치 정보 지원 여부 확인
   if (!navigator.geolocation) {
     alert("위치 정보를 지원하지 않는 브라우저입니다.");
-    router.push('/board'); // 좌표 없이 그냥 이동
+    router.push('/board');
     return;
   }
 
@@ -86,8 +86,8 @@ function enterAsGuest() {
     },
     (error) => {
       console.error("위치 획득 실패:", error);
+      router.push({ path: '/board', query: { lat: 37.4031615, lng: 126.9570707 } });
       // 권한 거부 등을 했을 경우에도 일단 입장은 시켜줌
-      router.push('/board');
     }
   );
 

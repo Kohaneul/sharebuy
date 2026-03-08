@@ -15,7 +15,7 @@ import java.util.List;
 public class PermissionMetaAssembler {
 
     public PermissionMeta assemble(RoleType userRoleType){
-        return new PermissionMeta(generatePermission(userRoleType));
+        return new PermissionMeta(userRoleType,generatePermission(userRoleType));
     }
 
     public List<PermissionItemMeta> generatePermission(RoleType roleType){

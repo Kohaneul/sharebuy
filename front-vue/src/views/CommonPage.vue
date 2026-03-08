@@ -1,5 +1,5 @@
 <template>
-   <TopNavBarRenderer :items=topNavMeta></TopNavBarRenderer>
+   <TopNavBarRenderer :items=topNavMeta :roleType="roleTypeRef"></TopNavBarRenderer>
    <PageRenderer :items="pageMeta"></PageRenderer>
 </template>
 
@@ -10,6 +10,8 @@ import {commonGet} from '@/utils/ShareBuyUtil';
 import TopNavBarRenderer from '@/components/TopNavBarRenderer.vue';
 import { PathToMenuIdMap } from '@/constants/MenuMap'
 import PageRenderer from '@/components/PageRenderer.vue';
+import { ROLES,RoleType } from '@/ts/UserType';
+
 const route = useRoute();
 const currentPath = route.path;
 const menuId = PathToMenuIdMap[currentPath] 
@@ -17,6 +19,7 @@ const menuId = PathToMenuIdMap[currentPath]
 const topNavMeta = ref([]);
 const pageMeta = ref([]);
 const permissionMeta = ref([]);
+const roleTypeRef = ref<RoleType>();
 
 onMounted(() => {
   const latNum = route.query.lat ? Number(route.query.lat) : null;
@@ -30,6 +33,7 @@ async function fetchData(lat:Number,lng:Number){
   topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
   pageMeta.value = res.pageMeta.pageItemMetaList;
   permissionMeta.value = res.permissionMeta.permissionItemMetaList;
+  roleTypeRef.value =  res.permissionMeta.roleType;
   }
 }
 

@@ -2,6 +2,7 @@
   <a-layout-header class="top-nav-bar">
     <div class="left">
         <Button type="text" @click="onLogoClick" >
+        
         <img 
           src="/main-logo.png"
           class="button-image" 
@@ -34,6 +35,13 @@
         v-bind="item.props"
         @action="onAction"
       />
+
+     <div v-if="roleType !== ROLES.GUEST">
+      <Button @click="onLogin">로그아웃</Button>
+    </div>
+      <div v-else>
+      <Button @click="onLogout">로그인</Button>
+    </div>
     </div>
   </a-layout-header>
 </template>
@@ -44,6 +52,11 @@ import { ref,computed } from 'vue'
 import { NavComponentMap} from '../ts/NavComponentMap'
 import { TopNavComponent} from '../ts/TopNavComponent'
 import { Button } from 'ant-design-vue';
+import {commonPost} from '@/utils/ShareBuyUtil';
+import { useRouter } from 'vue-router';
+import { ROLES,RoleType } from '@/ts/UserType';
+
+const route = useRouter();
 
 interface TopNavItemMeta {
   component: TopNavComponent
@@ -52,10 +65,13 @@ interface TopNavItemMeta {
   props?: Record<string, any>
 }
 
-const {items} = defineProps<{
-  items: TopNavItemMeta[]
+
+const {items,roleType} = defineProps<{
+  items: TopNavItemMeta[],
+  roleType:RoleType,
   menuId?: string
 }>();
+
 const leftItems = computed(() =>
   items.filter(i => i.position === 'LEFT').map(i => ({
     ...i,
@@ -81,7 +97,22 @@ const emit = defineEmits(['logoClick', 'search', 'notificationClick', 'menuClick
 
 const searchQuery = ref('')
 
-function onLogoClick() { emit('logoClick') }
+function onLogoClick() { route.replace("/login");}
+
+function onLogin(){
+// 게스트일 때는 로그인 페이지로 이동만 함
+    route.push("/login");
+    return;
+}
+async function onLogout(){
+  try{
+    await commonPost(`/auth/logout`,null);
+    route.replace("/login");
+  }
+  catch(Error){
+    console.log(Error);
+  }
+}
 function onSearch() { emit('search', searchQuery.value) }
 function onNotificationClick() { emit('notificationClick') }
 function onMenuClick() { emit('menuClick') }
