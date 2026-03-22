@@ -1,10 +1,7 @@
 package sharebuy.domain.post.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.dto.PostDetailResponse;
 import sharebuy.domain.post.service.PostService;
@@ -34,6 +31,16 @@ public class PostController {
      */
     @GetMapping("/{id}")
     public PostDetailResponse findById(@PathVariable("id") UUID id){
+        return postService.findById(id);
+    }
+
+    /**
+     * 특정 게시글 클릭했을때
+     * @param id
+     * @return
+     */
+    @PostMapping("/add")
+    public PostDetailResponse add(@PathVariable("id") UUID id){
         return postService.findById(id);
     }
 }

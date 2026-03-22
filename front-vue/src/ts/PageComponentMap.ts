@@ -1,4 +1,6 @@
 import Card from '@/components/page/CardList.vue'
+import Button from '@/components/page/Button.vue'
+
 import SearchForm from '@/components/page/SearchForm.vue'
 import Input from '@/components/page/Input.vue'
 import Grid from '@/components/page/Grid.vue'
@@ -8,6 +10,8 @@ import type { Component } from 'vue'
 
 export const PageComponentMap: Record<PageComponent, Component> = {
   [PageComponent.CARD]: Card,
+  [PageComponent.BUTTON]: Button,
+
   // [PageComponent.SEARCH_FORM]: SearchForm,
   // [PageComponent.INPUT]: Input,
   // [PageComponent.GRID]: Grid

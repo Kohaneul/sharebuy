@@ -22,7 +22,7 @@ public class PageController {
                                     HttpSession session,
                                     @RequestParam(required = false,name = "lat")Double lat,
                                     @RequestParam(required = false,name = "lng")Double lng){
-        return pageService.getPageContext(menuId,principal,session,lat,lng);
+            return pageService.getPageContext(menuId,principal,session,lat,lng);
     }
 
 

@@ -2,12 +2,12 @@
   <a-layout-header class="top-nav-bar">
     <div class="left">
         <Button type="text" @click="onLogoClick" >
-        
         <img 
           src="/main-logo.png"
           class="button-image" 
         />
         </Button>
+
       <component
         v-for="(item, i) in leftItems"
         :key="'l-' + i"
@@ -38,10 +38,11 @@
 
      <div v-if="roleType !== ROLES.GUEST">
       <Button @click="onLogout">로그아웃</Button>
-    </div>
+      </div>
       <div v-else>
       <Button @click="onLogin">로그인</Button>
-    </div>
+      </div>
+
     </div>
   </a-layout-header>
 </template>

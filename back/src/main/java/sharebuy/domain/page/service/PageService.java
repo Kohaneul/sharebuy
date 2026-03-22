@@ -135,7 +135,7 @@ public class PageService {
 
     private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
         return accessiblePageSection.stream().map(
-                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(), pageSection.getDataUrl())).toList();
+                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(),pageSection.getTitle(), pageSection.getDataUrl())).toList();
     }
 
     /**

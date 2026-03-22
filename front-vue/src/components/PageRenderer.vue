@@ -1,42 +1,24 @@
 <template>
-    <div>
-      <component
-        v-for="(item, i) in pageItems"
-        :key="'l-' + i"
-        :is="PageComponentMap[item.type]"
-        v-bind="item.componentProps"  />
-    </div>
+  <div>
+    <component
+      v-for="(item, i) in items"
+      :key="i"
+      :is="PageComponentMap[item.type]"
+      v-bind="item" 
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref,computed } from 'vue'
-import { PageComponentMap} from '../ts/PageComponentMap'
-import { PageComponent} from '../ts/PageComponent'
+import { PageComponent,ActionType } from '@/ts/PageComponent';
+import { PageComponentMap } from '../ts/PageComponentMap'
 
-interface PageItemMeta {
-  type: PageComponent; // "CARD", "INPUT" 등
-  dataUrl: string | null;  // 데이터를 가져올 API 주소
-}
 const props = defineProps<{
-  items: PageItemMeta[] 
+  items: {
+    type: PageComponent;
+    title: string | null;
+    actionType:ActionType;
+    dataUrl: string | null;
+  }[]
 }>();
-
-const pageItems = computed(() => {
-  return props.items.map(item => {
-    return {
-      ...item,
-      componentProps: {
-        dataUrl: item.dataUrl
-      }
-    }
-  })
-})
-
-const searchQuery = ref('')
-
 </script>
-
-<style scoped>
-
-
-</style>

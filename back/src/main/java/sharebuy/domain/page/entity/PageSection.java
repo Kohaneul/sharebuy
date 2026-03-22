@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sharebuy.common.domain.ActionType;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.post.type.PageSectionType;
@@ -38,6 +39,16 @@ public class PageSection extends BaseTimeEntity {
     @Column(name = "role_type")
     private RoleType roleType; // 해당 섹션 접근 가능 권한
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "data_url")
     private String dataUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action_type")
+    private ActionType actionType;  //버튼일경우, 버튼을 누르면 단순 vue-router로 이동하거나 서버로 가는 방식 분리
+
+    @Column(columnDefinition = "TEXT",name = "json_config")
+    private String jsonConfig;
 }
