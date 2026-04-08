@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <component
+  <div class="page-wrapper">
+      <component
       v-for="(item, i) in items"
       :key="i"
       :is="PageComponentMap[item.type]"
@@ -22,3 +22,9 @@ const props = defineProps<{
   }[]
 }>();
 </script>
+
+<style scoped>
+.page-wrapper {
+  background-color: #ececec; 
+}
+</style>

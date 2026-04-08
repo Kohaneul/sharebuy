@@ -7,9 +7,9 @@ export enum PageComponent {
   // SEARCH_FORM='SEARCH_FORM'
 }
 
-export enum ActionType{
-  MOVE,
-  API
+export enum ActionType {
+  MOVE = "MOVE",
+  API = "API"
 }
 
 export interface JsonConfig {

@@ -64,3 +64,9 @@ const handleClick = async () => {
   }
 };
 </script>
+<style lang="css" scoped>
+.section-button-wrapper {
+  display: inline-flex;
+  margin-right: 8px; /* 간격 */
+}
+</style>
