@@ -25,7 +25,12 @@ import static jakarta.persistence.FetchType.LAZY;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "post")
+@Table(
+        name = "post",
+        indexes = {
+                @Index(name = "idx_post_status_lat_lon", columnList = "status, latitude, longitude")
+        }
+)
 public class Post extends BaseTimeEntity {
 
     @Id
@@ -33,9 +38,14 @@ public class Post extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
-    private User user;
+    @Column(nullable = true)
+    private String avatar;
+
+    @Column(name = "login_id", nullable = false)
+    private String loginId;
+
+    @Column(nullable = true)
+    private String nickName;
 
     @NotBlank(message = "게시글 아이디는 필수입니다.")
     @Length(min = 2, max = 100, message = "제목은 2자 이상 100자 이하로 입력해야 합니다.")

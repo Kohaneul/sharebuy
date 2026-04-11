@@ -29,7 +29,7 @@ public class PageSection extends BaseTimeEntity {
     private Page page;
 
     @Enumerated(STRING)
-    @Column(name = "page_type")
+    @Column(name = "page_section_type")
     private PageSectionType pageSectionType;
 
     @Column(name = "sort_order",nullable = false)

@@ -14,6 +14,7 @@ import static sharebuy.domain.post.type.PageType.PERMISSION;
 public final class PermissionMeta implements UiMeta {
     private final RoleType roleType;
     private final List<PermissionItemMeta> permissionItemMetaList;
+    private final String userId;
 
     @Override
     public PageType type() {

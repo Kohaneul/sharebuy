@@ -1,6 +1,12 @@
 <template>
   <div class="section-button-wrapper">
-    <a-button type="primary" size="large" @click="handleClick">
+    <a-button 
+      :type="buttonStyle.type || 'default'" 
+      :danger="buttonStyle.danger"
+      :size="buttonStyle.size || 'large'"
+      :ghost="buttonStyle.ghost"
+      @click="handleClick"
+    >
       {{ title }}
     </a-button>
   </div>
@@ -10,6 +16,7 @@
 import { ActionType ,JsonConfig} from '@/ts/PageComponent';
 import { useRouter } from 'vue-router';
 import { commonPost } from '@/utils/ShareBuyUtil';
+import {computed} from 'vue';
 
 const props = defineProps<{
   title: string;
@@ -18,6 +25,14 @@ const props = defineProps<{
   jsonConfig?: string; 
   targetData?: any;
 }>();
+
+const buttonStyle = computed(() => {
+  try {
+    return props.jsonConfig ? JSON.parse(props.jsonConfig) : {};
+  } catch {
+    return {};
+  }
+});
 
 const router = useRouter();
 
@@ -63,6 +78,8 @@ const handleClick = async () => {
     }
   }
 };
+
+
 </script>
 <style lang="css" scoped>
 .section-button-wrapper {

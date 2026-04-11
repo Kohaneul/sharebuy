@@ -5,27 +5,27 @@
       
       <a-row :gutter="[16, 24]"> 
         <a-col 
-          v-for="n in 20" 
-          :key="n" 
+          v-for="card in cards" 
+          :key="card" 
           style="flex: 0 0 20%; max-width: 20%;"
           >          
           <a-card hoverable>
             <template #cover>
               <img
                 alt="example"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                :src="card.imgUrl || 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?q=80&w=500'"
               />
             </template>
             
             <template #actions>
-              <setting-outlined key="setting" @click="console.log('설정 클릭', n)" />
-              <edit-outlined key="edit" @click="console.log('수정 클릭', n)" />
-              <ellipsis-outlined key="ellipsis" />
+              <template v-if="hasAuthority(card)">
+                <setting-outlined key="setting" @click="console.log('설정 클릭', card.id)" />
+                <edit-outlined key="edit" @click="console.log('수정 클릭', card.id)" />
+              </template>
             </template>
 
             <a-card-meta 
-              :title="`Card title ${n}`" 
-              :description="`카드 상세 설명입니다.`"
+              :title=card.title 
             >
               <template #avatar>
                 <a-avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
@@ -41,6 +41,60 @@
 
 <script lang="ts" setup>
 import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/icons-vue';
+import {onMounted,ref} from 'vue';
+import {getCurrentLocation} from '@/utils/location';
+import { commonGet } from '@/utils/ShareBuyUtil';
+import{ CardData } from '@/ts/PageComponent';
+import { useUserStore } from '@/store/user';
+const userStore = useUserStore();
+
+const props = defineProps<{
+  dataUrl: string
+  jsonConfig:string
+}>();
+
+const config = ref();
+
+const cards = ref<CardData[]>([]);
+
+onMounted(async () => {
+
+   config.value = props.jsonConfig   ? JSON.parse(props.jsonConfig): {};
+
+  let context = {};
+
+  if (config.value.useCurrentLocation) {
+    const pos = await getCurrentLocation();
+    console.log(pos);
+
+    context = {
+      latitude: pos.latitude,
+      longitude: pos.longitude
+    }
+
+  }
+  await bindCard(context);
+})
+
+const hasAuthority = (card: CardData) => {
+  if (userStore.roleType === 'ADMIN') return true;
+  return userStore.userId !== 'guest' && userStore.loginId === card.loginId;
+};
+
+async function bindCard(context:any){
+  try{
+    const res:CardData[] = await commonGet(props.dataUrl,context);
+    if(res){
+      cards.value =res;
+    }
+  }
+  catch(Error){
+    console.log(Error);
+  }
+
+}
+
+
 </script>
 
 <style scoped>

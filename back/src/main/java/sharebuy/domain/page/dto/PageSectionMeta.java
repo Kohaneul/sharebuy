@@ -7,5 +7,6 @@ public record PageSectionMeta (
     PageSectionType type,
     ActionType actionType,
     String title,
-    String dataUrl
+    String dataUrl,
+    String jsonConfig
 ){};

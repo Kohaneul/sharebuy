@@ -19,3 +19,14 @@ export interface JsonConfig {
   refresh?: boolean;  // 완료 후 새로고침 여부
   payloadKey?: string; // 데이터를 감쌀 키값 (예: 'ids')
 }
+
+export interface CardData{
+  id: string;       
+  title: string;       // 게시글 제목
+  nickName: string;    // 작성자 닉네임
+  avatar: string | null;  // 프로필 이미지 (null 가능)
+  content: string;     // 게시글 본문
+  imgUrl: string | null;  // 게시글 썸네일 (null 가능)
+  status: 'RECRUITING' | 'CLOSED'; // 모집 상태 (Enum 기반)  
+  loginId:string;
+}

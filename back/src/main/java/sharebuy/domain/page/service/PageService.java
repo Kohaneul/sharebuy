@@ -62,7 +62,7 @@ public class PageService {
         PageMeta pageMeta = getPageMeta(menu.getId(),roleType);
 
         //meta 3 -> 권한 정보 관련 메타 가져오기
-        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(roleType);
+        PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getLoginId(),roleType);
 
         //전체 response 객체 셋팅해서 조립
         return new PageContextResponse(topNavMeta, pageMeta, permissionMeta);
@@ -135,7 +135,7 @@ public class PageService {
 
     private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
         return accessiblePageSection.stream().map(
-                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(),pageSection.getActionType(),pageSection.getTitle(), pageSection.getDataUrl())).toList();
+                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(),pageSection.getActionType(),pageSection.getTitle(), pageSection.getDataUrl(),pageSection.getJsonConfig())).toList();
     }
 
     /**

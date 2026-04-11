@@ -1,5 +1,6 @@
 package sharebuy.domain.post.controller;
 
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sharebuy.common.payload.CardResponse;
@@ -20,8 +21,8 @@ public class PostController {
      * @return
      */
     @GetMapping("/all")
-    public List<CardResponse> findAll(){
-        return postService.findAllData();
+    public List<CardResponse> findAll(@RequestParam("latitude")double latitude,@RequestParam("longitude")double longitude){
+        return postService.findAllData(latitude,longitude);
     }
 
     /**

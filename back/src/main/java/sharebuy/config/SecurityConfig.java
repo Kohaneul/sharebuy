@@ -9,6 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
+import static org.springframework.http.HttpMethod.GET;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -27,7 +29,9 @@ public class SecurityConfig {
                 //csrf 비활성화
                 .csrf(csrf->csrf.disable())
                 // 3. 권한 설정: 화면 주소와 인증 관련 API는 무조건 통과
-                .authorizeHttpRequests(auth->auth.requestMatchers("/","/login","/board","/rest/auth/**","/rest/page/**").permitAll()
+                .authorizeHttpRequests(auth->
+                        auth.requestMatchers("/","/login","/board","/rest/auth/**").permitAll()
+                        .requestMatchers(GET, "/rest/page/**","/rest/post/**").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form->form
                         .loginProcessingUrl("/rest/auth/login")
