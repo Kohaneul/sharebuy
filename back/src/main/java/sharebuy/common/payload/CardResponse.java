@@ -2,9 +2,9 @@ package sharebuy.common.payload;
 
 import org.springframework.util.CollectionUtils;
 import sharebuy.domain.post.entity.Post;
-
 import java.util.List;
 import java.util.UUID;
+
 public record CardResponse(
         UUID id,
         String title,
