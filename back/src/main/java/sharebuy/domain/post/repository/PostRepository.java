@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.entity.Post;
 
 import java.util.List;
@@ -20,16 +21,46 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
      * @return
      */
     @Query(value = """
-    SELECT * FROM post p
-    WHERE status IN ('RECRUITING', 'CLOSED')
-      AND (6371 * acos(
-          LEAST(1.0, GREATEST(-1.0,
-              cos(radians(:latitude)) * cos(radians(latitude)) * cos(radians(longitude) - radians(:longitude)) +
-              sin(radians(:latitude)) * sin(radians(latitude))
-          ))
-      )) < :radius
+            SELECT
+                p.id as id,
+                p.title as title,
+                p.nickname as nickName,
+                p.login_id as loginId,
+                p.avatar as avatar,
+                p.content as content,
+                i.imageurl as imgUrl,
+                p.status as status,
+                COALESCE(COUNT(pu.id), 0) as currentParticipants,
+                p.max_participants as maxParticipants
+            FROM post p
+            LEFT JOIN purchase pu
+                ON p.id = pu.post_id
+                AND pu.status = 'RECRUITING'
+            LEFT JOIN (
+                SELECT post_id, MIN(imageurl) AS imageurl
+                FROM image
+                GROUP BY post_id
+            ) i
+                ON p.id = i.post_id
+            WHERE p.status IN ('RECRUITING', 'CLOSED')
+              AND (6371 * acos(
+                  LEAST(1.0, GREATEST(-1.0,
+                      cos(radians(:latitude)) * cos(radians(p.latitude)) * cos(radians(p.longitude) - radians(:longitude)) +
+                      sin(radians(:latitude)) * sin(radians(p.latitude))
+                  ))
+              )) < :radius
+            GROUP BY
+                p.id,
+                p.title,
+                p.nickname,
+                p.login_id,
+                p.avatar,
+                p.content,
+                i.imageurl,
+                p.status,
+                p.max_participants
     """, nativeQuery = true)
-    List<Post> findNearbyPosts(
+    List<CardResponse> findNearbyPosts(
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,
             @Param("radius") double radius

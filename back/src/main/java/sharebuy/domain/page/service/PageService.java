@@ -1,7 +1,6 @@
 package sharebuy.domain.page.service;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
@@ -29,19 +28,18 @@ public class PageService {
     private final UserService userService;
     private final PageRepository pageRepository;
     private final GoogleMapService googleMapService; // 구글 API 호출용 서비스
-
-    @Autowired
-    private PermissionMetaAssembler permissionMetaAssembler;
-
+    private final PermissionMetaAssembler permissionMetaAssembler;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, List<TopNavProvider> topNavProviders) {
+    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, PermissionMetaAssembler permissionMetaAssembler, List<TopNavProvider> topNavProviders) {
         this.menuService = menuService;
         this.userService = userService;
         this.pageRepository = pageRepository;
         this.googleMapService = googleMapService;
+        this.permissionMetaAssembler = permissionMetaAssembler;
         this.topNavProviders = topNavProviders;
     }
+
 
     @Transactional(readOnly = true)
     public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal, HttpSession session,Double lat,Double lng){

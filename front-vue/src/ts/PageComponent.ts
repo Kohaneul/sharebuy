@@ -29,4 +29,6 @@ export interface CardData{
   imgUrl: string | null;  // 게시글 썸네일 (null 가능)
   status: 'RECRUITING' | 'CLOSED'; // 모집 상태 (Enum 기반)  
   loginId:string;
+  currentParticipants:number;
+  maxParticipants:number;
 }

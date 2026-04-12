@@ -13,8 +13,11 @@ import java.util.UUID;
 @RequestMapping("/rest/post")
 public class PostController {
 
-    @Autowired
-    private PostService postService;
+    private final PostService postService;
+
+    public PostController(PostService postService) {
+        this.postService = postService;
+    }
 
     /**
      * 화면 진입 시 취소건 제외한 모든건 가져오기
@@ -36,7 +39,7 @@ public class PostController {
     }
 
     /**
-     * 특정 게시글 클릭했을때
+     * 신규등록
      * @param id
      * @return
      */

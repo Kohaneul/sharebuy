@@ -12,7 +12,6 @@ import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.user.entity.User;
 
 import java.util.List;
 import java.util.UUID;
@@ -76,5 +75,8 @@ public class Post extends BaseTimeEntity {
     @ElementCollection
     @Column(name = "img_url")
     private List<String> imgUrl;
+
+    @Column(name = "max_participants")
+    private Integer maxParticipants;
 
 }
