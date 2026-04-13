@@ -13,6 +13,6 @@ export const PageComponentMap: Record<PageComponent, Component> = {
   [PageComponent.BUTTON]: Button,
 
   // [PageComponent.SEARCH_FORM]: SearchForm,
-  // [PageComponent.INPUT]: Input,
+  [PageComponent.INPUT]: Input,
   // [PageComponent.GRID]: Grid
 }

@@ -1,9 +1,9 @@
 
 export enum PageComponent {
   CARD = 'CARD',
-  BUTTON='BUTTON'
+  BUTTON='BUTTON',
   // GRID = 'GRID',
-  // INPUT = 'INPUT',
+  INPUT = 'INPUT'
   // SEARCH_FORM='SEARCH_FORM'
 }
 

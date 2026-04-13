@@ -4,7 +4,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router'
 import {commonGet} from '@/utils/ShareBuyUtil';
 import TopNavBarRenderer from '@/components/TopNavBarRenderer.vue';
@@ -16,7 +16,10 @@ import { useUserStore } from '@/store/user';
 const userStore = useUserStore();
 const route = useRoute();
 const currentPath = route.path;
-const menuId = PathToMenuIdMap[currentPath] 
+
+const menuId = computed(() => {
+  return PathToMenuIdMap[route.path]
+});
 
 const topNavMeta = ref([]);
 const pageMeta = ref([]);
@@ -32,7 +35,8 @@ onMounted(() => {
 });
 
 async function fetchData(lat:Number,lng:Number){
-  const res = await commonGet(`/page/${menuId}`,{lat,lng});
+  console.log("menu_id = "+menuId);
+  const res = await commonGet(`/page/${menuId.value}`,{lat,lng});
   if(res){
   topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
   pageMeta.value = res.pageMeta.pageItemMetaList;
@@ -41,5 +45,16 @@ async function fetchData(lat:Number,lng:Number){
   userStore.setAuthority(res.permissionMeta);
   }
 }
+
+watch(
+  () => route.path,
+  () => {
+    fetchData(
+      route.query.lat ? Number(route.query.lat) : null,
+      route.query.lng ? Number(route.query.lng) : null
+    )
+  },
+  { immediate: true }
+)
 
 </script>
