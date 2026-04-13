@@ -1,5 +1,5 @@
 <template>
-        <a-badge :count=countRef>
+        <a-badge :count=value  :show-zero="true">
           <Button type="text" @click="onNotificationClick">
             <BellOutlined class="nav-icon"/>
           </Button>
@@ -7,14 +7,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref,onMounted } from 'vue'
 import { Button } from 'ant-design-vue';
 import { BellOutlined } from '@ant-design/icons-vue'
 
-const props = defineProps({
-  location: { type: String, default: '서울시 강남구' },
-  notificationCount: { type: Number, default: 0 }
+const {value} = defineProps({
+  value: { type: Number, default: 0 }
 })
+
 const countRef = ref<number>(0);
 
 const emit = defineEmits([ 'notificationClick'])
