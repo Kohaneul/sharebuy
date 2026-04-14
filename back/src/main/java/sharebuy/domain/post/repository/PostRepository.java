@@ -31,7 +31,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
                 i.imageurl as imgUrl,
                 p.status as status,
                 COALESCE(COUNT(pu.id), 0) as currentParticipants,
-                p.max_participants as maxParticipants
+                COALESCE(p.max_participants,0) as maxParticipants
             FROM post p
             LEFT JOIN purchase pu
                 ON p.id = pu.post_id

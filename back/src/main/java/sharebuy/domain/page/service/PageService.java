@@ -24,6 +24,7 @@ import java.util.*;
 @Service
 public class PageService {
 
+    private final String GUEST_ADDRESS = "GUEST_ADDRESS";
     private final MenuService menuService;
     private final UserService userService;
     private final PageRepository pageRepository;
@@ -84,11 +85,11 @@ public class PageService {
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
         if(lat != null && lng !=null){
             Address guestAddress = googleMapService.convertAddressFromGoogleApi(lat, lng);
-            session.setAttribute("GUEST_ADDRESS",guestAddress);
+            session.setAttribute(GUEST_ADDRESS,guestAddress);
             return User.guest(guestAddress);
         }
         //GUEST_ADDRESS 정보가 세션에 저장되어있으면 해당 값을 가져옴
-        Address cachedAddress = (Address) session.getAttribute("GUEST_ADDRESS");
+        Address cachedAddress = (Address) session.getAttribute(GUEST_ADDRESS);
         if (cachedAddress == null) {
             return User.guest(Address.getDefaultAddress());
         }
