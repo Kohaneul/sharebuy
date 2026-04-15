@@ -2,8 +2,12 @@
 export enum PageComponent {
   CARD = 'CARD',
   BUTTON='BUTTON',
-  // GRID = 'GRID',
+  TEXT='TEXT',
+  IMAGE='IMAGE',
+  PARTICIPANTS='PARTICIPANTS',
+  STATUS='STATUS',
   INPUT = 'INPUT'
+  // GRID = 'GRID',
   // SEARCH_FORM='SEARCH_FORM'
 }
 

@@ -7,15 +7,15 @@
         v-for="card in cards" 
         :key="card.id"
         :span="24">          
-          <a-card hoverable class="horizontal-card">
+          <a-card hoverable class="horizontal-card" @click="goDetail(card.id)">
 
             <div class="card-body">
               
               <!-- 왼쪽 이미지 -->
               <img
-                class="card-image"
-                :src="card.imgUrl || 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?q=80&w=500'"
-              />
+                  class="card-image"
+                  :src="card.imgUrl || '/default.png'"
+                />
 
               <!-- 오른쪽 내용 -->
              <div class="card-content">
@@ -60,12 +60,18 @@
 <script lang="ts" setup>
 import { SettingOutlined, EditOutlined } from '@ant-design/icons-vue';
 import {onMounted,ref} from 'vue';
-import {getCurrentLocation} from '@/utils/location';
+import {getCurrentLocation} from '@/utils/CurrentLocationUtil';
 import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
 import { useUserStore } from '@/store/user';
-import { Tag } from 'ant-design-vue';
+import { useLocationStore } from '@/store/location';
+
+import { useRouter } from 'vue-router';
 const userStore = useUserStore();
+
+const locationStore = useLocationStore();
+
+const router = useRouter();
 
 const props = defineProps<{
   dataUrl: string
@@ -79,12 +85,12 @@ const cards = ref<CardData[]>([]);
 onMounted(async () => {
   
   config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
-
+  
   let context = {};
 
   if (config.value.useCurrentLocation) {
     const pos = await getCurrentLocation();
-    console.log(pos);
+    locationStore.setLocation(pos.latitude, pos.longitude);
 
     context = {
       latitude: pos.latitude,
@@ -142,7 +148,9 @@ const getStatusLabel = (status: string) => {
   }
 };
 
-
+const goDetail = (id: string) => {
+  router.push(`/card/${id}`);
+};
 </script>
 
 <style scoped>

@@ -3,9 +3,15 @@ import Button from '@/components/page/Button.vue'
 
 import SearchForm from '@/components/page/SearchForm.vue'
 import Input from '@/components/page/Input.vue'
+import Status from '@/components/page/Status.vue'
+import Text from '@/components/page/Text.vue'
+import Image from '@/components/page/Image.vue'
+
 import Grid from '@/components/page/Grid.vue'
 import { PageComponent } from './PageComponent'
 import type { Component } from 'vue'
+import Participants from '@/components/page/Participants.vue'
+
 
 
 export const PageComponentMap: Record<PageComponent, Component> = {
@@ -14,5 +20,10 @@ export const PageComponentMap: Record<PageComponent, Component> = {
 
   // [PageComponent.SEARCH_FORM]: SearchForm,
   [PageComponent.INPUT]: Input,
+  [PageComponent.TEXT]: Text,
+  [PageComponent.IMAGE]: Image,
+  [PageComponent.PARTICIPANTS]: Participants,
+  [PageComponent.STATUS]: Status,
+
   // [PageComponent.GRID]: Grid
 }

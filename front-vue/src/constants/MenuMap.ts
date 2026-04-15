@@ -1,4 +1,5 @@
 export const PathToMenuIdMap: Record<string, string> = {
   '/board': 'a7e19095-f426-46d3-a951-8951a085e2e4',
-  '/new':'b7e19095-f426-46d3-a951-8951a085e2e4'
+  '/new':'b7e19095-f426-46d3-a951-8951a085e2e4',
+  '/detail':'6a3525b8-521f-4dae-9024-c5f929195a4f'
 }
