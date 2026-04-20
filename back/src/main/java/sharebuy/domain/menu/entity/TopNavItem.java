@@ -37,7 +37,7 @@ public class TopNavItem extends BaseTimeEntity {
     private Integer displayOrder;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_id",nullable = false)
+    @JoinColumn(name = "menu_id",nullable = true)
     private Menu menu;
 
     @Enumerated(STRING)

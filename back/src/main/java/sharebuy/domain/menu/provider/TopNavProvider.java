@@ -8,5 +8,5 @@ import sharebuy.domain.user.entity.User;
 public sealed interface TopNavProvider permits LocationInfoProvider,AlarmProvider{
     TopNavComponent getType();
 
-    Object getValue(@Nullable User user, Menu menu);
+    Object getValue(@Nullable User user);
 }

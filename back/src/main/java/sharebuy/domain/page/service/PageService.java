@@ -15,11 +15,14 @@ import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
 import sharebuy.domain.page.repository.PageRepository;
+import sharebuy.domain.page.repository.TopNavItemRepository;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class PageService {
@@ -28,16 +31,20 @@ public class PageService {
     private final MenuService menuService;
     private final UserService userService;
     private final PageRepository pageRepository;
+    private final TopNavItemRepository topNavItemRepository;
     private final GoogleMapService googleMapService; // 구글 API 호출용 서비스
     private final PermissionMetaAssembler permissionMetaAssembler;
+    private final Map<TopNavComponent, TopNavProvider> topNavProviderMap;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, GoogleMapService googleMapService, PermissionMetaAssembler permissionMetaAssembler, List<TopNavProvider> topNavProviders) {
+    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, TopNavItemRepository topNavItemRepository, GoogleMapService googleMapService, PermissionMetaAssembler permissionMetaAssembler, List<TopNavProvider> topNavProviders) {
         this.menuService = menuService;
         this.userService = userService;
         this.pageRepository = pageRepository;
+        this.topNavItemRepository = topNavItemRepository;
         this.googleMapService = googleMapService;
         this.permissionMetaAssembler = permissionMetaAssembler;
+        this.topNavProviderMap = topNavProviders.stream().collect(Collectors.toMap(TopNavProvider::getType, Function.identity()));
         this.topNavProviders = topNavProviders;
     }
 
@@ -110,7 +117,27 @@ public class PageService {
 
     private TopNavMeta getTopNavMeta(Menu menu, User user) {
         List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+
+        if(topNavItemMetas ==null || topNavItemMetas.isEmpty()){
+            topNavItemMetas = getGlobalTopNavItems(user);
+        }
         return new TopNavMeta(topNavItemMetas);
+    }
+
+    private List<TopNavItemMeta> getGlobalTopNavItems(User user){
+        return topNavItemRepository.findByMenuIsNullAndRoleType(user.getRoleType()).stream()
+                .map(item->buildTopNavItem(item,user)).toList();
+    }
+
+    private TopNavItemMeta buildTopNavItem(TopNavItem item, User user) {
+        TopNavComponent component = item.getComponent();
+        boolean needValue = component.isNeedValue();
+        Object value =null;
+        if(needValue){
+           TopNavProvider topNavProvider = topNavProviderMap.get(component);
+           value =  topNavProvider.getValue(user);
+        }
+        return new TopNavItemMeta(component,needValue,item.getPosition(),value);
     }
 
     /**
@@ -155,11 +182,13 @@ public class PageService {
 
                     Object value = null;
                     if(needValue){
-                        TopNavProvider topNavProvider = topNavProviders.stream()
-                                .filter(p -> p.getType() == component).findFirst()
-                                .orElseThrow(() -> new IllegalStateException("없는 타입입니다."));
+                        TopNavProvider topNavProvider = topNavProviderMap.get(component);
 
-                        value = topNavProvider.getValue(user, menu);
+                        if (topNavProvider == null) {
+                            throw new IllegalStateException(component + " 존재하지 않는 provider");
+                        }
+
+                        value = topNavProvider.getValue(user);
                     }
 
                     return new TopNavItemMeta(component, needValue, item.getPosition(), value);

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sharebuy.domain.menu.domain.TopNavComponent;
 import sharebuy.domain.menu.domain.TopNavPosition;
+import sharebuy.domain.menu.entity.TopNavItem;
 import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
