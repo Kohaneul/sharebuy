@@ -149,8 +149,11 @@ const getStatusLabel = (status: string) => {
 };
 
 const goDetail = (id: string) => {
-  router.push(`/card/${id}`);
-};
+  router.push({
+    path: '/detail',
+    query: { id }
+  });
+  };
 </script>
 
 <style scoped>
