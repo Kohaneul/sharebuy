@@ -11,5 +11,5 @@ import java.util.UUID;
 
 @Repository
 public interface TopNavItemRepository extends JpaRepository<TopNavItem, UUID> {
-    List<TopNavItem> findByMenuIsNullAndRoleType(RoleType roleType);
+    List<TopNavItem> findByMenuIsNullAndRoleTypeIn(List<RoleType> roleType);
 }

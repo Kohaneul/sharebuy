@@ -125,8 +125,13 @@ public class PageService {
     }
 
     private List<TopNavItemMeta> getGlobalTopNavItems(User user){
-        return topNavItemRepository.findByMenuIsNullAndRoleType(user.getRoleType()).stream()
+
+        return topNavItemRepository.findByMenuIsNullAndRoleTypeIn(getAccessibleRoles(user.getRoleType())).stream()
                 .map(item->buildTopNavItem(item,user)).toList();
+    }
+
+    private List<RoleType> getAccessibleRoles(RoleType roleType){
+        return Arrays.stream(RoleType.values()).filter(roleType::canAccess).toList();
     }
 
     private TopNavItemMeta buildTopNavItem(TopNavItem item, User user) {
