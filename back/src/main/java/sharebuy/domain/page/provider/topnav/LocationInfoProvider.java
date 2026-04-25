@@ -1,4 +1,4 @@
-package sharebuy.domain.menu.provider;
+package sharebuy.domain.page.provider.topnav;
 
 import org.springframework.stereotype.Component;
 import sharebuy.domain.page.domain.TopNavComponent;

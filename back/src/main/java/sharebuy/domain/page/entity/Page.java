@@ -33,18 +33,15 @@ public class Page extends BaseTimeEntity {
     @Column(name = "route",nullable = false)
     private String route;
 
-
     @Column(name = "role_type")
     @Enumerated(STRING)
     private RoleType roleType;
-
 
     @OneToMany(mappedBy = "page",fetch = LAZY,cascade = CascadeType.ALL)
     private List<PageSection> pageSectionList;
 
     @OneToMany(mappedBy = "page",fetch = LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
     private List<TopNavItem> topNavItems;
-
 
 
 }

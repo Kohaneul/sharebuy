@@ -65,6 +65,7 @@ import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
 import { useUserStore } from '@/store/user';
 import { useLocationStore } from '@/store/location';
+import {pageRouterMap} from '@/constants/PageMap';
 
 import { useRouter } from 'vue-router';
 const userStore = useUserStore();
@@ -74,7 +75,7 @@ const locationStore = useLocationStore();
 const router = useRouter();
 
 const props = defineProps<{
-  dataUrl: string
+  routeUrl: string
   jsonConfig:string
 }>();
 
@@ -150,7 +151,7 @@ const getStatusLabel = (status: string) => {
 
 const goDetail = (id: string) => {
   router.push({
-    path: '/detail',
+    path: pageRouterMap[],
     query: { id }
   });
   };

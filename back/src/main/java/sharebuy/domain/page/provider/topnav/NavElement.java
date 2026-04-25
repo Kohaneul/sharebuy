@@ -1,4 +1,4 @@
-package sharebuy.domain.menu.provider;
+package sharebuy.domain.page.provider.topnav;
 
 import sharebuy.domain.page.domain.TopNavComponent;
 

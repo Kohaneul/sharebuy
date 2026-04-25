@@ -30,7 +30,8 @@ const props = defineProps<{
     type: PageComponent;
     title: string | null;
     actionType: ActionType;
-    dataUrl: string | null;
+    routeUrl: string | null;
+    dataSourceUrl:string | null;
   }[]
 }>();
 

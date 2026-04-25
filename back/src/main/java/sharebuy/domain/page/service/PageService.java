@@ -6,12 +6,12 @@ import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.TopNavComponent;
-import sharebuy.domain.menu.provider.TopNavProvider;
 import sharebuy.domain.page.dto.*;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
 import sharebuy.domain.page.entity.TopNavItem;
+import sharebuy.domain.page.provider.topnav.TopNavProvider;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.page.repository.TopNavItemRepository;
 import sharebuy.domain.user.domain.Address;
@@ -158,7 +158,14 @@ public class PageService {
 
     private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection) {
         return accessiblePageSection.stream().map(
-                pageSection-> new PageSectionMeta(pageSection.getPageSectionType(),pageSection.getActionType(),pageSection.getTitle(), pageSection.getDataUrl(),pageSection.getJsonConfig())).toList();
+                pageSection-> new PageSectionMeta(
+                        pageSection.getPageSectionType(),
+                        pageSection.getActionType(),
+                        pageSection.getTitle(),
+                        pageSection.getDataSourceType(),
+                        pageSection.getJsonConfig(),
+                        pageSection.getRouteUrl()))
+                .toList();
     }
 
     /**

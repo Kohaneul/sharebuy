@@ -26,7 +26,6 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<CardResponse> findAllData(double latitude, double longitude){
         return postRepository.findNearbyPosts(latitude, longitude, DEFAULT_RADIUS_KM);
-//        return idStrings.stream().map(CardResponse::from).toList();
     }
 
     public PostDetailResponse findById(UUID id){

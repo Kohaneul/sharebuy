@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import sharebuy.common.domain.ActionType;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
+import sharebuy.domain.page.domain.DataSourceType;
 import sharebuy.domain.post.type.PageSectionType;
 import java.util.UUID;
 
@@ -42,8 +43,8 @@ public class PageSection extends BaseTimeEntity {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "data_url")
-    private String dataUrl;
+    @Column(name = "route_url")
+    private String routeUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "action_type")
@@ -51,4 +52,8 @@ public class PageSection extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT",name = "json_config")
     private String jsonConfig;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "data_source_type")
+    private DataSourceType dataSourceType;
 }
