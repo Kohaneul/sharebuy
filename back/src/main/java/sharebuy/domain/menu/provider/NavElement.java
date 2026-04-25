@@ -1,6 +1,6 @@
 package sharebuy.domain.menu.provider;
 
-import sharebuy.domain.menu.domain.TopNavComponent;
+import sharebuy.domain.page.domain.TopNavComponent;
 
 public record NavElement (
         TopNavComponent componentType, // ALARM, SEARCH 등

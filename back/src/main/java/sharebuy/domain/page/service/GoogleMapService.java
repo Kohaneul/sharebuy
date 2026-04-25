@@ -23,17 +23,17 @@ import static java.lang.String.format;
 public class GoogleMapService {
 
     private final RestTemplate restTemplate;
+    private static final String OK = "OK";
+    private static final String GOOGLE_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&key=%s&language=ko";
 
     @Value("${google.map.key}")
     private String apiKey;
 
     public Address convertAddressFromGoogleApi(Double lat,Double lng){
-        String url = format(
-                "https://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&key=%s&language=ko",
-                lat, lng,apiKey);
+        String url = format(GOOGLE_GEOCODE_URL, lat, lng,apiKey);
         try{
             Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            if(response != null && "OK".equals(response.get("status"))){
+            if(response != null && OK.equals(response.get("status"))){
                 List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
                 if(results != null && !results.isEmpty()){
                     Map<String, Object> firstResult = results.get(0);

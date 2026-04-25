@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
+import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.entity.Menu;
 
 import java.util.List;
 import java.util.UUID;
 
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.FetchType.LAZY;
 
 @AllArgsConstructor
@@ -28,8 +30,21 @@ public class Page extends BaseTimeEntity {
     @JoinColumn(name = "menu_id",nullable = false)
     private Menu menu;
 
-    @OneToMany(mappedBy = "page",cascade = CascadeType.ALL)
+    @Column(name = "route",nullable = false)
+    private String route;
+
+
+    @Column(name = "role_type")
+    @Enumerated(STRING)
+    private RoleType roleType;
+
+
+    @OneToMany(mappedBy = "page",fetch = LAZY,cascade = CascadeType.ALL)
     private List<PageSection> pageSectionList;
+
+    @OneToMany(mappedBy = "page",fetch = LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<TopNavItem> topNavItems;
+
 
 
 }

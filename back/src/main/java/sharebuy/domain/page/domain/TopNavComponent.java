@@ -1,4 +1,4 @@
-package sharebuy.domain.menu.domain;
+package sharebuy.domain.page.domain;
 
 public enum TopNavComponent {
     LOCATION_INFO(true),

@@ -1,4 +1,4 @@
-package sharebuy.domain.menu.entity;
+package sharebuy.domain.page.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
-import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.domain.TopNavPosition;
+import sharebuy.domain.page.domain.TopNavComponent;
+import sharebuy.domain.page.domain.TopNavPosition;
 
 import java.util.UUID;
 
@@ -17,7 +17,10 @@ import static jakarta.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "top_nav_item")
+@Table(name = "top_nav_item",
+uniqueConstraints = {
+        @UniqueConstraint(name = "uk_page_component",columnNames = {"page_id","component"})
+})
 public class TopNavItem extends BaseTimeEntity {
 
     @Id
@@ -37,8 +40,8 @@ public class TopNavItem extends BaseTimeEntity {
     private Integer displayOrder;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "menu_id",nullable = true)
-    private Menu menu;
+    @JoinColumn(name = "page_id",nullable = true)
+    private Page page;
 
     @Enumerated(STRING)
     @Column(name = "role_type",nullable = false)

@@ -16,13 +16,13 @@ import java.util.UUID;
 public class PageController {
     private final PageService pageService;
 
-    @GetMapping("/{menuId}")
-    public PageContextResponse page(@PathVariable("menuId") UUID menuId,
+    @GetMapping("/{pageId}")
+    public PageContextResponse page(@PathVariable("pageId") UUID pageId,
                                     @AuthenticationPrincipal CustomUserDetail principal,
                                     HttpSession session,
                                     @RequestParam(required = false,name = "lat")Double lat,
                                     @RequestParam(required = false,name = "lng")Double lng){
-            return pageService.getPageContext(menuId,principal,session,lat,lng);
+            return pageService.getPageContext(pageId,principal,session,lat,lng);
     }
 
 

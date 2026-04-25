@@ -5,15 +5,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
-import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.entity.Menu;
-import sharebuy.domain.menu.entity.TopNavItem;
+import sharebuy.domain.page.domain.TopNavComponent;
 import sharebuy.domain.menu.provider.TopNavProvider;
-import sharebuy.domain.menu.service.MenuService;
 import sharebuy.domain.page.dto.*;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
+import sharebuy.domain.page.entity.TopNavItem;
 import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.page.repository.TopNavItemRepository;
 import sharebuy.domain.user.domain.Address;
@@ -27,8 +25,6 @@ import java.util.stream.Collectors;
 @Service
 public class PageService {
 
-    private final String GUEST_ADDRESS = "GUEST_ADDRESS";
-    private final MenuService menuService;
     private final UserService userService;
     private final PageRepository pageRepository;
     private final TopNavItemRepository topNavItemRepository;
@@ -37,8 +33,7 @@ public class PageService {
     private final Map<TopNavComponent, TopNavProvider> topNavProviderMap;
     private final List<TopNavProvider> topNavProviders;
 
-    public PageService(MenuService menuService, UserService userService, PageRepository pageRepository, TopNavItemRepository topNavItemRepository, GoogleMapService googleMapService, PermissionMetaAssembler permissionMetaAssembler, List<TopNavProvider> topNavProviders) {
-        this.menuService = menuService;
+    public PageService( UserService userService, PageRepository pageRepository, TopNavItemRepository topNavItemRepository, GoogleMapService googleMapService, PermissionMetaAssembler permissionMetaAssembler, List<TopNavProvider> topNavProviders) {
         this.userService = userService;
         this.pageRepository = pageRepository;
         this.topNavItemRepository = topNavItemRepository;
@@ -50,22 +45,21 @@ public class PageService {
 
 
     @Transactional(readOnly = true)
-    public PageContextResponse getPageContext(UUID menuId, CustomUserDetail principal, HttpSession session,Double lat,Double lng){
-        Menu menu = menuService.findById(menuId);
-
+    public PageContextResponse getPageContext(UUID pageId, CustomUserDetail principal, HttpSession session,Double lat,Double lng){
+        Page page = pageRepository.findById(pageId).orElseThrow(() -> new IllegalStateException("페이지 없음"));
         //user 정보 추출
         User user = getUser(principal, session,lat,lng);
 
         RoleType roleType = user.getRoleType();
 
         //해당 메뉴가 접근가능한지 확인
-        validationAccessMenu(roleType,menu.getRoleType());
+        validationAccessPage(roleType,page.getRoleType());
 
         //meta 1 -> top_nav 메타정보 가져오기
-        TopNavMeta topNavMeta = getTopNavMeta(menu, user);
+        TopNavMeta topNavMeta = getTopNavMeta(page.getId(), user);
 
         //meta 2 -> 페이지 랜더링할 메타정보 가져오기
-        PageMeta pageMeta = getPageMeta(menu.getId(),roleType);
+        PageMeta pageMeta = getPageMeta(page,roleType);
 
         //meta 3 -> 권한 정보 관련 메타 가져오기
         PermissionMeta permissionMeta =permissionMetaAssembler.assemble(user.getLoginId(),roleType);
@@ -90,6 +84,7 @@ public class PageService {
 
         //CASE 2) 로그인 x
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
+        String GUEST_ADDRESS = "GUEST_ADDRESS";
         if(lat != null && lng !=null){
             Address guestAddress = googleMapService.convertAddressFromGoogleApi(lat, lng);
             session.setAttribute(GUEST_ADDRESS,guestAddress);
@@ -106,27 +101,26 @@ public class PageService {
     /**
      * 메뉴가 현 유저가 접근 가능한 메뉴인지 확인
      * @param userRoleType
-     * @param menuRoleType
+     * @param pageRoleType
      */
-    private void validationAccessMenu(RoleType userRoleType, RoleType menuRoleType) {
-        if(!userRoleType.canAccess(menuRoleType)){
-            throw new IllegalStateException("["+menuRoleType+"]만 접근가능한 메뉴입니다. 현재 나의 권한:["+userRoleType+"]");
+    private void validationAccessPage(RoleType userRoleType, RoleType pageRoleType) {
+        if(!userRoleType.canAccess(pageRoleType)){
+            throw new IllegalStateException("["+pageRoleType+"]만 접근가능한 메뉴입니다. 현재 나의 권한:["+userRoleType+"]");
         }
     }
 
 
-    private TopNavMeta getTopNavMeta(Menu menu, User user) {
-        List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(menu, user);
+    private TopNavMeta getTopNavMeta(UUID pageId, User user) {
+        List<TopNavItemMeta> topNavItemMetas = getTopNavItemMetaList(pageId, user);
 
-        if(topNavItemMetas ==null || topNavItemMetas.isEmpty()){
+        if(topNavItemMetas.isEmpty()){
             topNavItemMetas = getGlobalTopNavItems(user);
         }
         return new TopNavMeta(topNavItemMetas);
     }
 
     private List<TopNavItemMeta> getGlobalTopNavItems(User user){
-
-        return topNavItemRepository.findByMenuIsNullAndRoleTypeIn(getAccessibleRoles(user.getRoleType())).stream()
+        return topNavItemRepository.findByPageIdNullAndRoleTypeIn(getAccessibleRoles(user.getRoleType())).stream()
                 .map(item->buildTopNavItem(item,user)).toList();
     }
 
@@ -147,13 +141,11 @@ public class PageService {
 
     /**
      * PageMeta 가져오기
-     * @param menuId
+     * @param page
      * @param userRoleType
      * @return
      */
-    private PageMeta getPageMeta(UUID menuId, RoleType userRoleType) {
-        Page page = pageRepository.findByMenuId(menuId);
-
+    private PageMeta getPageMeta(Page page, RoleType userRoleType) {
         List<PageSection> accessiblePageSection = page.getPageSectionList().stream()
                 .filter(section -> userRoleType.canAccess(section.getRoleType()))
                 .sorted(Comparator.comparing(PageSection::getSortOrder)).toList();
@@ -171,21 +163,22 @@ public class PageService {
 
     /**
      * top_nav 메타데이터 조립
-     * @param menu
+     * @param pageId
      * @param user
      * @return
      */
-    private List<TopNavItemMeta> getTopNavItemMetaList(Menu menu, User user) {
-        return menu.getTopNavItems()
+    private List<TopNavItemMeta> getTopNavItemMetaList(UUID pageId, User user) {
+        return pageRepository.findTopNavItems(pageId)
                 .stream()
-                .filter(item -> user.getRoleType().canAccess(item.getRoleType()))
-                .sorted(Comparator.comparing(TopNavItem::getPosition).thenComparing(TopNavItem::getDisplayOrder))
+                .filter(item -> user.getRoleType().canAccess(item.roleType()))
+                .sorted(Comparator.comparing(TopNavItemDto::position).thenComparing(TopNavItemDto::displayOrder))
                 .map(item -> {
-                    boolean needValue = TopNavComponent.isNeedValue(item.getComponent());
+                    boolean needValue = TopNavComponent.isNeedValue(item.component());
 
-                    TopNavComponent component = item.getComponent();
+                    TopNavComponent component = item.component();
 
                     Object value = null;
+
                     if(needValue){
                         TopNavProvider topNavProvider = topNavProviderMap.get(component);
 
@@ -196,7 +189,7 @@ public class PageService {
                         value = topNavProvider.getValue(user);
                     }
 
-                    return new TopNavItemMeta(component, needValue, item.getPosition(), value);
+                    return new TopNavItemMeta(component, needValue, item.position(), value);
                 }).toList();
     }
 

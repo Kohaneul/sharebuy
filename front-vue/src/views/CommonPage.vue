@@ -8,7 +8,7 @@ import { ref, onMounted,computed,watch } from 'vue'
 import { useRoute } from 'vue-router'
 import {commonGet} from '@/utils/ShareBuyUtil';
 import TopNavBarRenderer from '@/components/TopNavBarRenderer.vue';
-import { PathToMenuIdMap } from '@/constants/MenuMap'
+import { PathToPageIdMap } from '@/constants/PageMap'
 import PageRenderer from '@/components/PageRenderer.vue';
 import { RoleType,ROLES } from '@/ts/UserType';
 import { useUserStore } from '@/store/user';
@@ -17,8 +17,8 @@ const userStore = useUserStore();
 const route = useRoute();
 const currentPath = route.path;
 
-const menuId = computed(() => {
-  return PathToMenuIdMap[route.path]
+const pageId = computed(() => {
+  return PathToPageIdMap[route.path]
 });
 
 const topNavMeta = ref([]);
@@ -35,8 +35,7 @@ onMounted(() => {
 });
 
 async function fetchData(lat:Number,lng:Number){
-  console.log("menu_id = "+menuId);
-  const res = await commonGet(`/page/${menuId.value}`,{lat,lng});
+  const res = await commonGet(`/page/${pageId.value}`,{lat,lng});
   if(res){
   topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
   pageMeta.value = res.pageMeta.pageItemMetaList;

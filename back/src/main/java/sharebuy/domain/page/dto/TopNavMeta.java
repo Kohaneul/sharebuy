@@ -3,9 +3,8 @@ package sharebuy.domain.page.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import sharebuy.domain.menu.domain.TopNavComponent;
-import sharebuy.domain.menu.domain.TopNavPosition;
-import sharebuy.domain.menu.entity.TopNavItem;
+import sharebuy.domain.page.domain.TopNavComponent;
+import sharebuy.domain.page.domain.TopNavPosition;
 import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
