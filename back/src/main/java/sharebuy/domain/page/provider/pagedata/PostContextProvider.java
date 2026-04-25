@@ -18,20 +18,6 @@ public class PostContextProvider implements PageContextProvider {
         this.postService = postService;
     }
 
-
-    @Override
-    public Object get(DataSourceType type,Map<String, Object> params) {
-        return switch (type) {
-            case POST_ALL -> postService.findAllData(
-                    (double) params.get(ContextConstants.LAT),
-                    (double) params.get(ContextConstants.LNG)
-            );
-
-            case POST_DETAIL -> postService.findById(
-                    (UUID) params.get(ContextConstants.ID)
-            );
-        };    }
-
     @Override
     public DataSourceType getType() {
         return POST;
