@@ -12,16 +12,4 @@ import java.util.UUID;
 
 @Repository
 public interface PageRepository extends JpaRepository<Page, UUID> {
-    @Query("""
-    select new sharebuy.domain.page.dto.TopNavItemDto(
-        t.roleType,
-        t.component,
-        t.displayOrder,
-        t.position
-    )
-    from TopNavItem t
-    where t.page.id = :pageId
-""")
-    List<TopNavItemDto> findTopNavItems(@Param("pageId") UUID pageId);
-
 }

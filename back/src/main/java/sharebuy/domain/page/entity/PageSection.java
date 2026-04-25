@@ -53,6 +53,9 @@ public class PageSection extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT",name = "json_config")
     private String jsonConfig;
 
+    @Column(name = "action_param")
+    private String actionParam;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "data_source_type")
     private DataSourceType dataSourceType;
