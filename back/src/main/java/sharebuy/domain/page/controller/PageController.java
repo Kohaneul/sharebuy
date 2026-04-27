@@ -8,6 +8,7 @@ import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.domain.page.dto.PageContextResponse;
 import sharebuy.domain.page.service.PageService;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -20,9 +21,8 @@ public class PageController {
     public PageContextResponse page(@PathVariable("pageId") UUID pageId,
                                     @AuthenticationPrincipal CustomUserDetail principal,
                                     HttpSession session,
-                                    @RequestParam(required = false,name = "lat")Double lat,
-                                    @RequestParam(required = false,name = "lng")Double lng){
-            return pageService.getPageContext(pageId,principal,session,lat,lng);
+                                    @RequestParam Map<String,String> param){
+            return pageService.getPageContext(pageId,principal,session,param);
     }
 
 

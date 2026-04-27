@@ -65,7 +65,6 @@ import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
 import { useUserStore } from '@/store/user';
 import { useLocationStore } from '@/store/location';
-import {pageRouterMap} from '@/constants/PageMap';
 
 import { useRouter } from 'vue-router';
 const userStore = useUserStore();
@@ -109,7 +108,7 @@ const hasAuthority = (card: CardData) => {
 
 async function bindCard(context:any){
   try{
-    const res:CardData[] = await commonGet(props.dataUrl,context);
+    const res:CardData[] = await commonGet(props.routeUrl,context);
     if(res){
       cards.value =res;
     }
@@ -151,7 +150,7 @@ const getStatusLabel = (status: string) => {
 
 const goDetail = (id: string) => {
   router.push({
-    path: pageRouterMap[],
+    path: config.value.detailPageKey,
     query: { id }
   });
   };

@@ -6,6 +6,6 @@ import java.util.Map;
 
 public interface PageContextProvider {
     DataSourceType getType();
-    Object get(Map<String,Object> params);
+    Object get(Map<String,String> params);
 
 }

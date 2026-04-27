@@ -32,8 +32,12 @@ public class PageService {
 
 
     @Transactional(readOnly = true)
-    public PageContextResponse getPageContext(UUID pageId, CustomUserDetail principal, HttpSession session,Double lat,Double lng){
+    public PageContextResponse getPageContext(UUID pageId, CustomUserDetail principal, HttpSession session,Map<String,String> paramMap){
         Page page = pageRepository.findById(pageId).orElseThrow(() -> new IllegalStateException("페이지 없음"));
+
+        ContextParam contextParam = new ContextParam(paramMap);
+        Double lat = contextParam.getLat();
+        Double lng = contextParam.getLng();
 
         //user 정보 추출
         User user = userContextService.getUser(principal, session,lat,lng);
@@ -47,7 +51,7 @@ public class PageService {
         TopNavMeta topNavMeta = topNavService.getTopNavMeta(page.getId(), user);
 
         //meta 2 -> 페이지 랜더링할 메타정보 가져오기
-        PageMeta pageMeta = pageSectionService.getPageMeta(page,lat,lng,roleType);
+        PageMeta pageMeta = pageSectionService.getPageMeta(page,paramMap,roleType);
 
         //meta 3 -> 권한 정보 관련 메타 가져오기
         PermissionMeta permissionMeta =permissionService.permissionMeta(user.getLoginId(),roleType);

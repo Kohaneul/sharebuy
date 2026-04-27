@@ -3,9 +3,12 @@ package sharebuy.domain.context.service;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.domain.page.dto.ContextParam;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;
+
+import java.util.Map;
 
 @Service
 public class UserContextService {
@@ -31,7 +34,6 @@ public class UserContextService {
         if(principal !=null){
             return userService.findById(principal.getId());
         }
-
         //CASE 2) 로그인 x
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
         String GUEST_ADDRESS = "GUEST_ADDRESS";

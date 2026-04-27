@@ -54,7 +54,7 @@ public class PageSection extends BaseTimeEntity {
     private String jsonConfig;
 
     @Column(name = "action_param")
-    private String actionParam;
+    private String actionParam; //데이터 조회(API)를 위한 식별자
 
     @Enumerated(EnumType.STRING)
     @Column(name = "data_source_type")

@@ -28,14 +28,14 @@ const roleTypeRef = ref<RoleType>(ROLES.GUEST);
 
 onMounted(() => {
 
-  const latNum = route.query.lat ? Number(route.query.lat) : null;
-  const lngNum = route.query.lng ? Number(route.query.lng) : null;
+  // const latNum = route.query.lat ? Number(route.query.lat) : null;
+  // const lngNum = route.query.lng ? Number(route.query.lng) : null;
 
-  fetchData(latNum, lngNum);
+  fetchData(route.query);
 });
 
-async function fetchData(lat:Number,lng:Number){
-  const res = await commonGet(`/page/${pageId.value}`,{lat,lng});
+async function fetchData(route:any){
+  const res = await commonGet(`/page/${pageId.value}`,route);
   if(res){
   topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
   pageMeta.value = res.pageMeta.pageItemMetaList;
