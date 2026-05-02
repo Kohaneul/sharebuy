@@ -26,16 +26,9 @@ const pageMeta = ref([]);
 const permissionMeta = ref([]);
 const roleTypeRef = ref<RoleType>(ROLES.GUEST);
 
-onMounted(() => {
 
-  // const latNum = route.query.lat ? Number(route.query.lat) : null;
-  // const lngNum = route.query.lng ? Number(route.query.lng) : null;
-
-  fetchData(route.query);
-});
-
-async function fetchData(route:any){
-  const res = await commonGet(`/page/${pageId.value}`,route);
+async function fetchData(param:any){
+  const res = await commonGet(`/page/${pageId.value}`,param);
   if(res){
   topNavMeta.value = res.topNavMeta.topNavItemMetaList; 
   pageMeta.value = res.pageMeta.pageItemMetaList;
@@ -46,12 +39,9 @@ async function fetchData(route:any){
 }
 
 watch(
-  () => route.path,
+  () => route.fullPath,
   () => {
-    fetchData(
-      route.query.lat ? Number(route.query.lat) : null,
-      route.query.lng ? Number(route.query.lng) : null
-    )
+    fetchData(route.query);
   },
   { immediate: true }
 )

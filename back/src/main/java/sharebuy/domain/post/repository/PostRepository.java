@@ -24,7 +24,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             SELECT
                 p.id as id,
                 p.title as title,
-                p.nickname as nickName,
+                p.nick_name as nickName,
                 p.login_id as loginId,
                 p.avatar as avatar,
                 p.content as content,
@@ -52,7 +52,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             GROUP BY
                 p.id,
                 p.title,
-                p.nickname,
+                p.nick_name,
                 p.login_id,
                 p.avatar,
                 p.content,

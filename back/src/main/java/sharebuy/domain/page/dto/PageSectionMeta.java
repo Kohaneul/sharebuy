@@ -11,5 +11,6 @@ public record PageSectionMeta (
     DataSourceType dataSourceType,
     String jsonConfig,
     String routeUrl,
+    String mappingKey,
     Object value
 ){};

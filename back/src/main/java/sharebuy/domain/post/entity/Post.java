@@ -43,15 +43,15 @@ public class Post extends BaseTimeEntity {
     @Column(name = "login_id", nullable = false)
     private String loginId;
 
-    @Column(nullable = true)
+    @Column(name = "nick_name")
     private String nickName;
 
-    @NotBlank(message = "게시글 아이디는 필수입니다.")
+    @NotBlank(message = "게시글 제목은 필수입니다.")
     @Length(min = 2, max = 100, message = "제목은 2자 이상 100자 이하로 입력해야 합니다.")
     @Column(nullable = false)
     private String title;
 
-    @NotBlank(message = "게시글 아이디는 필수입니다.")
+    @NotBlank(message = "게시글 내용은 필수입니다.")
     @Column(nullable = false)
     private String content;
 

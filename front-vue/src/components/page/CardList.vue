@@ -59,7 +59,7 @@
 
 <script lang="ts" setup>
 import { SettingOutlined, EditOutlined } from '@ant-design/icons-vue';
-import {onMounted,ref} from 'vue';
+import {onMounted,watch,ref} from 'vue';
 import {getCurrentLocation} from '@/utils/CurrentLocationUtil';
 import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
@@ -149,11 +149,18 @@ const getStatusLabel = (status: string) => {
 };
 
 const goDetail = (id: string) => {
+  console.log("detail = "+config.value.detailPageKey);
   router.push({
     path: config.value.detailPageKey,
     query: { id }
   });
   };
+
+//   watch(() => route.query.id, (newId) => {
+//   if (newId) {
+//     bindCard({ id: newId }); // 상세 데이터 로드 로직
+//   }
+// });
 </script>
 
 <style scoped>

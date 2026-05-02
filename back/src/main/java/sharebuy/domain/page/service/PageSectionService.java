@@ -5,6 +5,7 @@ import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.DataSourceType;
 import sharebuy.domain.page.dto.PageMeta;
 import sharebuy.domain.page.dto.PageSectionMeta;
+import sharebuy.domain.page.dto.UserContextParam;
 import sharebuy.domain.page.entity.Page;
 import sharebuy.domain.page.entity.PageSection;
 import sharebuy.domain.page.provider.pagedata.PageContextProvider;
@@ -35,24 +36,24 @@ public class PageSectionService {
      * @param userRoleType
      * @return
      */
-    public PageMeta getPageMeta(Page page,Map<String,String> paramMap, RoleType userRoleType) {
+    public PageMeta getPageMeta(Page page, UserContextParam userContextParam, RoleType userRoleType) {
         List<RoleType> accessibleRoles = userRoleType.getAccessibleRoles();
 
         List<PageSection> accessiblePageSection = pageSectionRepository.findByPageIdAndRoleTypeIn(page.getId(),accessibleRoles).stream()
                 .sorted(Comparator.comparing(PageSection::getSortOrder)).toList();
 
-        List<PageSectionMeta> list = getTypeSectionMetas(accessiblePageSection,paramMap);
+        List<PageSectionMeta> list = getTypeSectionMetas(accessiblePageSection,userContextParam);
 
         return new PageMeta(list);
     }
 
 
-    private Object assemble(DataSourceType dataSourceType,Map<String,String>paramMap){
+    private Object assemble(DataSourceType dataSourceType,UserContextParam userContextParam,String actionParam){
         PageContextProvider pageContextProvider = pageContextProviderMap.get(dataSourceType);
-       return pageContextProvider.get(paramMap);
+       return pageContextProvider.get(userContextParam,actionParam);
     }
 
-    private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection,Map<String,String> paramMap) {
+    private List<PageSectionMeta> getTypeSectionMetas(List<PageSection> accessiblePageSection,UserContextParam userContextParam) {
         return accessiblePageSection.stream().map(
                         pageSection-> new PageSectionMeta(
                                 pageSection.getPageSectionType(),
@@ -61,7 +62,8 @@ public class PageSectionService {
                                 pageSection.getDataSourceType(),
                                 pageSection.getJsonConfig(),
                                 pageSection.getRouteUrl(),
-                                !Objects.isNull(pageSection.getDataSourceType()) ? assemble(pageSection.getDataSourceType(),paramMap) : null)
+                                pageSection.getMappingKey(),
+                                !Objects.isNull(pageSection.getDataSourceType()) ? assemble(pageSection.getDataSourceType(),userContextParam, pageSection.getActionParam()) : null)
                 )
                 .toList();
     }

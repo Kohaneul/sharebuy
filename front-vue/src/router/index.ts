@@ -7,7 +7,7 @@ const routes = [
   { path: '/login', component: LoginPage },
   { path: '/board', component: CommonPage },
   { path: '/new', component: CommonPage },
-  { path: '/detail', component: CommonPage },
+  { path: '/detail/post', component: CommonPage },
   { path: '/', redirect: '/login' } // 기본 진입
 ]
 

@@ -58,5 +58,8 @@ public class PageSection extends BaseTimeEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "data_source_type")
-    private DataSourceType dataSourceType;
+    private DataSourceType dataSourceType;  //조회할 테이블
+
+    @Column(columnDefinition = "TEXT",name = "mapping_key")
+    private String mappingKey;  //input일 경우 어떤 데이터값과 매핑할지
 }

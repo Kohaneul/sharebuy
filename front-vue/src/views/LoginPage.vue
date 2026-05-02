@@ -75,24 +75,22 @@ function enterAsGuest() {
   // 2. 현재 위치 가져오기
   navigator.geolocation.getCurrentPosition(
     (position) => {
-      const lat = position.coords.latitude;
-      const lng = position.coords.longitude;
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
       // 좌표를 쿼리 스트링에 실어서 보냄 (예: /board?lat=37.1&lng=127.1)
       router.push({
         path: '/board',
-        query: { lat, lng }
+        query:{ latitude: latitude, longitude: longitude }
       });
     },
     (error) => {
       console.error("위치 획득 실패:", error);
-      router.push({ path: '/board', query: { lat: 37.4031615, lng: 126.9570707 } });
+      router.push({ path: '/board', query: { latitude: 37.4031615, longitude: 126.9570707 } });
       // 권한 거부 등을 했을 경우에도 일단 입장은 시켜줌
     }
   );
 
-  // 게시글 조회 페이지로 이동
-  router.push('/board');
 }
 </script>
 <style scoped>

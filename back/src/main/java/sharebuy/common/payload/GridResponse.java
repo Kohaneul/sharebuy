@@ -1,4 +1,4 @@
 package sharebuy.common.payload;
 
-public class GridResponse {
+public interface GridResponse {
 }

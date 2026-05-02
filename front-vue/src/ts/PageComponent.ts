@@ -6,7 +6,8 @@ export enum PageComponent {
   IMAGE='IMAGE',
   PARTICIPANTS='PARTICIPANTS',
   STATUS='STATUS',
-  INPUT = 'INPUT'
+  INPUT = 'INPUT',
+  INPUT_GROUP='INPUT_GROUP'
   // GRID = 'GRID',
   // SEARCH_FORM='SEARCH_FORM'
 }
@@ -14,6 +15,12 @@ export enum PageComponent {
 export enum ActionType {
   MOVE = "MOVE",
   API = "API"
+}
+
+export interface InputGroup{
+  field:string;
+  input_type:'SELECT_BOX'|'INPUT'|'TEXT'|'RANGE_DATE_PICKER',
+  readOnly:boolean
 }
 
 export interface JsonConfig {

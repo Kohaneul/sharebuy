@@ -37,7 +37,7 @@ public class UserProfile extends BaseTimeEntity {
     private Location location;
 
     @NotBlank(message = "닉네임은 필수입니다.")
-    @Column(nullable = false, unique = true)
+    @Column(name = "nick_name", nullable = false, unique = true)
     private String nickName;
 
 

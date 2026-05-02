@@ -13,6 +13,8 @@ import sharebuy.domain.user.entity.User;
 
 import java.util.*;
 
+import static org.springframework.util.ObjectUtils.isEmpty;
+
 @Service
 public class PageService {
 
@@ -35,13 +37,9 @@ public class PageService {
     public PageContextResponse getPageContext(UUID pageId, CustomUserDetail principal, HttpSession session,Map<String,String> paramMap){
         Page page = pageRepository.findById(pageId).orElseThrow(() -> new IllegalStateException("페이지 없음"));
 
-        ContextParam contextParam = new ContextParam(paramMap);
-        Double lat = contextParam.getLat();
-        Double lng = contextParam.getLng();
-
         //user 정보 추출
-        User user = userContextService.getUser(principal, session,lat,lng);
-
+        UserContextParam userContextParam = userContextService.getUserContextParam(principal, session,paramMap);
+        User user = userContextParam.user();
         RoleType roleType = user.getRoleType();
 
         //해당 메뉴가 접근가능한지 확인
@@ -51,7 +49,7 @@ public class PageService {
         TopNavMeta topNavMeta = topNavService.getTopNavMeta(page.getId(), user);
 
         //meta 2 -> 페이지 랜더링할 메타정보 가져오기
-        PageMeta pageMeta = pageSectionService.getPageMeta(page,paramMap,roleType);
+        PageMeta pageMeta = pageSectionService.getPageMeta(page,userContextParam,roleType);
 
         //meta 3 -> 권한 정보 관련 메타 가져오기
         PermissionMeta permissionMeta =permissionService.permissionMeta(user.getLoginId(),roleType);

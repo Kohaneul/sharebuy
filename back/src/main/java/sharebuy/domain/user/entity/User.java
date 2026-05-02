@@ -34,8 +34,8 @@ public class User extends BaseTimeEntity {
     @Column(name = "login_id", nullable = false,unique = true)
     private String loginId;
 
-    @Column(name = "nickname",nullable = false)
-    private String nickname;
+    @Column(name = "nick_name",nullable = false)
+    private String nickName;
 
     @NotBlank(message = "비밀번호는 필수입니다.")
     @Column(nullable = false)

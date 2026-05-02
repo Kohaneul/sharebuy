@@ -2,6 +2,7 @@ import Card from '@/components/page/CardList.vue'
 import Button from '@/components/page/Button.vue'
 
 import SearchForm from '@/components/page/SearchForm.vue'
+import InputGroup from '@/components/page/InputGroup.vue'
 import Input from '@/components/page/Input.vue'
 import Status from '@/components/page/Status.vue'
 import Text from '@/components/page/Text.vue'
@@ -24,6 +25,7 @@ export const PageComponentMap: Record<PageComponent, Component> = {
   [PageComponent.IMAGE]: Image,
   [PageComponent.PARTICIPANTS]: Participants,
   [PageComponent.STATUS]: Status,
+  [PageComponent.INPUT_GROUP]:InputGroup
 
   // [PageComponent.GRID]: Grid
 }

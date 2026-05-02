@@ -1,5 +1,6 @@
 package sharebuy.domain.page.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,8 +22,10 @@ public class PageController {
     public PageContextResponse page(@PathVariable("pageId") UUID pageId,
                                     @AuthenticationPrincipal CustomUserDetail principal,
                                     HttpSession session,
-                                    @RequestParam Map<String,String> param){
-            return pageService.getPageContext(pageId,principal,session,param);
+                                    HttpServletRequest request,
+                                    @RequestParam(required = false) Map<String,String> param){
+
+                return pageService.getPageContext(pageId,principal,session,param);
     }
 
 
