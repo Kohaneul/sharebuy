@@ -64,18 +64,17 @@ import {getCurrentLocation} from '@/utils/CurrentLocationUtil';
 import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
 import { useUserStore } from '@/store/user';
-import { useLocationStore } from '@/store/location';
-
 import { useRouter } from 'vue-router';
 const userStore = useUserStore();
 
-const locationStore = useLocationStore();
 
 const router = useRouter();
 
 const props = defineProps<{
   routeUrl: string
   jsonConfig:string
+  latitude?: number | null;
+  longitude?: number | null;
 }>();
 
 const config = ref();
@@ -85,19 +84,12 @@ const cards = ref<CardData[]>([]);
 onMounted(async () => {
   
   config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
-  
-  let context = {};
+  // console.log("card");
+  console.log(props);
+  console.log(typeof props.latitude);
 
-  if (config.value.useCurrentLocation) {
-    const pos = await getCurrentLocation();
-    locationStore.setLocation(pos.latitude, pos.longitude);
+  const  context = { latitude: props.latitude, longitude: props.longitude };
 
-    context = {
-      latitude: pos.latitude,
-      longitude: pos.longitude
-    }
-
-  }
   await bindCard(context);
 })
 
@@ -107,7 +99,10 @@ const hasAuthority = (card: CardData) => {
 };
 
 async function bindCard(context:any){
+  
   try{
+    console.log(props.routeUrl);
+    console.log(context);
     const res:CardData[] = await commonGet(props.routeUrl,context);
     if(res){
       cards.value =res;
@@ -149,18 +144,24 @@ const getStatusLabel = (status: string) => {
 };
 
 const goDetail = (id: string) => {
-  console.log("detail = "+config.value.detailPageKey);
   router.push({
     path: config.value.detailPageKey,
     query: { id }
   });
   };
-
-//   watch(() => route.query.id, (newId) => {
-//   if (newId) {
-//     bindCard({ id: newId }); // 상세 데이터 로드 로직
-//   }
-// });
+watch(
+  () => [props.latitude, props.longitude],
+  async ([newLat, newLng]) => {
+    
+    const context = { 
+      latitude: newLat || null, 
+      longitude: newLng || null 
+    };
+    
+    await bindCard(context);
+  },
+  { immediate: true } 
+);
 </script>
 
 <style scoped>

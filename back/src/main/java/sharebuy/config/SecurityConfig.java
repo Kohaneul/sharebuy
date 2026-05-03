@@ -1,5 +1,6 @@
 package sharebuy.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,13 +8,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
+import sharebuy.common.auth.config.CustomUserDetail;
 
-import static org.springframework.http.HttpMethod.GET;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    private final ObjectMapper objectMapper;
+
+    public SecurityConfig(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -31,13 +42,27 @@ public class SecurityConfig {
                 // 3. 권한 설정: 화면 주소와 인증 관련 API는 무조건 통과
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers("/","/login","/board","/rest/auth/**").permitAll()
-                        .requestMatchers(GET, "/rest/page/**","/rest/post/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/rest/page/**", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/rest/post/**", "GET")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form->form
                         .loginProcessingUrl("/rest/auth/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .successHandler((req, res, auth) -> res.setStatus(200)) // 성공 시 리다이렉트 방지
+                        .successHandler((req,res,auth)->{
+                            //로그인 성공시 반환값 설정
+                            CustomUserDetail userDetail = (CustomUserDetail) auth.getPrincipal();
+                            //응답데이터 맵 구성
+                            Map<String,Object> data = new HashMap<>();
+                            data.put("latitude", userDetail.getLatitude());
+                            data.put("longitude", userDetail.getLongitude());
+                            data.put("roleType", userDetail.getRoleType().name());
+                            data.put("loginId", userDetail.getLoginId());
+                            res.setContentType("application/json;charset=UTF-8");
+                            res.setStatus(200);
+
+                            res.getWriter().write(objectMapper.writeValueAsString(data));
+                        }) // 성공 시 리다이렉트 방지
                         .failureHandler((req, res, exp) -> res.setStatus(401)) // 실패 시 401 반환
                         .permitAll())
                 .logout(logout->logout

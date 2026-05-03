@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import sharebuy.common.domain.RoleType;
+import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 
 import java.util.Collection;
@@ -22,6 +23,8 @@ public class CustomUserDetail implements UserDetails {
     private final UUID id;
     private final String loginId;
     private final String password;
+    private final double latitude;
+    private final double longitude;
     @Getter
     private final RoleType roleType;
 
@@ -30,6 +33,10 @@ public class CustomUserDetail implements UserDetails {
         this.loginId = user.getLoginId();
         this.password = user.getPassword();
         this.roleType = user.getRoleType();
+        Address address = user.getAddress();
+        this.latitude = address.getLatitude();
+        this.longitude = address.getLongitude();
+
     }
 
     @Override
@@ -66,5 +73,7 @@ public class CustomUserDetail implements UserDetails {
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
     }
+
+
 
 }

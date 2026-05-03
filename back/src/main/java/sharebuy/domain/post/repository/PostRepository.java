@@ -8,6 +8,7 @@ import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.entity.Post;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -65,4 +66,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             @Param("longitude") double longitude,
             @Param("radius") double radius
     );
+
+    @Query("select p from Post p left join fetch p.imgUrl where p.id = :id")
+    Optional<Post> findByIdWithImages(@Param("id")UUID id);
 }

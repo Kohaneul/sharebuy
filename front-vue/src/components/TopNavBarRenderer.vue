@@ -57,6 +57,9 @@ import {commonPost} from '@/utils/ShareBuyUtil';
 import { useRouter } from 'vue-router';
 import { ROLES,RoleType } from '@/ts/UserType';
 
+import { useUserStore } from '@/store/user';
+
+const userStore = useUserStore();
 const route = useRouter();
 
 interface TopNavItemMeta {
@@ -67,16 +70,19 @@ interface TopNavItemMeta {
 }
 
 
-const {items,roleType} = defineProps<{
+const {items,roleType,latitude,longitude} = defineProps<{
   items: TopNavItemMeta[],
   roleType:RoleType,
-  menuId?: string
+  menuId?: string,
+  latitude?: number | null;
+  longitude?: number | null;
 }>();
 
 const leftItems = computed(() =>
   items.filter(i => i.position === 'LEFT').map(i => ({
     ...i,
-    props: { value: i.value } 
+    props: { value: i.value,
+      latitude,longitude } 
   }))
 )
 
@@ -106,6 +112,7 @@ function onLogin(){
 
 async function onLogout(){
   try{
+    userStore.logout();
     await commonPost(`/auth/logout`,null);
     route.push("/");
   }

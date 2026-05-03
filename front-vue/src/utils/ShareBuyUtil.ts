@@ -18,8 +18,6 @@ const api: AxiosInstance = axios.create({
 export async function commonGet<T>(url: string, params?: object): Promise<T> {
     const combinedUrl = url.startsWith('/') ? `${API_PREFIX}${url}` : `${API_PREFIX}/${url}`;
   try {
-    console.log("commonGet");
-     console.log(params);
     const response: AxiosResponse<T> = await api.get(combinedUrl,{params:params});
     return response.data; 
   } catch (error) {

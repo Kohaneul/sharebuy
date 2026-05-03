@@ -35,6 +35,11 @@
 import { useRouter } from 'vue-router'
 import {commonPostLogin} from '@/utils/ShareBuyUtil';
 import {ref} from 'vue';
+import { useLocationStore } from '@/store/location'; 
+import { useUserStore } from '@/store/user'; 
+
+const locationStore = useLocationStore();
+const userStore = useUserStore();
 
 const router = useRouter();
 const loginId = ref<string|null>('');
@@ -50,8 +55,22 @@ async function loginUser(){
   param.append('username', loginId.value); 
   param.append('password', password.value);
   
-   await commonPostLogin(`/auth/login`,param);
-   router.push("/board")
+   const res= await commonPostLogin(`/auth/login`,param);
+   console.log(res);
+if (res) {
+  // 1. 유저 스토어에 통째로 저장 (좌표 포함)
+  userStore.setUserInfo(res);
+
+  // 2. 위치 스토어에도 필요하다면 중복 저장 혹은 동기화
+  locationStore.setLocation(res.latitude, res.longitude);
+
+  // 3. 페이지 이동
+  router.push({
+    path: "/board",
+    query: { latitude: res.latitude, longitude: res.longitude }
+  });
+}
+  router.push("/board")
   }
   catch(Error){
     clearData();
@@ -64,33 +83,30 @@ function clearData(){
   password.value= null;
 }
 
-function enterAsGuest() {
-// 1. 브라우저 위치 정보 지원 여부 확인
+async function enterAsGuest() {
   if (!navigator.geolocation) {
     alert("위치 정보를 지원하지 않는 브라우저입니다.");
     router.push('/board');
     return;
   }
 
-  // 2. 현재 위치 가져오기
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
+  // 1. 현재 GPS 좌표 가져오기
+  const { latitude, longitude } = await locationStore.syncLocation(true);
 
-      // 좌표를 쿼리 스트링에 실어서 보냄 (예: /board?lat=37.1&lng=127.1)
-      router.push({
-        path: '/board',
-        query:{ latitude: latitude, longitude: longitude }
-      });
-    },
-    (error) => {
-      console.error("위치 획득 실패:", error);
-      router.push({ path: '/board', query: { latitude: 37.4031615, longitude: 126.9570707 } });
-      // 권한 거부 등을 했을 경우에도 일단 입장은 시켜줌
-    }
-  );
+  // 2. 🚀 게스트라도 userStore에 위치 정보 저장!
+  // 로그인 정보는 없으니 null이나 기본값을 유지하고 좌표만 업데이트합니다.
+  userStore.setUserInfo({
+    loginId: 'guest',
+    roleType: 'GUEST',
+    latitude: latitude,
+    longitude: longitude
+  });
 
+  // 3. 페이지 이동
+  router.push({
+    path: '/board',
+    query: { latitude: latitude, longitude: longitude }
+  });
 }
 </script>
 <style scoped>

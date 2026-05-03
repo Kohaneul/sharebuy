@@ -5,7 +5,6 @@ export enum PageComponent {
   TEXT='TEXT',
   IMAGE='IMAGE',
   PARTICIPANTS='PARTICIPANTS',
-  STATUS='STATUS',
   INPUT = 'INPUT',
   INPUT_GROUP='INPUT_GROUP'
   // GRID = 'GRID',
@@ -42,4 +41,11 @@ export interface CardData{
   loginId:string;
   currentParticipants:number;
   maxParticipants:number;
+}
+
+export interface MappingConfig {
+  field: string;
+  type: string; // INPUT, TEXTAREA 등
+  label?: string;
+  readOnly?: boolean;
 }

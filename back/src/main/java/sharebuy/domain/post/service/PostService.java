@@ -24,8 +24,9 @@ public class PostService {
         return postRepository.findNearbyPosts(latitude, longitude, DEFAULT_RADIUS_KM);
     }
 
+    @Transactional(readOnly = true)
     public PostDetailResponse findById(UUID id){
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalStateException("존재하지 않습니다."));
+        Post post = postRepository.findByIdWithImages(id).orElseThrow(() -> new IllegalStateException("존재하지 않습니다."));
         return PostDetailResponse.from(post);
     }
 }

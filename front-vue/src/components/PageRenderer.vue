@@ -6,6 +6,8 @@
         :key="'btn-' + i"
         :is="PageComponentMap[item.type]"
         v-bind="item"
+        :latitude="latitude"
+        :longitude="longitude"
       />
     </div>
 
@@ -15,6 +17,8 @@
         :key="'comp-' + i"
         :is="PageComponentMap[item.type]"
         v-bind="item"
+        :latitude="latitude"
+        :longitude="longitude"
       />
     </div>
   </div>
@@ -32,7 +36,10 @@ const props = defineProps<{
     actionType: ActionType;
     routeUrl: string | null;
     dataSourceUrl:string | null;
-  }[]
+    mappingKey:string|null;
+  }[];
+  latitude?: number | null;
+  longitude?: number | null;
 }>();
 
 // 버튼들만 필터링
@@ -66,6 +73,6 @@ const nonButtons = computed(() => props.items.filter(item => item.type !== 'BUTT
 .content-body {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* 컴포넌트 간 수직 간격 */
+  gap: 10px; /* 컴포넌트 간 수직 간격 */
 }
 </style>

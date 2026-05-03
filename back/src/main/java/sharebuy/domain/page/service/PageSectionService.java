@@ -63,7 +63,8 @@ public class PageSectionService {
                                 pageSection.getJsonConfig(),
                                 pageSection.getRouteUrl(),
                                 pageSection.getMappingKey(),
-                                !Objects.isNull(pageSection.getDataSourceType()) ? assemble(pageSection.getDataSourceType(),userContextParam, pageSection.getActionParam()) : null)
+                                !Objects.isNull(pageSection.getDataSourceType()) ?
+                                        assemble(pageSection.getDataSourceType(),userContextParam, pageSection.getActionParam()) : null)
                 )
                 .toList();
     }
