@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.TopNavComponent;
-import sharebuy.domain.page.domain.TopNavPosition;
+import sharebuy.domain.page.domain.Position;
 
 import java.util.UUID;
 
@@ -30,7 +30,7 @@ public class TopNavItem extends BaseTimeEntity {
 
     @Column(name = "position")
     @Enumerated(STRING)
-    private TopNavPosition position;
+    private Position position;
 
     @Column(name = "component" ,columnDefinition = "text")
     @Enumerated(STRING)

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import sharebuy.domain.page.domain.TopNavComponent;
-import sharebuy.domain.page.domain.TopNavPosition;
+import sharebuy.domain.page.domain.Position;
 import sharebuy.domain.post.type.PageType;
 
 import java.util.List;
@@ -31,7 +31,7 @@ public final class TopNavMeta  implements UiMeta{
     public static class TopNavItemMeta{
         private TopNavComponent component;
         private boolean isValue;
-        private TopNavPosition position;
+        private Position position;
         private Object value;
 
     }

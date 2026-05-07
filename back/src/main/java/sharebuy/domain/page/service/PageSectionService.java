@@ -3,6 +3,7 @@ package sharebuy.domain.page.service;
 import org.springframework.stereotype.Service;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.DataSourceType;
+import sharebuy.domain.page.domain.Position;
 import sharebuy.domain.page.dto.PageMeta;
 import sharebuy.domain.page.dto.PageSectionMeta;
 import sharebuy.domain.page.dto.UserContextParam;
@@ -63,6 +64,7 @@ public class PageSectionService {
                                 pageSection.getJsonConfig(),
                                 pageSection.getRouteUrl(),
                                 pageSection.getMappingKey(),
+                                Objects.isNull(pageSection.getPosition())? Position.LEFT:pageSection.getPosition(),
                                 !Objects.isNull(pageSection.getDataSourceType()) ?
                                         assemble(pageSection.getDataSourceType(),userContextParam, pageSection.getActionParam()) : null)
                 )

@@ -2,6 +2,7 @@ package sharebuy.domain.page.dto;
 
 import sharebuy.common.domain.ActionType;
 import sharebuy.domain.page.domain.DataSourceType;
+import sharebuy.domain.page.domain.Position;
 import sharebuy.domain.post.type.PageSectionType;
 
 public record PageSectionMeta (
@@ -12,5 +13,6 @@ public record PageSectionMeta (
     String jsonConfig,
     String routeUrl,
     String mappingKey,
+    Position position,
     Object value
 ){};

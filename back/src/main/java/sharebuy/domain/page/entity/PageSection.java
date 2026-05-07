@@ -8,6 +8,7 @@ import sharebuy.common.domain.ActionType;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.DataSourceType;
+import sharebuy.domain.page.domain.Position;
 import sharebuy.domain.post.type.PageSectionType;
 import java.util.UUID;
 
@@ -62,4 +63,8 @@ public class PageSection extends BaseTimeEntity {
 
     @Column(columnDefinition = "TEXT",name = "mapping_key")
     private String mappingKey;  //input일 경우 어떤 데이터값과 매핑할지
+
+    @Column(name = "position")
+    @Enumerated(STRING)
+    private Position position;
 }

@@ -1,89 +1,105 @@
 <template>
-  <div class="section-button-wrapper">
-    <a-button 
-      :type="buttonStyle.type || 'default'" 
-      :danger="buttonStyle.danger"
-      :size="buttonStyle.size || 'large'"
-      :ghost="buttonStyle.ghost"
-      @click="handleClick"
-    >
-      {{ title }}
-    </a-button>
+  <div class="stats-card">
+    <a-row :gutter="16">
+      <a-col :span="12">
+        <a-statistic
+          title="현재 참여"
+          :value="counts.current"
+          suffix="명"
+          :value-style="{ color: isJoinable ? '#1890ff' : '#8c8c8c' }"
+        >
+          <template #prefix><user-outlined /></template>
+        </a-statistic>
+      </a-col>
+
+      <a-col :span="12">
+        <a-statistic
+          title="남은 자리"
+          :value="remainingSeats"
+          suffix="석"
+          :value-style="{ color: statusColor }"
+        >
+          <template #prefix><team-outlined /></template>
+        </a-statistic>
+      </a-col>
+    </a-row>
+
+    <div class="stats-footer" :class="{ 'is-closed': !isJoinable }">
+      <span v-if="currentStatus === 'RECRUITING' && !isFull"> 🚀 ({{ remainingSeats }}명 남음)</span>
+      <span v-else-if="currentStatus === 'RECRUITING' && isFull">🈵 정원이 가득 찼습니다.</span>
+      <span v-else-if="currentStatus === 'CLOSED'">🔒 모집이 마감되었습니다.</span>
+      <span v-else-if="currentStatus === 'CANCELED'">🚫 취소된 게시글입니다.</span>
+      <span v-else-if="currentStatus === 'EDITING'">⚙️ 정보를 수정 중입니다.</span>
+      <span v-else>입장이 불가능한 상태입니다.</span>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ActionType ,JsonConfig} from '@/ts/PageComponent';
-import { useRouter } from 'vue-router';
-import { commonPost } from '@/utils/ShareBuyUtil';
-import {computed} from 'vue';
+import { computed } from 'vue';
+import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue';
 
 const props = defineProps<{
-  title: string;
-  actionType: ActionType;
-  dataUrl: string;
   jsonConfig?: string; 
-  targetData?: any;
+  value: any; 
 }>();
 
-const buttonStyle = computed(() => {
+// 1. 숫자 데이터 파싱
+const counts = computed(() => {
   try {
-    return props.jsonConfig ? JSON.parse(props.jsonConfig) : {};
-  } catch {
-    return {};
+    const config = props.jsonConfig ? JSON.parse(props.jsonConfig) : {};
+    const current = props.value?.[config.currentField] || 0;
+    const max = props.value?.[config.maxField] || 0;
+    return { current, max };
+  } catch (e) {
+    return { current: 0, max: 0 };
   }
 });
 
-const router = useRouter();
+// 2. 상태값 파싱 (RECRUITING, CLOSED, CANCELED, EDITING)
+const currentStatus = computed(() => props.value?.status || 'RECRUITING');
 
-const handleClick = async () => {
-  // MOVE 타입이면 그냥 이동 (기존 로직 유지)
-  if (props.actionType === ActionType.MOVE) {
-    router.push(props.dataUrl);
-    return;
+// 3. 상태 판별 로직
+const isFull = computed(() => counts.value.current >= counts.value.max && counts.value.max > 0);
+// 오직 RECRUITING이면서 자리가 있을 때만 '참여 가능'으로 판단
+const isJoinable = computed(() => currentStatus.value === 'RECRUITING' && !isFull.value);
+
+const remainingSeats = computed(() => {
+  const diff = counts.value.max - counts.value.current;
+  return diff > 0 ? diff : 0;
+});
+
+// 4. 색상 가이드
+const statusColor = computed(() => {
+  if (currentStatus.value === 'RECRUITING') {
+    return isFull.value ? '#f5222d' : '#52c41a'; // 가득 차면 빨강, 아니면 초록
   }
-
-  if (props.actionType === ActionType.API) {
-    // 2. JSON 파싱
-    const config: JsonConfig = props.jsonConfig ? JSON.parse(props.jsonConfig) : {};
-
-    // 3. [Confirm] 설정된 문구가 있으면 띄우기
-    if (config.confirm && !confirm(config.confirm)) return;
-
-    try {
-      // 4. {id} 처리
-      let finalUrl = props.dataUrl;
-      if (typeof props.targetData === 'string' || typeof props.targetData === 'number') {
-        finalUrl = props.dataUrl.replace('{id}', String(props.targetData));
-      }
-
-      // 5. [Payload 조립] payloadKey가 있으면 감싸서 보냄
-      const requestData = config.payloadKey 
-        ? { [config.payloadKey]: props.targetData } 
-        : props.targetData;
-
-      // 6. [API 호출] commonPost 대신 조금 더 유연하게 호출하거나, 
-      // 현재 commonPost가 POST 전용이면 config.method에 따라 분기 처리
-      await commonPost(finalUrl, requestData); 
-
-      // 7. [후처리] 성공 메시지 & 새로고침
-      if (config.msg) alert(config.msg);
-      if (config.refresh) {
-        window.location.reload(); // 또는 부모에게 emit('refresh')
-      }
-
-    } catch (error) {
-      console.error("Error:", error);
-      alert("처리 중 오류가 발생했습니다.");
-    }
-  }
-};
-
-
+  return '#8c8c8c'; // CLOSED, CANCELED, EDITING은 모두 회색 처리
+});
 </script>
-<style lang="css" scoped>
-.section-button-wrapper {
-  display: inline-flex;
-  margin-right: 8px; /* 간격 */
+
+<style scoped>
+.stats-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 16px;
+}
+
+.stats-footer {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px dashed #f0f0f0;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 500;
+  color: #1890ff; /* 기본 파란색 */
+}
+
+.stats-footer.is-closed {
+  color: #f5222d; /* 마감/취소 등은 빨간색 계열 */
+  font-weight: bold;
 }
 </style>

@@ -1,6 +1,6 @@
 package sharebuy.domain.page.domain;
 
-public enum TopNavPosition {
+public enum Position {
     LEFT,
     RIGHT,
     CENTER;
