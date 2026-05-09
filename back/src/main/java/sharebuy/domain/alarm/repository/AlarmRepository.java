@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 @Repository
 public interface AlarmRepository extends JpaRepository<Alarm, UUID> {
-    int countByUserIdAndReadFalse(UUID userId);
+    boolean existsByUserIdAndReadFalse(UUID userId);
     List<Alarm> findByUserIdAndReadFalse(UUID userId);
 
 }

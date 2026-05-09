@@ -1,38 +1,51 @@
 <template>
-        <a-badge :count=value  :show-zero="true">
-          <Button type="text" @click="onNotificationClick">
-            <BellOutlined class="nav-icon"/>
-          </Button>
-        </a-badge>
+  <!-- 
+    1. count 대신 dot 속성을 사용합니다.
+    2. value가 0보다 크거나 'Y'인 경우에만 점이 나오도록 설정하세요.
+  -->
+  <a-badge :dot="hasNotification" :offset="[-2, 5]">
+    <Button type="text" @click="onNotificationClick">
+      <BellOutlined class="nav-icon"/>
+    </Button>
+  </a-badge>
 </template>
 
 <script setup lang="ts">
-import { ref,onMounted } from 'vue'
-import { Button } from 'ant-design-vue';
+import { computed } from 'vue'
+import { Button, Badge as ABadge } from 'ant-design-vue'; // Ant Design 컴포넌트 명시적 임포트
 import { BellOutlined } from '@ant-design/icons-vue'
 
-const {value} = defineProps({
-  value: { type: Number, default: 0 }
+// 상단바 메타데이터에서 내려오는 value를 받습니다.
+const props = defineProps({
+  value: { type:Boolean, default: false }
 })
 
-const countRef = ref<number>(0);
+const emit = defineEmits(['notificationClick'])
 
-const emit = defineEmits([ 'notificationClick'])
+// Dot을 보여줄지 결정하는 계산된 속성
+const hasNotification = computed(() => {
+    return props.value ;
+});
 
-const searchQuery = ref('')
-
-function onNotificationClick() { emit('notificationClick') }
-
-
+function onNotificationClick() { 
+  emit('notificationClick') 
+}
 </script>
 
 <style scoped>
 .nav-icon {
-  font-size: 20px;   /* 크기 */
-  color: #fff;       /* 흰색 */
+  font-size: 22px;   /* 점 방식은 아이콘이 조금 더 커도 예쁩니다 */
+  color: #fff;
+  transition: color 0.3s;
 }
 
 .nav-icon:hover {
-  color: #40a9ff; /* ant primary blue */
+  color: #40a9ff;
+}
+
+/* Ant Design Badge 점 색상 커스텀이 필요하다면 사용하세요 */
+:deep(.ant-badge-dot) {
+  background-color: #ff4d4f; /* 쨍한 레드 */
+  box-shadow: 0 0 0 1px #223344; /* 배경색과 맞춘 보더 (선택사항) */
 }
 </style>

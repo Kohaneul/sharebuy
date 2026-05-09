@@ -90,7 +90,7 @@ onMounted(async () => {
 
   const  context = { latitude: props.latitude, longitude: props.longitude };
 
-  await bindCard(context);
+  // await bindCard(context);
 })
 
 const hasAuthority = (card: CardData) => {

@@ -13,8 +13,6 @@ import sharebuy.domain.user.entity.User;
 
 import java.util.*;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
 @Service
 public class PageService {
 
@@ -70,7 +68,9 @@ public class PageService {
         }
     }
 
-
-
-
+    @Transactional(readOnly = true)
+    public TopNavMeta getDetaultTopNavMeta(CustomUserDetail principal, HttpSession session, Map<String, String> param) {
+        UserContextParam userContextParam = userContextService.getUserContextParam(principal, session,param);
+        return topNavService.getDetaultTopNavMeta(userContextParam);
+    }
 }

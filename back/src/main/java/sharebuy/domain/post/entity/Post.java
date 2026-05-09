@@ -66,10 +66,6 @@ public class Post extends BaseTimeEntity {
     @Embedded
     private Appointment appointment;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "page_id",nullable = false)
-    private Page page;
-
     @OneToMany(mappedBy = "post", cascade = ALL)
     private List<Purchase> purchases; // 해당 게시글의 공동구매 참여 목록
 

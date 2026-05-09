@@ -1,11 +1,14 @@
 package sharebuy.domain.page.service;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
+import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.page.domain.TopNavComponent;
 import sharebuy.domain.page.dto.TopNavItemDto;
 import sharebuy.domain.page.dto.TopNavMeta;
 import sharebuy.domain.page.dto.TopNavMeta.TopNavItemMeta;
+import sharebuy.domain.page.dto.UserContextParam;
 import sharebuy.domain.page.entity.TopNavItem;
 import sharebuy.domain.page.provider.topnav.TopNavProvider;
 import sharebuy.domain.page.repository.TopNavItemRepository;
@@ -91,5 +94,10 @@ public class TopNavService {
 
                     return new TopNavItemMeta(component, needValue, item.position(), value);
                 }).toList();
+    }
+
+    public TopNavMeta getDetaultTopNavMeta(UserContextParam userContextParam) {
+        User user = userContextParam.user();
+        return new TopNavMeta(getGlobalTopNavItems(user));
     }
 }

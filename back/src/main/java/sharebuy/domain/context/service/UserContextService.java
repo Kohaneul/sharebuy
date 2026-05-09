@@ -11,6 +11,8 @@ import sharebuy.domain.user.service.UserService;
 
 import java.util.Map;
 
+import static sharebuy.domain.page.provider.pagedata.ContextConstants.*;
+
 @Service
 public class UserContextService {
     private final GoogleMapService googleMapService; // 구글 API 호출용 서비스
@@ -40,7 +42,6 @@ public class UserContextService {
 
         //CASE 2) 로그인 x
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
-        String GUEST_ADDRESS = "GUEST_ADDRESS";
         if(!paramMap.isEmpty()){
             Address guestAddress = googleMapService.convertAddressFromGoogleApi(userContextParam.getLat(), userContextParam.getLng());
             session.setAttribute(GUEST_ADDRESS,guestAddress);
@@ -66,8 +67,8 @@ public class UserContextService {
             Address address = user.getAddress();
             lat = address.getLatitude();
             lng = address.getLongitude();
-            paramMap.put(ContextConstants.LAT,String.valueOf(lat));
-            paramMap.put(ContextConstants.LNG,String.valueOf(lng));
+            paramMap.put(LAT,String.valueOf(lat));
+            paramMap.put(LNG,String.valueOf(lng));
         }
     }
 }

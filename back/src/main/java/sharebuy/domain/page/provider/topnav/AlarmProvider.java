@@ -32,7 +32,7 @@ public final class AlarmProvider implements TopNavProvider {
         }
 
         UUID userId = user.getId();
-        return alarmRepository.countByUserIdAndReadFalse(userId);
+        return alarmRepository.existsByUserIdAndReadFalse(userId);
     }
 
 }

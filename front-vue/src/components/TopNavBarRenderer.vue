@@ -50,8 +50,8 @@
 
 <script setup lang="ts">
 import { ref,computed } from 'vue'
-import { NavComponentMap} from '../ts/NavComponentMap'
-import { TopNavComponent} from '../ts/TopNavComponent'
+import { NavComponentMap} from '@/ts/NavComponentMap'
+import { TopNavItemMeta} from '@/ts/TopNavItemMeta'
 import { Button } from 'ant-design-vue';
 import {commonPost} from '@/utils/ShareBuyUtil';
 import { useRouter } from 'vue-router';
@@ -61,14 +61,6 @@ import { useUserStore } from '@/store/user';
 
 const userStore = useUserStore();
 const route = useRouter();
-
-interface TopNavItemMeta {
-  component: TopNavComponent
-  position: 'LEFT' | 'CENTER' | 'RIGHT'
-  menuId?: string
-  props?: Record<string, any>
-}
-
 
 const {items,roleType,latitude,longitude} = defineProps<{
   items: TopNavItemMeta[],
