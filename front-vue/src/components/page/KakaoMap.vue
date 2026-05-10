@@ -62,7 +62,7 @@ watch(() => [props.latitude, props.longitude], ([newLat, newLng]) => {
 <style scoped>
 .kakao-map {
   width: 100%;    /* 너비는 부모에 맞춰서 */
-  height: 400px;  /* 🌟 높이를 반드시 'px' 단위로 명시하세요! */
+  height: 200px;  /* 🌟 높이를 반드시 'px' 단위로 명시하세요! */
   background-color: #f0f0f0; /* 지도가 안 뜰 때 영역 확인용 */
 }
 </style>

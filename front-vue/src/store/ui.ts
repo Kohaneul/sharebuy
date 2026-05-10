@@ -10,7 +10,8 @@ export const useUiStore = defineStore('ui', {
       { component: TopNavComponent.MENU, position: 'RIGHT', value: null }
     ] as TopNavItemMeta[],
 
-    navCache: {} as Record<string, TopNavItemMeta[]>
+    navCache: {} as Record<string, TopNavItemMeta[]>,
+    globalTopNav:null as TopNavItemMeta[]|null
   }),
 
   getters: {
@@ -32,6 +33,9 @@ export const useUiStore = defineStore('ui', {
   },
 
   actions: {
+    setGlobalNav(meta: TopNavItemMeta[]) {
+      this.globalTopNav = meta;
+    },
     setNavMeta(path: string, meta: TopNavItemMeta[]) {
       this.navCache[path] = meta;
     },

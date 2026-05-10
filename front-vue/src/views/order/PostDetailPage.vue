@@ -1,9 +1,10 @@
 <template>
   <PageWrapper>
+
   <div class="post-detail-wrapper" v-if="post">
     <!-- 1. 상단 이미지 & 헤더 -->
     <div class="header-section">
-      <img   :src="post.imgUrl ? post.imgUrl : '/default.png'"  class="main-image" />
+      
       <div class="header-content">
         <a-avatar :src="post.userAvatar" :size="40" />
         <span class="nickname">{{ post.nickName }}</span>
@@ -21,7 +22,6 @@
     <!-- 3. 지도 섹션 (가칭) -->
     <div class="map-section">
       <h3>거래 희망 장소</h3>
-      <!-- 기존에 만드신 지도 컴포넌트가 있다면 여기에 교체하세요 -->
        <KakaoMap 
         :latitude="post.latitude" 
         :longitude="post.longitude" 
@@ -43,6 +43,13 @@
         </a-row>
       </a-card>
     </div>
+    <div class="content-section">
+      <img 
+          v-if="post.imgUrl" 
+          :src="post.imgUrl" 
+          class="main-image" 
+        />
+    </div>
 
     <!-- 5. 하단 고정 액션 바 -->
     <div class="action-bar">
@@ -51,12 +58,12 @@
         size="large" 
         block 
         :disabled="!isJoinable"
-        @click="openJoinModal"
-      >
+        @click="openJoinModal">
         {{ getButtonText }}
       </a-button>
     </div>
 
+    
     <!-- 6. 참여 확인 팝업 (모달) -->
     <a-modal
       v-model:visible="modalVisible"
@@ -104,6 +111,7 @@ const longitude = ref();
 
 onMounted(async ()=>{
     const coords = await locationStore.syncLocation(true); 
+    
     modalVisible.value = userStore.isLoggedIn;
     latitude.value = coords.latitude;
     longitude.value = coords.longitude;
