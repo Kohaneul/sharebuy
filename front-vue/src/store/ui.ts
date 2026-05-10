@@ -41,6 +41,7 @@ export const useUiStore = defineStore('ui', {
     },
     clearUiCache() {
       this.navCache = {};
+      this.globalTopNav = null;
     }
   }
 });

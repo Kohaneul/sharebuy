@@ -56,10 +56,12 @@ import { Button } from 'ant-design-vue';
 import {commonPost} from '@/utils/ShareBuyUtil';
 import { useRouter } from 'vue-router';
 import { ROLES,RoleType } from '@/ts/UserType';
-
+import { useUiStore } from '@/store/ui';
 import { useUserStore } from '@/store/user';
 
 const userStore = useUserStore();
+const uiStore = useUiStore();
+
 const route = useRouter();
 
 const {items,roleType,latitude,longitude} = defineProps<{
@@ -105,6 +107,7 @@ function onLogin(){
 async function onLogout(){
   try{
     userStore.logout();
+    uiStore.clearUiCache();
     await commonPost(`/auth/logout`,null);
     route.push("/");
   }
