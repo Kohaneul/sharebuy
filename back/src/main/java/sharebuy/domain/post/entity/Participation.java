@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
-import sharebuy.domain.order.domain.PayStatus;
+import sharebuy.domain.order.domain.Category;
+import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,14 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "participation")
+@Table(name = "participation",
+uniqueConstraints = {
+        @UniqueConstraint(
+                name = "uk_post_user",
+                columnNames = {"post_id","user_id"}
+        )
+}
+)
 public class Participation extends BaseTimeEntity {
 
     @Id
@@ -34,8 +42,8 @@ public class Participation extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotBlank(message = "금액 정보는 필수입니다.")
-    @Column(nullable = false,unique = true)
+    @NotNull(message = "금액 정보는 필수입니다.")
+    @Column(nullable = false)
     private int amount;
 
     @NotNull
@@ -43,8 +51,8 @@ public class Participation extends BaseTimeEntity {
     private LocalDateTime payAt;
 
     @NotNull
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PayStatus status;
+    private ParticipationStatus participationStatus;
 
 }

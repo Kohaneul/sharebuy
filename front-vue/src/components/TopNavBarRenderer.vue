@@ -98,7 +98,9 @@ const emit = defineEmits(['logoClick', 'search', 'notificationClick', 'menuClick
 
 const searchQuery = ref('')
 
-function onLogoClick() { route.replace("/login");}
+function onLogoClick() {
+   route.replace("/board");
+ }
 
 function onLogin(){
     route.push("/login");

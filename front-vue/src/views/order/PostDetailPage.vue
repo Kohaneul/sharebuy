@@ -15,6 +15,15 @@
     <!-- 2. 본문 내용 -->
     <div class="content-section">
       <h1 class="post-title">{{ post.title }}</h1>
+      <p class="post-body">구매처:
+        <span v-if="post.purchasePlace">{{ post.purchasePlace }}</span>
+        <a v-if="post.purchaseUrl" :href="post.purchaseUrl" target="_blank">
+          링크 보기
+        </a>
+      </p>
+      <p class="post-body">구매 금액 : {{ post.totalPrice }}</p>
+      <p class="post-body">구매 일자 : {{ formatDate(post.purchaseAt) }}</p>
+    
       <p class="post-body">{{ post.content }}</p>
       <a-divider />
     </div>
@@ -28,17 +37,17 @@
       />
     </div>
 
-    <!-- 4. 참여 인원 통계 카드 (우리가 만든 것) -->
+    <!-- 4. 참여 인원 통계 카드-->
     <div class="stats-section">
       <a-card class="stats-card">
         <a-row :gutter="16">
           <a-col :span="12">
-            <a-statistic title="현재 참여" :value="post.currentCount" suffix="명">
+            <a-statistic title="현재 참여" :value="post.currentParticipants" suffix="명">
               <template #prefix><user-outlined /></template>
             </a-statistic>
           </a-col>
           <a-col :span="12">
-            <a-statistic title="모집 정원" :value="post.maxCount" suffix="명" />
+            <a-statistic title="모집 정원" :value="post.maxParticipants" suffix="명" />
           </a-col>
         </a-row>
       </a-card>
@@ -133,7 +142,7 @@ const loadDetail = async () => {
 
 // 2. 상태 관련 로직
 const isJoinable = computed(() => {
-  return post.value?.status === 'RECRUITING' && post.value?.currentCount < post.value?.maxCount;
+  return post.value?.status === 'RECRUITING' && post.value?.currentCount < post.value?.maxPr;
 });
 
 const getButtonText = computed(() => {
@@ -161,7 +170,7 @@ const handleJoin = async () => {
   loading.value = true;
   try {
     // 참여 API 호출
-    await commonPost(`/api/posts/${post.value.id}/join`, {});
+    await commonPost(`/posts/${post.value.id}/join`, {});
     message.success('성공적으로 참여되었습니다! 🎉');
     modalVisible.value = false;
     await loadDetail(); // 데이터 새로고침 (인원수 업데이트)
@@ -170,6 +179,18 @@ const handleJoin = async () => {
   } finally {
     loading.value = false;
   }
+};
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+
+  const yy = String(date.getFullYear()).slice(2);
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const min = String(date.getMinutes()).padStart(2, '0');
+
+  return `${yy}.${mm}.${dd} ${hh}:${min}`;
 };
 </script>
 

@@ -2,7 +2,10 @@ package sharebuy.domain.post.controller;
 
 import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.dto.PostDetailResponse;
 import sharebuy.domain.post.service.PostService;
@@ -47,4 +50,12 @@ public class PostController {
     public PostDetailResponse add(@PathVariable("id") UUID id){
         return postService.findById(id);
     }
+
+    @PostMapping("/{postId}/join")
+    public BaseResponse participate(@PathVariable("postId") UUID postId
+            , @AuthenticationPrincipal CustomUserDetail principal){
+
+        return postService.participate(postId, principal.getId());
+    }
+
 }

@@ -10,13 +10,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
+import sharebuy.common.exception.ErrorCode;
+import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.domain.Gen;
+import sharebuy.domain.user.domain.UserStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static sharebuy.common.exception.ErrorCode.USER_NOT_ACTIVE;
 
 @Entity
 @Getter
@@ -70,11 +75,21 @@ public class User extends BaseTimeEntity {
     @Column
     private String avatar;
 
+    @Column(name = "user_status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
     public static User guest(Address address) {
         User user = new User();
         user.loginId="guest";
         user.roleType = RoleType.GUEST;
         user.address = address;
         return user;
+    }
+
+    public void validateUserActive() {
+        if (this.userStatus != UserStatus.ACTIVE) {
+            throw new ShareBuyException(USER_NOT_ACTIVE);
+        }
     }
 }

@@ -69,4 +69,10 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
 
     @Query("select p from Post p left join fetch p.imgUrl where p.id = :id")
     Optional<Post> findByIdWithImages(@Param("id")UUID id);
+
+    @Query("UPDATE Post p " +
+            "set p.currentParticipants = p.currentParticipants+1" +
+            "where p.id = :id " +
+            "and p.maxParticipants>p.currentParticipants ")
+    int participate(UUID id);
 }

@@ -4,7 +4,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, onUnmounted } from 'vue';
+
 const props = defineProps<{
   latitude: number;
   longitude: number;
@@ -12,51 +13,82 @@ const props = defineProps<{
 }>();
 
 const mapContainer = ref<HTMLElement | null>(null);
+
 let map: any = null;
 let marker: any = null;
 
 const initMap = () => {
-  // 1. window에서 kakao 객체를 가져옵니다.
   const { kakao } = window as any;
 
-  // 2. 만약 스크립트 자체가 로드 안되었다면 재시도 로직이나 에러 처리를 합니다.
   if (!kakao || !kakao.maps) {
-    console.error('카카오맵 스크립트가 아직 로드되지 않았습니다. 500ms 후 재시도합니다.');
+    console.error('카카오맵 스크립트가 아직 로드되지 않았습니다.');
     setTimeout(initMap, 500);
     return;
   }
 
-  // 3. autoload=false 설정 시 필수인 load 함수 호출
   kakao.maps.load(() => {
     if (!mapContainer.value) return;
 
+    const center = new kakao.maps.LatLng(
+      props.latitude,
+      props.longitude
+    );
+
     const options = {
-      center: new kakao.maps.LatLng(props.latitude, props.longitude),
+      center,
       level: props.level || 3
     };
 
-    const map = new kakao.maps.Map(mapContainer.value, options);
-    
-    const marker = new kakao.maps.Marker({
-      position: new kakao.maps.LatLng(props.latitude, props.longitude)
+    // ❌ const map = ...
+    // ❌ const marker = ...
+
+    map = new kakao.maps.Map(mapContainer.value, options);
+
+    marker = new kakao.maps.Marker({
+      position: center
     });
+
     marker.setMap(map);
   });
 };
 
-// 5. 컴포넌트가 마운트된 후 지도를 초기화합니다.
+const handleResize = () => {
+  if (!map) return;
+
+  map.relayout();
+
+  const moveLatLon = new (window as any).kakao.maps.LatLng(
+    props.latitude,
+    props.longitude
+  );
+
+  map.setCenter(moveLatLon);
+};
+
 onMounted(() => {
   initMap();
+
+  window.addEventListener('resize', handleResize);
 });
 
-// 6. 혹시 위도/경도가 중간에 바뀔 경우를 대비한 Watcher
-watch(() => [props.latitude, props.longitude], ([newLat, newLng]) => {
-  if (map) {
-    const moveLatLon = new (window as any).kakao.maps.LatLng(newLat, newLng);
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize);
+});
+
+watch(
+  () => [props.latitude, props.longitude],
+  ([newLat, newLng]) => {
+    if (!map || !marker) return;
+
+    const moveLatLon = new (window as any).kakao.maps.LatLng(
+      newLat,
+      newLng
+    );
+
     map.setCenter(moveLatLon);
     marker.setPosition(moveLatLon);
   }
-});
+);
 </script>
 
 <style scoped>

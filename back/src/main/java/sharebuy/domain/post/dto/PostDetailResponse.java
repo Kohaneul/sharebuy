@@ -1,6 +1,7 @@
 package sharebuy.domain.post.dto;
 
 import sharebuy.common.domain.Location;
+import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.Place;
 import sharebuy.domain.post.domain.PostStatus;
@@ -18,7 +19,15 @@ public record PostDetailResponse(
         double longitude,
         LocalDateTime appointmentTime,
         PostStatus status,
-        List<String> imgUrl
+        List<String> imgUrl,
+        String purchasePlace,
+        String productCode,
+        String purchaseUrl,
+        Integer totalPrice,
+        LocalDateTime purchaseAt,
+        Integer currentParticipants,
+        Integer maxParticipants,
+        Category category
 ) {
     public static PostDetailResponse from(Post post){
         Appointment appointment = post.getAppointment();
@@ -26,6 +35,8 @@ public record PostDetailResponse(
         Place place = appointment.getPlace();
         Location location = place.getLocation();
         return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName()
-                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl());
+                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl()
+                    ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPurchaseAt()
+                    ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory());
     }
 };
