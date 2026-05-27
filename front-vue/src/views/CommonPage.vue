@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed,watch,onMounted } from 'vue'
+import { ref, computed,watch } from 'vue'
 import { useRoute } from 'vue-router'
 import {commonGet} from '@/utils/ShareBuyUtil';
 import PageWrapper from './PageWrapper.vue';
@@ -45,35 +45,6 @@ const roleTypeRef = ref<RoleType>(ROLES.GUEST);
 const latitudeRef = ref<number>();
 const longitudeRef = ref<number>();
 
-
-// onMounted(async ()=>{
-//    // userStore에 latitude가 저장되어 있다면 그걸 먼저 씁니다.
-//     let lat = userStore.latitude || (route.query.latitude ? parseFloat(route.query.latitude as string) : undefined);
-//     let lng = userStore.longitude || (route.query.longitude ? parseFloat(route.query.longitude as string) : undefined);
-
-//   if (!lat || !lng) {
-//         // 방법 A: 다시 위치 권한을 물어본다 (locationStore 활용)
-//         const coords = await locationStore.syncLocation(true); 
-//         lat = coords.latitude;
-//         lng = coords.longitude;
-        
-//         // 스토어에도 저장해줘서 다음 이동 시 편하게 만듭니다.
-//         userStore.setUserInfo({ latitude: lat, longitude: lng });
-//     }
-
-//     // 2. Ref 업데이트 (자식 컴포넌트들에게 전달됨)
-//     latitudeRef.value = lat;
-//     longitudeRef.value = lng;
-
-//     // 3. API 호출 파라미터 구성
-//     const params = {
-//       ...route.query, // 기존 쿼리 유지 (필요 시)
-//       latitude: lat,
-//       longitude: lng
-//     };
-
-//     await fetchData(params);
-// })
 
 async function fetchData(param: any) {
   // 1. GUEST 캐시 체크 (네트워크 비용 절감)

@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.domain.page.dto.UserContextParam;
-import sharebuy.domain.page.provider.pagedata.ContextConstants;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.service.UserService;

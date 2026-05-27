@@ -16,17 +16,14 @@
 <script setup lang="ts">
 import { ref,computed } from 'vue'
 
-
-const {value} = defineProps<{
-  value:string;
+const props = defineProps<{
+  value?: string | null;
   menuId?: string;
 }>();
 
 const displayLocation = computed(() => {
-  return value || '위치 확인 중...';
+  return props.value || '위치 확인 중...';
 });
-const loading = ref(false)
-const error = ref<string | null>(null)
 
 
 const emit = defineEmits(['logoClick'])

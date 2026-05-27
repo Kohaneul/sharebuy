@@ -1,9 +1,8 @@
 package sharebuy.domain.page.service;
 
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
-import sharebuy.common.auth.config.CustomUserDetail;
-import sharebuy.common.domain.RoleType;
+import sharebuy.common.exception.ErrorCode;
+import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.page.domain.TopNavComponent;
 import sharebuy.domain.page.dto.TopNavItemDto;
 import sharebuy.domain.page.dto.TopNavMeta;
@@ -17,6 +16,8 @@ import sharebuy.domain.user.entity.User;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static sharebuy.common.exception.ErrorCode.INVALID_COMPONENT_PROVIDER;
 
 @Service
 public class TopNavService {
@@ -86,7 +87,7 @@ public class TopNavService {
                         TopNavProvider topNavProvider = topNavProviderMap.get(component);
 
                         if (topNavProvider == null) {
-                            throw new IllegalStateException(component + " 존재하지 않는 provider");
+                            throw new ShareBuyException(INVALID_COMPONENT_PROVIDER);
                         }
 
                         value = topNavProvider.getValue(user);

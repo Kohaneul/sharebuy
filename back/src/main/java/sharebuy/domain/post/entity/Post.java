@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.Appointment;
@@ -116,7 +117,7 @@ public class Post extends BaseTimeEntity {
     public void validateCanParticipate(User user) {
         //1. 모집중인 게시글이 아닐때
         if(this.status != PostStatus.RECRUITING){
-            throw new ShareBuyException(NOT_RECRUITABLE);
+            throw new ShareBuyException(ErrorCode.NOT_RECRUITABLE);
         }
 
         //2. 본인 글에 참여할때

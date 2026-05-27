@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
+import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.context.service.UserContextService;
 import sharebuy.domain.page.dto.*;
 import sharebuy.domain.page.entity.Page;
@@ -12,6 +13,9 @@ import sharebuy.domain.page.repository.PageRepository;
 import sharebuy.domain.user.entity.User;
 
 import java.util.*;
+
+import static sharebuy.common.exception.ErrorCode.PAGE_ACCESS_DENIED;
+import static sharebuy.common.exception.ErrorCode.PAGE_NOT_FOUND;
 
 @Service
 public class PageService {
@@ -33,7 +37,7 @@ public class PageService {
 
     @Transactional(readOnly = true)
     public PageContextResponse getPageContext(UUID pageId, CustomUserDetail principal, HttpSession session,Map<String,String> paramMap){
-        Page page = pageRepository.findById(pageId).orElseThrow(() -> new IllegalStateException("페이지 없음"));
+        Page page = pageRepository.findById(pageId).orElseThrow(() -> new ShareBuyException(PAGE_NOT_FOUND));
 
         //user 정보 추출
         UserContextParam userContextParam = userContextService.getUserContextParam(principal, session,paramMap);
@@ -62,9 +66,9 @@ public class PageService {
      * @param userRoleType
      * @param pageRoleType
      */
-    private void validationAccessPage(RoleType userRoleType, RoleType pageRoleType) {
+    private void validationAccessPage(RoleType userRoleType, RoleType pageRoleType) throws ShareBuyException {
         if(!userRoleType.canAccess(pageRoleType)){
-            throw new IllegalStateException("["+pageRoleType+"]만 접근가능한 메뉴입니다. 현재 나의 권한:["+userRoleType+"]");
+            throw new ShareBuyException(PAGE_ACCESS_DENIED);
         }
     }
 
