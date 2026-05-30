@@ -1,6 +1,6 @@
 <template>
   <div class="page-wrapper">
-    <!-- 2. v-if 조건이 맞는지 확인 (데이터가 빈 배열([])이면 안 나올 수 있음) -->
+    
     <TopNavBarRenderer 
       v-if="displayNavMeta && displayNavMeta.length > 0"
       :items="displayNavMeta"
@@ -8,7 +8,7 @@
       :latitude="latitude"
       :longitude="longitude"
     />
-    <!-- 데이터가 없을 때를 대비한 디폴트 바가 작동하는지 확인 -->
+
     <header v-else class="fallback-nav">ShareBuy</header>
     
     <slot></slot>

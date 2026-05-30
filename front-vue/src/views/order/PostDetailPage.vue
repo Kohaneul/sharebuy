@@ -75,7 +75,7 @@
     
     <!-- 6. 참여 확인 팝업 (모달) -->
     <a-modal
-      v-model:visible="modalVisible"
+      v-model:open="modalVisible"
       title="공동구매 참여"
       @ok="handleJoin"
       :confirm-loading="loading"

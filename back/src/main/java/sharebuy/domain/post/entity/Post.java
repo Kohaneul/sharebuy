@@ -110,7 +110,7 @@ public class Post extends BaseTimeEntity {
     private Category category;
 
 
-    private boolean isOwner( User user){
+    private boolean isOwner(User user){
         return this.getUser().getId().equals(user.getId());
     }
 

@@ -47,15 +47,15 @@ const longitudeRef = ref<number>();
 
 
 async function fetchData(param: any) {
-  // 1. GUEST 캐시 체크 (네트워크 비용 절감)
-  if (userStore.roleType === ROLES.GUEST) {
-    const cachedNav = uiStore.navCache[route.path];
-    if (cachedNav) {
-      topNavMeta.value = cachedNav;
-      uiStore.setGlobalNav(cachedNav); // 캐시된 데이터를 전역으로 승격
-      return; 
-    }
-  }
+  // 1. GUEST 캐시 체크
+  // if (userStore.roleType === ROLES.GUEST) {
+  //   const cachedNav = uiStore.navCache[route.path];
+  //   if (cachedNav) {
+  //     topNavMeta.value = cachedNav;
+  //     uiStore.setGlobalNav(cachedNav); // 캐시된 데이터를 전역으로 승격
+      
+  //   }
+  // }
 
   // 2. 서버 호출 (캐시가 없거나, 로그인 사용자일 때)
   const res = await commonGet(`/page/${pageId.value}`, param);  

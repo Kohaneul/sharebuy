@@ -1,7 +1,5 @@
 package sharebuy.domain.post.controller;
 
-import io.lettuce.core.dynamic.annotation.Param;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sharebuy.common.auth.config.CustomUserDetail;

@@ -99,7 +99,7 @@ const emit = defineEmits(['logoClick', 'search', 'notificationClick', 'menuClick
 const searchQuery = ref('')
 
 function onLogoClick() {
-   route.replace("/board");
+   route.push("/board");
  }
 
 function onLogin(){

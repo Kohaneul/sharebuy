@@ -1,7 +1,6 @@
 package sharebuy.domain.page.service;
 
 import org.springframework.stereotype.Service;
-import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.page.domain.TopNavComponent;
 import sharebuy.domain.page.dto.TopNavItemDto;

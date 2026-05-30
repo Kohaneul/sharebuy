@@ -60,13 +60,13 @@
 <script lang="ts" setup>
 import { SettingOutlined, EditOutlined } from '@ant-design/icons-vue';
 import {onMounted,watch,ref} from 'vue';
-import {getCurrentLocation} from '@/utils/CurrentLocationUtil';
 import { commonGet } from '@/utils/ShareBuyUtil';
 import{ CardData } from '@/ts/PageComponent';
 import { useUserStore } from '@/store/user';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 const userStore = useUserStore();
 
+const route = useRoute();
 
 const router = useRouter();
 
@@ -84,13 +84,9 @@ const cards = ref<CardData[]>([]);
 onMounted(async () => {
   
   config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
-  // console.log("card");
-  console.log(props);
-  console.log(typeof props.latitude);
 
   const  context = { latitude: props.latitude, longitude: props.longitude };
-
-  // await bindCard(context);
+  console.log(context);
 })
 
 const hasAuthority = (card: CardData) => {
@@ -101,8 +97,6 @@ const hasAuthority = (card: CardData) => {
 async function bindCard(context:any){
   
   try{
-    console.log(props.routeUrl);
-    console.log(context);
     const res:CardData[] = await commonGet(props.routeUrl,context);
     if(res){
       cards.value =res;
@@ -149,6 +143,17 @@ const goDetail = (id: string) => {
     query: { id }
   });
   };
+
+
+watch(
+  () => route.query.id,
+  async () => {
+    console.log(route.query.id);
+    console.log(userStore);
+  },
+  { immediate: true }
+);
+
 watch(
   () => [props.latitude, props.longitude],
   async ([newLat, newLng]) => {

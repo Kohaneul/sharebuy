@@ -10,7 +10,7 @@ export const useLocationStore = defineStore('location', {
   actions: {
     // 🌟 위치 정보를 업데이트하는 통합 액션
     async syncLocation(forceRefresh = false) {
-      // 강제 갱신이 아니고 이미 좌표가 있다면 그대로 사용 (캐싱 효과)
+      // 이미 저장된 좌표 정보가 있다면 그대로 사용
       if (!forceRefresh && this.latitude && this.longitude) {
         return { latitude: this.latitude, longitude: this.longitude };
       }

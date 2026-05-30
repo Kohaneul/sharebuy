@@ -93,7 +93,6 @@ async function enterAsGuest() {
   // 1. 현재 GPS 좌표 가져오기
   const { latitude, longitude } = await locationStore.syncLocation(true);
 
-  // 2. 🚀 게스트라도 userStore에 위치 정보 저장!
   // 로그인 정보는 없으니 null이나 기본값을 유지하고 좌표만 업데이트합니다.
   userStore.setUserInfo({
     loginId: 'guest',
@@ -101,6 +100,8 @@ async function enterAsGuest() {
     latitude: latitude,
     longitude: longitude
   });
+
+
 
   // 3. 페이지 이동
   router.push({
