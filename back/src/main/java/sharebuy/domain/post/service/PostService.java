@@ -2,6 +2,8 @@ package sharebuy.domain.post.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.domain.RoleType;
 import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.common.payload.CardResponse;
@@ -41,9 +43,16 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public PostDetailResponse findById(UUID id){
+    public PostDetailResponse findById(UUID id, CustomUserDetail principal){
         Post post = postRepository.findByIdWithImages(id).orElseThrow(() -> new IllegalStateException("존재하지 않습니다."));
-        return PostDetailResponse.from(post);
+        boolean canClose = false;
+        if(principal != null){
+            UUID userId = principal.getId();
+            UUID postOwnerId = post.getUser().getId();
+
+            canClose = userId.equals(postOwnerId) || principal.getRoleType()== RoleType.ADMIN;
+        }
+        return PostDetailResponse.from(post,canClose);
     }
 
     /**
@@ -77,5 +86,9 @@ public class PostService {
             throw new ShareBuyException(ALREADY_PARTICIPATED);
         }
 
+    }
+
+    public PostDetailResponse addPost(CustomUserDetail principal) {
+        return null;
     }
 }

@@ -110,25 +110,26 @@ public class Post extends BaseTimeEntity {
     private Category category;
 
 
-    private boolean isOwner(User user){
+    public boolean isOwner(User user){
         return this.getUser().getId().equals(user.getId());
     }
 
     public void validateCanParticipate(User user) {
-        //1. 모집중인 게시글이 아닐때
+        //1. 이미 마감된 건일때
+        if (this.status == PostStatus.CLOSED) {
+            throw new ShareBuyException(SOLD_OUT);
+        }
+
+        //2. 모집중인 게시글이 아닐때
         if(this.status != PostStatus.RECRUITING){
             throw new ShareBuyException(ErrorCode.NOT_RECRUITABLE);
         }
 
-        //2. 본인 글에 참여할때
+        //3. 본인 글에 참여할때
         if(isOwner(user)){
             throw new ShareBuyException(SELF_PARTICIPATION_NOT_ALLOWED);
         }
 
-        //3. 이미 마감된 건일때
-        if (this.status != PostStatus.RECRUITING) {
-            throw new ShareBuyException(SOLD_OUT);
-        }
 
         //4. 게시글 작성자 상태 체크
         this.getUser().validateUserActive();

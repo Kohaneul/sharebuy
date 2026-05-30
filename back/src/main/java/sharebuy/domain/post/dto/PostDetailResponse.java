@@ -27,9 +27,10 @@ public record PostDetailResponse(
         LocalDateTime purchaseAt,
         Integer currentParticipants,
         Integer maxParticipants,
-        Category category
+        Category category,
+        boolean canClose
 ) {
-    public static PostDetailResponse from(Post post){
+    public static PostDetailResponse from(Post post,boolean canClose){
         Appointment appointment = post.getAppointment();
         LocalDateTime appointmentTime = appointment.getAppointmentTime();
         Place place = appointment.getPlace();
@@ -37,6 +38,6 @@ public record PostDetailResponse(
         return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName()
                    ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl()
                     ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPurchaseAt()
-                    ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory());
+                    ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory(),canClose);
     }
 };

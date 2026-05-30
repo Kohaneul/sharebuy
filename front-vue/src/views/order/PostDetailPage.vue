@@ -61,12 +61,12 @@
     </div>
 
     <!-- 5. 하단 고정 액션 바 -->
-    <div class="action-bar">
+    <div class="action-bar" v-if="userStore.roleType != 'GUEST'">
       <a-button 
         type="primary" 
         size="large" 
         block 
-        :disabled="!isJoinable"
+        :disabled="buttonDisabled"
         @click="openJoinModal">
         {{ getButtonText }}
       </a-button>
@@ -142,12 +142,13 @@ const loadDetail = async () => {
 
 // 2. 상태 관련 로직
 const isJoinable = computed(() => {
-  return post.value?.status === 'RECRUITING' && post.value?.currentCount < post.value?.maxPr;
+  return post.value?.status === 'RECRUITING' && post.value?.currentCount < post.value?.maxParticipants;
 });
 
 const getButtonText = computed(() => {
-  if (post.value?.status !== 'RECRUITING') return '모집 종료';
-  if (post.value?.currentCount >= post.value?.maxCount) return '인원 마감';
+  if(post.value?.canClose) return '주문 마감';
+  if(post.value?.status !== 'RECRUITING') return '모집 종료';
+  if(post.value?.currentParticipants >= post.value?.maxParticipants) return '인원 마감';
   return '참여하기';
 });
 
@@ -160,6 +161,14 @@ const getStatusLabel = (status: string) => {
   const labels: any = { RECRUITING: '모집중', CLOSED: '마감', EDITING: '수정중' };
   return labels[status] || status;
 };
+const buttonDisabled = computed(() => {
+  if (post.value?.canClose) {
+    return false;
+  }
+
+  return !isJoinable.value;
+});
+
 
 // 3. 참여 액션
 const openJoinModal = () => {

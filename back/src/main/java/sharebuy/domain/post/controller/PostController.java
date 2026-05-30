@@ -35,18 +35,19 @@ public class PostController {
      * @return
      */
     @GetMapping("/{id}")
-    public PostDetailResponse findById(@PathVariable("id") UUID id){
-        return postService.findById(id);
+    public PostDetailResponse findById(@PathVariable("id") UUID id, @AuthenticationPrincipal CustomUserDetail principal){
+        return postService.findById(id,principal);
     }
 
+
     /**
-     * 신규등록
-     * @param id
+     * 신규 등록
+     * @param principal
      * @return
      */
     @PostMapping("/add")
-    public PostDetailResponse add(@PathVariable("id") UUID id){
-        return postService.findById(id);
+    public PostDetailResponse add(@AuthenticationPrincipal CustomUserDetail principal){
+        return postService.addPost(principal);
     }
 
     @PostMapping("/{postId}/join")
