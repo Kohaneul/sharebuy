@@ -23,7 +23,7 @@ public class Address implements Serializable {
     private String detailAddress;
 
     @NotBlank(message = "우편번호는 필수입니다.")
-    @Column(name = "zip_code", nullable = false)
+    @Column(name = "zip_code", nullable = true)
     private String zipCode;
 
     // --- 좌표 정보 추가 ---

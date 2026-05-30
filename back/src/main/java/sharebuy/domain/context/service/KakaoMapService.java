@@ -3,8 +3,13 @@ package sharebuy.domain.context.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 import sharebuy.domain.user.domain.Address;
 
 import java.util.List;
@@ -18,28 +23,35 @@ import static java.lang.String.format;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GoogleMapService {
+public class KakaoMapService {
 
     private final RestTemplate restTemplate;
     private static final String OK = "OK";
-    private static final String GOOGLE_GEOCODE_URL = "https://maps.googleapis.com/maps/api/geocode/json?latlng=%f,%f&key=%s&language=ko";
-
-    @Value("${google.map.key}")
+    private static final String KAKAO_COORD_TO_ADDRESS_URL =
+            "https://dapi.kakao.com/v2/local/geo/coord2address.json";
+    @Value("${kakao.map.key}")
     private String apiKey;
 
-    public Address convertAddressFromGoogleApi(Double lat,Double lng){
-        String url = format(GOOGLE_GEOCODE_URL, lat, lng,apiKey);
+    public Address convertAddressFromKakaoApi(Double lat,Double lng){
+        String url = UriComponentsBuilder.fromHttpUrl(KAKAO_COORD_TO_ADDRESS_URL)
+                    .queryParam("x", lng)
+                    .queryParam("y", lat)
+                    .toUriString();
         try{
-            Map<String, Object> response = restTemplate.getForObject(url, Map.class);
-            if(response != null && OK.equals(response.get("status"))){
-                List<Map<String, Object>> results = (List<Map<String, Object>>) response.get("results");
-                if(results != null && !results.isEmpty()){
-                    Map<String, Object> firstResult = results.get(0);
-                    String fullAddress = (String) firstResult.get("formatted_address");
-                    return parseAddress(fullAddress,lat,lng);
-                }
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Authorization", "KakaoAK " + apiKey);
+
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+            ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, entity, Map.class);
+            Map body = response.getBody();
+            List<Map<String, Object>> documents = (List<Map<String, Object>>) body.get("documents");
+            if(documents.isEmpty()){
+                return null;
             }
-            return null;
+            Map<String, Object> map = documents.get(0);
+            Map<String, Object> address = (Map<String, Object>) map.get("address");
+            String primaryAddress = (String) address.get("address_name");
+            return new Address(primaryAddress,null,null,lat,lng);
         }
         catch(RuntimeException e){
             log.error("실패 -> **찾을 수 없는 좌표입니다.");

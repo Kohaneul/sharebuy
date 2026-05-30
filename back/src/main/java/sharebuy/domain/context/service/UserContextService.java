@@ -14,11 +14,11 @@ import static sharebuy.domain.page.provider.pagedata.ContextConstants.*;
 
 @Service
 public class UserContextService {
-    private final GoogleMapService googleMapService; // 구글 API 호출용 서비스
+    private final KakaoMapService kakaoMapService; // 구글 API 호출용 서비스
     private final UserService userService;
 
-    public UserContextService(GoogleMapService googleMapService, UserService userService) {
-        this.googleMapService = googleMapService;
+    public UserContextService(KakaoMapService kakaoMapService, UserService userService) {
+        this.kakaoMapService = kakaoMapService;
         this.userService = userService;
     }
 
@@ -42,7 +42,7 @@ public class UserContextService {
         //CASE 2) 로그인 x
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
         if(!paramMap.isEmpty()){
-            Address guestAddress = googleMapService.convertAddressFromGoogleApi(userContextParam.getLat(), userContextParam.getLng());
+            Address guestAddress = kakaoMapService.convertAddressFromKakaoApi(userContextParam.getLat(), userContextParam.getLng());
             session.setAttribute(GUEST_ADDRESS,guestAddress);
             User guest = User.guest(guestAddress);
 
