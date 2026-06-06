@@ -3,10 +3,7 @@ package sharebuy.domain.post.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.ParticipationStatus;
@@ -19,6 +16,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Table(name = "participation",
 uniqueConstraints = {
         @UniqueConstraint(

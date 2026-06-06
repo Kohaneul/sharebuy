@@ -3,10 +3,7 @@ package sharebuy.domain.post.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
@@ -28,6 +25,7 @@ import static sharebuy.common.exception.ErrorCode.*;
 
 @Entity
 @Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(

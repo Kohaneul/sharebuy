@@ -2,10 +2,7 @@ package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.user.entity.User;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Table(name = "comment")
 public class Comment extends BaseTimeEntity {
 

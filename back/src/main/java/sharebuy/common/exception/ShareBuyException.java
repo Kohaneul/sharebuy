@@ -7,6 +7,7 @@ public class ShareBuyException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public ShareBuyException(ErrorCode errorCode) {
+        super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
 }

@@ -2,17 +2,14 @@ package sharebuy.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.Location;
 import sharebuy.domain.post.entity.Post;
 
 import java.util.UUID;
 
-
+@Builder
 @Entity
 @Getter
 @AllArgsConstructor

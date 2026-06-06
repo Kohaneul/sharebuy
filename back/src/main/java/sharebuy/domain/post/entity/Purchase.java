@@ -1,12 +1,15 @@
 package sharebuy.domain.post.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import sharebuy.domain.post.domain.PurchaseStatus;
 import sharebuy.domain.user.entity.User;
 
 import java.util.UUID;
-
+@Builder
 @Entity
+@AllArgsConstructor
 public class Purchase {
     @Id
     @GeneratedValue

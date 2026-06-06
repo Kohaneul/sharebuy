@@ -21,7 +21,7 @@ dependencies {
 	//validator
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// 🛡️ Spring Security 및 Redis 연동
+	//️ Spring Security 및 Redis 연동
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 //	implementation 'org.springframework.session:spring-session-data-redis'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -37,6 +37,8 @@ dependencies {
 	// 🧪 테스트
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.12.2'
+
 }
 
 tasks.named('test') { useJUnitPlatform() }

@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import sharebuy.common.exception.ErrorCode;
@@ -24,6 +21,7 @@ import java.util.UUID;
 import static sharebuy.common.exception.ErrorCode.USER_NOT_ACTIVE;
 
 @Entity
+@Builder
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

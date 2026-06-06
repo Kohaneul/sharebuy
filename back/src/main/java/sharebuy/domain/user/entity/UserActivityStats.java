@@ -2,14 +2,11 @@ package sharebuy.domain.user.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 
 import java.util.UUID;
-
+@Builder
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

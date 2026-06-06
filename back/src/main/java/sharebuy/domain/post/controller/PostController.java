@@ -53,7 +53,6 @@ public class PostController {
     @PostMapping("/{postId}/join")
     public BaseResponse participate(@PathVariable("postId") UUID postId
             , @AuthenticationPrincipal CustomUserDetail principal){
-
         return postService.participate(postId, principal.getId());
     }
 
