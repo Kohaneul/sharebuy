@@ -1,5 +1,7 @@
 import sharebuy.common.domain.RoleType;
+import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.post.domain.PostStatus;
+import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
 import sharebuy.domain.user.domain.UserStatus;
 import sharebuy.domain.user.entity.User;
@@ -41,5 +43,21 @@ public class TestFixture {
                 5,
                 ETC
         );
+    }
+
+    public static Participation participation(
+            User user,
+            Post post,
+            int amount,
+            ParticipationStatus status
+    ) {
+        return Participation.builder()
+                .id(UUID.randomUUID())
+                .user(user)
+                .post(post)
+                .amount(amount)
+                .payAt(LocalDateTime.now())
+                .participationStatus(status)
+                .build();
     }
 }

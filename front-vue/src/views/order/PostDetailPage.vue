@@ -166,7 +166,7 @@ const buttonDisabled = computed(() => {
     return false;
   }
 
-  return !isJoinable.value;
+  return isJoinable.value;
 });
 
 
@@ -179,7 +179,7 @@ const handleJoin = async () => {
   loading.value = true;
   try {
     // 참여 API 호출
-    await commonPost(`/posts/${post.value.id}/join`, {});
+    await commonPost(`/post/${post.value.id}/join`, {});
     message.success('성공적으로 참여되었습니다! 🎉');
     modalVisible.value = false;
     await loadDetail(); // 데이터 새로고침 (인원수 업데이트)

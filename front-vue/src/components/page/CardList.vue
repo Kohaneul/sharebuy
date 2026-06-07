@@ -86,7 +86,6 @@ onMounted(async () => {
   config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
 
   const  context = { latitude: props.latitude, longitude: props.longitude };
-  console.log(context);
 })
 
 const hasAuthority = (card: CardData) => {
@@ -148,8 +147,6 @@ const goDetail = (id: string) => {
 watch(
   () => route.query.id,
   async () => {
-    console.log(route.query.id);
-    console.log(userStore);
   },
   { immediate: true }
 );

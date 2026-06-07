@@ -1,6 +1,7 @@
 package sharebuy.domain.post.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -78,9 +79,13 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     @Query("select p from Post p left join fetch p.imgUrl where p.id = :id")
     Optional<Post> findByIdWithImages(@Param("id")UUID id);
 
-    @Query("UPDATE Post p " +
-            "set p.currentParticipants = p.currentParticipants+1" +
-            "where p.id = :id " +
-            "and p.maxParticipants>p.currentParticipants ")
-    int participate(UUID id);
+
+    @Modifying
+    @Query("""
+    UPDATE Post p
+       SET p.currentParticipants = p.currentParticipants + 1
+     WHERE p.id = :id
+       AND p.maxParticipants > p.currentParticipants
+    """)
+    int participate(@Param("id") UUID id);
 }
