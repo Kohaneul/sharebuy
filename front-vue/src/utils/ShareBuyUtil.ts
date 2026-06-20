@@ -22,9 +22,9 @@ export async function commonGet<T>(url: string, params?: object): Promise<T> {
     return response.data; 
   } catch (error) {
     if (axios.isAxiosError(error)) {
-        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.",2);
     } else {
-        message.error("오류가 발생했습니다.");
+        message.error("오류가 발생했습니다.",2);
     }
     throw error;
   }
@@ -42,9 +42,9 @@ export async function commonPost<T, D = any>(url: string, data: D,  headers?: Re
         return response.data;
     } catch (error) {
     if (axios.isAxiosError(error)) {
-        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.",2);
     } else {
-        message.error("오류가 발생했습니다.");
+        message.error("오류가 발생했습니다.",2);
     }
         throw error;
     }
@@ -60,9 +60,9 @@ export async function commonPostLogin<T, D = any>(url: string, data: D): Promise
         return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.",2);
     } else {
-        message.error("오류가 발생했습니다.");
+        message.error("오류가 발생했습니다.",2);
     }
         throw error;
     }
