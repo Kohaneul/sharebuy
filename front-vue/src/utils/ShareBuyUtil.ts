@@ -1,6 +1,6 @@
 // src/utils/ShareBuyUtil.ts
-
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { message } from 'ant-design-vue';
 
 const API_PREFIX = '/rest'; // 접두사 정의
 
@@ -22,9 +22,9 @@ export async function commonGet<T>(url: string, params?: object): Promise<T> {
     return response.data; 
   } catch (error) {
     if (axios.isAxiosError(error)) {
-        console.error(`[API Error] GET ${combinedUrl}:`, error.message);
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
     } else {
-        console.error(`[API Error] Unexpected Error on GET ${combinedUrl}:`, error);
+        message.error("오류가 발생했습니다.");
     }
     throw error;
   }
@@ -41,11 +41,11 @@ export async function commonPost<T, D = any>(url: string, data: D,  headers?: Re
         const response: AxiosResponse<T> = await api.post(combinedUrl, data,{headers});
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error(`[API Error] POST ${combinedUrl}:`, error.message);
-        } else {
-            console.error(`[API Error] Unexpected Error on POST ${combinedUrl}:`, error);
-        }
+    if (axios.isAxiosError(error)) {
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
+    } else {
+        message.error("오류가 발생했습니다.");
+    }
         throw error;
     }
 }
@@ -59,11 +59,11 @@ export async function commonPostLogin<T, D = any>(url: string, data: D): Promise
         const response: AxiosResponse<T> = await api.post(combinedUrl, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }});
         return response.data;
     } catch (error) {
-        if (axios.isAxiosError(error)) {
-            console.error(`[API Error] POST ${combinedUrl}:`, error.message);
-        } else {
-            console.error(`[API Error] Unexpected Error on POST ${combinedUrl}:`, error);
-        }
+      if (axios.isAxiosError(error)) {
+        message.error(error.response?.data?.message ?? "오류가 발생했습니다.");
+    } else {
+        message.error("오류가 발생했습니다.");
+    }
         throw error;
     }
 }

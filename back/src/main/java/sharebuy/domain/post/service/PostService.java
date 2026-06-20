@@ -74,7 +74,7 @@ public class PostService {
        if(updatedRow>0){
            Participation participation = new Participation(UUID.randomUUID(),post,user,0, LocalDateTime.now(), ParticipationStatus.JOINED);
            participationRepository.save(participation);
-           return new BaseResponse(true);
+           return new BaseResponse(true,null);
        }
         throw new ShareBuyException(SOLD_OUT);
     }
