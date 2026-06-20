@@ -1,3 +1,5 @@
+package sharebuy;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -6,7 +8,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.post.entity.Post;
-import sharebuy.domain.post.repository.ParticipationRepository;
 import sharebuy.domain.post.repository.PostRepository;
 import sharebuy.domain.post.service.PostService;
 import sharebuy.domain.user.entity.User;
@@ -27,8 +28,6 @@ public class PostServiceTest {
 
     @Mock
     private PostRepository postRepository;
-    @Mock
-    private ParticipationRepository participationRepository;
     @Mock
     private UserRepository userRepository;
 

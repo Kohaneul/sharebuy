@@ -56,4 +56,11 @@ public class PostController {
         return postService.participate(postId, principal.getId());
     }
 
+
+    @PostMapping("/{postId}/end")
+    public BaseResponse orderEnd(@PathVariable("postId") UUID postId
+            , @AuthenticationPrincipal CustomUserDetail principal){
+        return postService.orderEnd(postId, principal.getId());
+    }
+
 }

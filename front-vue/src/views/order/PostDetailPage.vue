@@ -22,6 +22,7 @@
         </a>
       </p>
       <p class="post-body">구매 금액 : {{ post.totalPrice }}</p>
+      <p class="post-body">공동구매 금액 : {{ post.perPrice }}</p>
       <p class="post-body">구매 일자 : {{ formatDate(post.purchaseAt) }}</p>
     
       <p class="post-body">{{ post.content }}</p>

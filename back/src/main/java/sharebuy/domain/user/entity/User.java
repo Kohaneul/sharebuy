@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import static sharebuy.common.exception.ErrorCode.NOT_POST_OWNER;
 import static sharebuy.common.exception.ErrorCode.USER_NOT_ACTIVE;
 
 @Entity
@@ -84,10 +85,10 @@ public class User extends BaseTimeEntity {
         user.address = address;
         return user;
     }
-
     public void validateUserActive() {
         if (this.userStatus != UserStatus.ACTIVE) {
             throw new ShareBuyException(USER_NOT_ACTIVE);
         }
     }
+
 }

@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import sharebuy.common.payload.CardResponse;
+import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.entity.Post;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -88,4 +90,13 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
        AND p.maxParticipants > p.currentParticipants
     """)
     int participate(@Param("id") UUID id);
+
+    @Modifying(clearAutomatically = true)
+    @Query("""
+    UPDATE Post p
+       SET status = :status,
+       updatedAt = CURRENT_TIMESTAMP
+     WHERE p.id = :id
+    """)
+    int changeStatus(@Param("id") UUID id , @Param("status")PostStatus postStatus);
 }

@@ -24,6 +24,7 @@ public record PostDetailResponse(
         String productCode,
         String purchaseUrl,
         Integer totalPrice,
+        Integer perPrice,
         LocalDateTime purchaseAt,
         Integer currentParticipants,
         Integer maxParticipants,
@@ -37,7 +38,7 @@ public record PostDetailResponse(
         Location location = place.getLocation();
         return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName()
                    ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl()
-                    ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPurchaseAt()
+                    ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPerPrice(),post.getPurchaseAt()
                     ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory(),canClose);
     }
 };

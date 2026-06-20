@@ -8,6 +8,7 @@ import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.domain.ParticipationStatus;
+import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.dto.PostDetailResponse;
 import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
@@ -72,11 +73,33 @@ public class PostService {
 
        int updatedRow = postRepository.participate(postId);
        if(updatedRow>0){
-           Participation participation = new Participation(UUID.randomUUID(),post,user,0, LocalDateTime.now(), ParticipationStatus.JOINED);
+           Participation participation = new Participation(UUID.randomUUID(),post,user,post.getPerPrice(), LocalDateTime.now(), ParticipationStatus.JOINED);
            participationRepository.save(participation);
            return new BaseResponse(true,null);
        }
         throw new ShareBuyException(SOLD_OUT);
+    }
+
+    /**
+     * 주문 마감
+     * @param postId
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public BaseResponse orderEnd(UUID postId,UUID userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
+        //작성자가 아닌 유저가 마감처리 할 경우 throw
+        post.validateOwnerUser(user);
+
+        //1.해당 게시글의 상태값 변경
+        int updatedRow = postRepository.changeStatus(post.getId(), PostStatus.CLOSED);
+
+        if(updatedRow>0){
+          //@TODO 주문 마감 시 사용자에게 메시지 or 카카오톡 알림 전송(eventListener)
+        }
+        return new BaseResponse(true,null);
     }
 
 

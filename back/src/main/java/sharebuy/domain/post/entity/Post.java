@@ -71,9 +71,13 @@ public class Post extends BaseTimeEntity {
     @Column(name = "purchase_url")
     private String purchaseUrl;
 
-    @NotBlank(message = "총 구매 금액은 필수입니다.")
+    @NotNull(message = "총 구매 금액은 필수입니다.")
     @Column(name = "total_price",nullable = false)
     private Integer totalPrice;
+
+    @NotNull(message = "인당 참여 금액은 필수입니다.")
+    @Column(name = "per_price", nullable = false)
+    private Integer perPrice;
 
     @NotNull(message = "구매 시점은 필수입니다.")
     @Column(name = "purchase_at",nullable = false)
@@ -100,7 +104,7 @@ public class Post extends BaseTimeEntity {
     private Integer currentParticipants = 0;
 
     @Column(nullable = false,name = "max_participants")
-    private Integer maxParticipants;
+    private Integer maxParticipants;@NotNull(message = "인당 참여 금액은 필수입니다.")
 
     @NotNull
     @Column(nullable = false, updatable = false)
@@ -108,10 +112,16 @@ public class Post extends BaseTimeEntity {
     private Category category;
 
 
-    public boolean isOwner(User user){
+    private boolean isOwner(User user){
         return this.getUser().getId().equals(user.getId());
     }
 
+    public void validateOwnerUser(User user){
+        if(!isOwner(user)){
+            throw new ShareBuyException(NOT_POST_OWNER);
+        }
+
+    }
     public void validateCanParticipate(User user) {
         //1. 이미 마감된 건일때
         if (this.status == PostStatus.CLOSED) {
@@ -132,6 +142,7 @@ public class Post extends BaseTimeEntity {
         //4. 게시글 작성자 상태 체크
         this.getUser().validateUserActive();
     }
+
 
 }
 

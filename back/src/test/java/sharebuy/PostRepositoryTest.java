@@ -1,16 +1,14 @@
-import org.assertj.core.api.Assertions;
+package sharebuy;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import sharebuy.SharebuyApplication;
 import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
 import sharebuy.domain.post.repository.ParticipationRepository;
 import sharebuy.domain.post.repository.PostRepository;
-import sharebuy.domain.post.service.PostService;
 import sharebuy.domain.user.domain.UserStatus;
 import sharebuy.domain.user.entity.User;
 import sharebuy.domain.user.repository.UserRepository;
@@ -48,7 +46,7 @@ public class PostRepositoryTest {
         Post post = TestFixture.post(UUID.randomUUID(),owner, PostStatus.RECRUITING);
         postRepository.save(post);
 
-        Participation participation =TestFixture.participation(user,post,10000, ParticipationStatus.JOINED);
+        Participation participation = TestFixture.participation(user,post,10000, ParticipationStatus.JOINED);
         Participation saved = participationRepository.save(participation);
 
         assertThat(saved.getId()).isNotNull();

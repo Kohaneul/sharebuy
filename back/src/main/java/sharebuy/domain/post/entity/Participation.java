@@ -49,7 +49,7 @@ public class Participation extends BaseTimeEntity {
     private LocalDateTime payAt;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "participation_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ParticipationStatus participationStatus;
 
