@@ -1,5 +1,7 @@
 package sharebuy;
 
+import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+@Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
 public class ParticipationTest {
@@ -140,18 +143,18 @@ public class ParticipationTest {
      * 현재 참여중인 인원 : 1명
      * 동시 참여 시도 인원 : 30명
      * 8명 일떄 주문 마감 시킴
-     * 순서에 따라서 4명만 참여하고 나머지 26명에 대해서는 throw
+     * 나머지 23일때 throw
      */
     @Test
     void participation_test3() throws InterruptedException {
         final int THREAD_COUNT = 30;
-
-        ExecutorService executorService
-                = Executors.newFixedThreadPool(THREAD_COUNT);
-        CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
-
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
+        CountDownLatch participationLatch = new CountDownLatch(7);
+        CountDownLatch blockGate = new CountDownLatch(1);
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
+
         User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), UserStatus.ACTIVE));
         Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), owner, PostStatus.RECRUITING,1,10));
         UUID postId = post.getId();
@@ -160,8 +163,13 @@ public class ParticipationTest {
         for (User user : userList) {
             executorService.submit(()->{
                 try{
+                    if(success.get()>=7){
+                        blockGate.await();
+                    }
                     postService.participate(postId,user.getId());
-                    int count = success.incrementAndGet();
+                    success.incrementAndGet();
+                    participationLatch.countDown();
+                    log.info("참여자 = {} 참여 완료",user.getLoginId());
 
                 }
                 catch(Exception e){
@@ -169,14 +177,23 @@ public class ParticipationTest {
                     fail.incrementAndGet();
                 }
                 finally{
-                    latch.countDown();
+                    countDownLatch.countDown();
                 }
             });
         }
-        latch.await();
 
-        assertThat(success.get()).isEqualTo(2);
-        assertThat(fail.get()).isEqualTo(4);
+        participationLatch.await();
+        try{
+            postService.orderEnd(postId,owner.getId());
+        }
+        catch(Exception e){
+
+        }
+
+        blockGate.countDown();
+        countDownLatch.await();
+        assertThat(success.get()).isEqualTo(7);
+        assertThat(fail.get()).isEqualTo(23);
     }
 
     /**

@@ -67,7 +67,9 @@ public class PostService {
         User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
         user.validateUserActive();
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
+        Post post = postRepository.findByIdWithLock(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
+
+        //참여 가능 한지 판별
         post.validateCanParticipate(user);
         existsByPostIdAndUserId(user,post);
 
@@ -89,7 +91,7 @@ public class PostService {
     @Transactional
     public BaseResponse orderEnd(UUID postId,UUID userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
-        Post post = postRepository.findById(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
+        Post post = postRepository.findByIdWithLock(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
         //작성자가 아닌 유저가 마감처리 할 경우 throw
         post.validateOwnerUser(user);
 

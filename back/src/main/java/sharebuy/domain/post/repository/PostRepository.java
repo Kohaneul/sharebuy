@@ -1,6 +1,8 @@
 package sharebuy.domain.post.repository;
 
+import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -91,12 +93,17 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     """)
     int participate(@Param("id") UUID id);
 
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select p from Post p where p.id = :id")
+    Optional<Post> findByIdWithLock(@Param("id")UUID id);
+
     @Modifying(clearAutomatically = true)
     @Query("""
     UPDATE Post p
-       SET status = :status,
+       SET status = :postStatus,
        updatedAt = CURRENT_TIMESTAMP
      WHERE p.id = :id
     """)
-    int changeStatus(@Param("id") UUID id , @Param("status")PostStatus postStatus);
+    int changeStatus(@Param("id") UUID id , @Param("postStatus")PostStatus postStatus);
 }
