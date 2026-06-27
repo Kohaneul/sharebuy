@@ -15,8 +15,8 @@ public class Purchase {
     @GeneratedValue
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
-    
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;       // 참여한 사용자
 
@@ -25,7 +25,7 @@ public class Purchase {
     @Enumerated(value = EnumType.STRING)
     private PurchaseStatus status;     // 예: 참여중, 완료 등
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id",nullable = false)
     private Post post;         // 어떤 게시글에 참여했는지 연결
 }

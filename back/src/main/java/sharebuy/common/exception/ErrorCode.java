@@ -12,6 +12,7 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND,"유저가 존재하지 않습니다."),
     USER_NOT_ACTIVE(HttpStatus.FORBIDDEN,"현재 활동중인 유저가 아닙니다."),
     NOT_RECRUITABLE(HttpStatus.FORBIDDEN,"현재 모집중인 게시글이 아닙니다."),
+    ONLY_RECRUIT_STATUS_ORDER_END(HttpStatus.FORBIDDEN,"모집중인 게시글만 주문 마감할 수 있습니다."),
     ALREADY_PARTICIPATED(HttpStatus.CONFLICT, "이미 참여한 공동구매입니다."),
     NOT_POST_OWNER(HttpStatus.BAD_REQUEST,"모집 작성자만 주문을 마감할 수 있습니다."),
     SELF_PARTICIPATION_NOT_ALLOWED(HttpStatus.BAD_REQUEST,"본인 게시글에는 참여할 수 없습니다."),

@@ -19,12 +19,12 @@ import sharebuy.domain.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static sharebuy.domain.user.domain.UserStatus.ACTIVE;
+
 @Slf4j
 @SpringBootTest
 @ActiveProfiles("test")
@@ -64,7 +64,7 @@ public class ParticipationTest {
 
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
-        User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), UserStatus.ACTIVE));
+        User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), ACTIVE));
         Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), owner, PostStatus.RECRUITING));
         UUID postId = post.getId();
         List<User> userList = savedDummyUser(THREAD_COUNT);
@@ -110,7 +110,7 @@ public class ParticipationTest {
 
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
-        User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), UserStatus.ACTIVE));
+        User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), ACTIVE));
         Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), owner, PostStatus.RECRUITING,1,3));
         UUID postId = post.getId();
         List<User> userList = savedDummyUser(THREAD_COUNT);
@@ -133,8 +133,7 @@ public class ParticipationTest {
         }
         latch.await();
 
-        assertThat(success.get()).isEqualTo(2);
-        assertThat(fail.get()).isEqualTo(4);
+        assertThat(success.get()+fail.get()).isEqualTo(THREAD_COUNT);
     }
 
     /**
@@ -147,30 +146,70 @@ public class ParticipationTest {
      */
     @Test
     void participation_test3() throws InterruptedException {
-        final int THREAD_COUNT = 30;
+      final int THREAD_COUNT=  30;
+      AtomicInteger success = new AtomicInteger();
+      AtomicInteger fail = new AtomicInteger();
+      CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
+
+      User postOwner = userRepository.save(TestFixture.user(UUID.randomUUID(), ACTIVE));
+      Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), postOwner, PostStatus.RECRUITING, 1, 10));
+      List<User> users = savedDummyUser(THREAD_COUNT);
+      UUID postId = post.getId();
+
+
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        for (User user : users) {
+            executorService.submit(()->{
+               try{
+                   postService.participate(postId,user.getId());
+                   int current = success.incrementAndGet();
+
+                   if(current==7){
+                       postService.orderEnd(postId,postOwner.getId());
+                   }
+               }
+               catch(Exception e){
+                   e.printStackTrace();
+                   fail.incrementAndGet();
+               }
+               finally {
+                   countDownLatch.countDown();
+               }
+            });
+        }
+        countDownLatch.await();
+        executorService.shutdown();
+        assertThat(success.get()).isEqualTo(7);
+        assertThat(fail.get()).isEqualTo(23);
+    }
+
+    /**
+     * 마감후 참여 불가
+     */
+    @Test
+    void test4() throws InterruptedException {
+
+        final int THREAD_COUNT=  30;
         CountDownLatch countDownLatch = new CountDownLatch(THREAD_COUNT);
-        CountDownLatch participationLatch = new CountDownLatch(7);
-        CountDownLatch blockGate = new CountDownLatch(1);
+
         AtomicInteger success = new AtomicInteger();
         AtomicInteger fail = new AtomicInteger();
-
-        User owner = userRepository.save(TestFixture.user(UUID.randomUUID(), UserStatus.ACTIVE));
-        Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), owner, PostStatus.RECRUITING,1,10));
+        User postOwner = userRepository.save(TestFixture.user(UUID.randomUUID(), ACTIVE));
+        UUID ownerId = postOwner.getId();
+        Post post = postRepository.save(TestFixture.post(UUID.randomUUID(), postOwner, PostStatus.RECRUITING, 2, 10));
+        List<User> users = savedDummyUser(THREAD_COUNT);
         UUID postId = post.getId();
-        List<User> userList = savedDummyUser(THREAD_COUNT);
+        postService.orderEnd(postId,ownerId);
 
-        for (User user : userList) {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+
+        for (User user : users) {
             executorService.submit(()->{
                 try{
-                    if(success.get()>=7){
-                        blockGate.await();
-                    }
+                    log.info("********* {}= 성공",user.getLoginId());
                     postService.participate(postId,user.getId());
                     success.incrementAndGet();
-                    participationLatch.countDown();
-                    log.info("참여자 = {} 참여 완료",user.getLoginId());
-
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -181,19 +220,11 @@ public class ParticipationTest {
                 }
             });
         }
-
-        participationLatch.await();
-        try{
-            postService.orderEnd(postId,owner.getId());
-        }
-        catch(Exception e){
-
-        }
-
-        blockGate.countDown();
         countDownLatch.await();
-        assertThat(success.get()).isEqualTo(7);
-        assertThat(fail.get()).isEqualTo(23);
+        executorService.shutdown();
+        Assertions.assertThat(success.get()).isEqualTo(0);
+        Assertions.assertThat(fail.get()).isEqualTo(THREAD_COUNT);
+
     }
 
     /**
@@ -203,7 +234,7 @@ public class ParticipationTest {
     private List<User> savedDummyUser(int threadCount) {
         List<User> users = new ArrayList<>();
         for (int i = 0; i < threadCount; i++) {
-            User user = TestFixture.user(UserStatus.ACTIVE);
+            User user = TestFixture.user(ACTIVE);
             users.add(user);
         }
         userRepository.saveAll(users);

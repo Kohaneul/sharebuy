@@ -26,7 +26,7 @@ public class MenuRoles extends BaseTimeEntity {
     @Column(name = "role_type")
     private RoleType roleType;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "menu_id", nullable = false)
     private Menu menu;
 

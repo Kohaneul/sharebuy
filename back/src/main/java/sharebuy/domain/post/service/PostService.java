@@ -1,5 +1,6 @@
 package sharebuy.domain.post.service;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
@@ -12,6 +13,7 @@ import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.dto.PostDetailResponse;
 import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
+import sharebuy.domain.post.event.PostEndEvent;
 import sharebuy.domain.post.repository.ParticipationRepository;
 import sharebuy.domain.post.repository.PostRepository;
 import sharebuy.domain.user.entity.User;
@@ -19,6 +21,7 @@ import sharebuy.domain.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static sharebuy.common.exception.ErrorCode.*;
@@ -30,11 +33,13 @@ public class PostService {
     private final PostRepository postRepository;
     private final ParticipationRepository participationRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public PostService(PostRepository postRepository, ParticipationRepository participationRepository, UserRepository userRepository) {
+    public PostService(PostRepository postRepository, ParticipationRepository participationRepository, UserRepository userRepository, ApplicationEventPublisher applicationEventPublisher) {
         this.postRepository = postRepository;
         this.participationRepository = participationRepository;
         this.userRepository = userRepository;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 
@@ -77,9 +82,30 @@ public class PostService {
        if(updatedRow>0){
            Participation participation = new Participation(UUID.randomUUID(),post,user,post.getPerPrice(), LocalDateTime.now(), ParticipationStatus.JOINED);
            participationRepository.save(participation);
+
+           //현재 참여인원 = 모집 마감인원이면 자동으로 주문 마감처리
+           autoCloseIfFull(postId);
+
            return new BaseResponse(true,null);
        }
         throw new ShareBuyException(SOLD_OUT);
+    }
+
+    /**
+     * 현재 참여인원 = 모집 마감인원이면 자동으로 주문 마감처리
+     * @param postId
+     */
+    public void autoCloseIfFull(UUID postId){
+        Post updatedPost = postRepository.findById(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
+
+        if(Objects.equals(updatedPost.getCurrentParticipants(), updatedPost.getMaxParticipants())){
+            postRepository.changeStatus(postId, PostStatus.CLOSED);
+        }
+    }
+
+    @Transactional
+    public void orderEndAuto(UUID postId){
+        postRepository.changeStatus(postId,PostStatus.CLOSED);
     }
 
     /**
@@ -92,14 +118,17 @@ public class PostService {
     public BaseResponse orderEnd(UUID postId,UUID userId){
         User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
         Post post = postRepository.findByIdWithLock(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
-        //작성자가 아닌 유저가 마감처리 할 경우 throw
-        post.validateOwnerUser(user);
+
+        //validation
+        post.validate(user);
 
         //1.해당 게시글의 상태값 변경
         int updatedRow = postRepository.changeStatus(post.getId(), PostStatus.CLOSED);
 
         if(updatedRow>0){
-          //@TODO 주문 마감 시 사용자에게 메시지 or 카카오톡 알림 전송(eventListener)
+            List<Participation> participationList = participationRepository.findByIdPostIdWithUser(postId);
+            //@TODO eventListener: 주문 마감 시 사용자에게 메시지 or 카카오톡 알림 전송
+            applicationEventPublisher.publishEvent(new PostEndEvent(postId,participationList));
         }
         return new BaseResponse(true,null);
     }

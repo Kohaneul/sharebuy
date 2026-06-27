@@ -26,12 +26,12 @@ public class Payment extends BaseTimeEntity {
     private UUID id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;    //참여자
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id",nullable = false)
     private Participation participant;
 
@@ -44,12 +44,12 @@ public class Payment extends BaseTimeEntity {
     private String pg_tid;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id",nullable = false)
     private Post post;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id",nullable = false)
     private OrderGroup orderGroup;
 

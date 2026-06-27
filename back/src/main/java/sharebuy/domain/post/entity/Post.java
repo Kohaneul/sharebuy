@@ -116,12 +116,17 @@ public class Post extends BaseTimeEntity {
         return this.getUser().getId().equals(user.getId());
     }
 
-    public void validateOwnerUser(User user){
+    public void validate(User user){
+        //1. 해당 게시글의 주인이 아닌데 마감을 하는 경우
         if(!isOwner(user)){
             throw new ShareBuyException(NOT_POST_OWNER);
         }
-
+        //2. 마감하려는 게시글이 모집중인 게시글이 아닌 경우
+        if(!this.status.equals(PostStatus.RECRUITING)){
+            throw new ShareBuyException(ONLY_RECRUIT_STATUS_ORDER_END);
+        }
     }
+
     public void validateCanParticipate(User user) {
         //1. 이미 마감된 건일때
         if (this.status == PostStatus.CLOSED) {

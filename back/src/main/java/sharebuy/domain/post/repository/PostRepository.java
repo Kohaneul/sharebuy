@@ -84,12 +84,13 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
     Optional<Post> findByIdWithImages(@Param("id")UUID id);
 
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("""
     UPDATE Post p
        SET p.currentParticipants = p.currentParticipants + 1
      WHERE p.id = :id
        AND p.maxParticipants > p.currentParticipants
+       AND p.status = 'RECRUITING'
     """)
     int participate(@Param("id") UUID id);
 
@@ -104,6 +105,8 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
        SET status = :postStatus,
        updatedAt = CURRENT_TIMESTAMP
      WHERE p.id = :id
+     AND p.maxParticipants >= p.currentParticipants
+     AND p.status = 'RECRUITING'
     """)
     int changeStatus(@Param("id") UUID id , @Param("postStatus")PostStatus postStatus);
 }

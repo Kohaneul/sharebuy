@@ -26,7 +26,7 @@ public class PageSection extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id",nullable = false)
     private Page page;
 
