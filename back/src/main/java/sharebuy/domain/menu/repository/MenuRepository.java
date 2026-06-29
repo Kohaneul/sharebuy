@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.entity.Menu;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,4 +15,11 @@ public interface MenuRepository extends JpaRepository<Menu, UUID> {
     @Query("select m from Menu m where m.id = :menuId ")
     Optional<Menu> findMenuByUser(@Param("roleType") RoleType roleType, @Param("menuId") UUID menuId);
 
+    @Query("""
+    SELECT m
+    FROM Menu m
+    WHERE m.roleType = :roleType
+      AND m.isActive = 1
+    ORDER BY m.menuOrder""")
+    List<Menu> findActiveMenusByRoleType(RoleType roleType);
 }

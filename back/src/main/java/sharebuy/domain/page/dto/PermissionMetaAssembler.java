@@ -2,7 +2,6 @@ package sharebuy.domain.page.dto;
 
 import org.springframework.stereotype.Component;
 import sharebuy.common.domain.RoleType;
-import sharebuy.domain.menu.entity.Menu;
 import sharebuy.domain.page.dto.PermissionMeta.PermissionItemMeta;
 
 import java.util.Collections;
