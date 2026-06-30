@@ -2,6 +2,7 @@ package sharebuy.domain.menu.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.dto.MenuChildResponse;
@@ -30,13 +31,23 @@ public class MenuService {
         return menuRepository.findById(menuId).orElseThrow(()->new RuntimeException("존재하지 않습니다."));
     }
 
+    @Transactional(readOnly = true)
     public List<MenuResponse> findAll(CustomUserDetail principal) {
-        List<Menu> menus = menuRepository.findActiveMenusByRoleType(principal.getRoleType());
-
-        return convertMenuResponseList(menus);
-
+        RoleType roleType = principal.getRoleType();
+        List<MenuResponse> menuResponseList = menuCacheService.get(roleType);
+        if(menuResponseList == null || menuResponseList.isEmpty()){
+            List<Menu> menus = menuRepository.findActiveMenusByRoleType(principal.getRoleType());
+            menuResponseList = convertMenuResponseList(menus);
+            menuCacheService.save(roleType,menuResponseList);
+        };
+        return menuResponseList;
     }
 
+    /**
+     * menu ->menuResponse 객체로 변환
+     * @param menus
+     * @return
+     */
     private List<MenuResponse> convertMenuResponseList(List<Menu> menus) {
         Map<UUID, List<Menu>> childMap = menus.stream().filter(menu -> menu.getParentId() != null).collect(Collectors.groupingBy(Menu::getParentId));
 
