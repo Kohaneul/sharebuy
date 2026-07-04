@@ -14,7 +14,7 @@ public class MenuCacheService {
 
     private final RedisTemplate<String, List<MenuResponse>> redisTemplate;
 
-    private final String MENU_KEY_PREFIX = "menu:";
+    private final String MENU_KEY_PREFIX = "MENU:";
 
     public List<MenuResponse> get(RoleType roleType){
         return redisTemplate.opsForValue().get(getKey(roleType));

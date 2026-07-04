@@ -36,8 +36,8 @@ public class MenuService {
         RoleType roleType = principal.getRoleType();
         List<MenuResponse> menuResponseList = menuCacheService.get(roleType);
         if(menuResponseList == null || menuResponseList.isEmpty()){
-            List<Menu> menus = menuRepository.findActiveMenusByRoleType(principal.getRoleType());
-            menuResponseList = convertMenuResponseList(menus);
+            List<Menu> menus = menuRepository.findActiveMenusIsActive();
+            menuResponseList = convertMenuResponseList(menus,roleType);
             menuCacheService.save(roleType,menuResponseList);
         };
         return menuResponseList;
@@ -48,16 +48,17 @@ public class MenuService {
      * @param menus
      * @return
      */
-    private List<MenuResponse> convertMenuResponseList(List<Menu> menus) {
-        Map<UUID, List<Menu>> childMap = menus.stream().filter(menu -> menu.getParentId() != null).collect(Collectors.groupingBy(Menu::getParentId));
+    private List<MenuResponse> convertMenuResponseList(List<Menu> menus,RoleType roleType) {
+        List<Menu> accessibleMenus = menus.stream().filter(menu ->roleType.canAccess(menu.getRoleType())).toList();
+        Map<UUID, List<Menu>> accessibleChildMap = accessibleMenus.stream().filter(menu -> menu.getParentId() != null).collect(Collectors.groupingBy(Menu::getParentId));
 
-        return menus.stream()
-                .filter(menu -> menu.getParentId() == null)
+        return accessibleMenus.stream()
+                .filter(menu->menu.getParentId()==null)
                 .map(parent -> new MenuResponse(
                         parent.getId(),
                         parent.getTitle(),
                         parent.getIcon(),
-                        childMap.getOrDefault(parent.getId(), List.of())
+                        accessibleChildMap.getOrDefault(parent.getId(), List.of())
                                 .stream()
                                 .map(child -> new MenuChildResponse(
                                         child.getId(),
@@ -67,6 +68,5 @@ public class MenuService {
                                 .toList()
                 ))
                 .toList();
-
            }
 }

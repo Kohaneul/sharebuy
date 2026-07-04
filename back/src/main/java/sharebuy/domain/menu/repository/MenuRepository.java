@@ -18,8 +18,7 @@ public interface MenuRepository extends JpaRepository<Menu, UUID> {
     @Query("""
     SELECT m
     FROM Menu m
-    WHERE m.roleType = :roleType
-      AND m.isActive = 1
+    WHERE m.isActive = 1
     ORDER BY m.menuOrder""")
-    List<Menu> findActiveMenusByRoleType(RoleType roleType);
+    List<Menu> findActiveMenusIsActive();
 }
