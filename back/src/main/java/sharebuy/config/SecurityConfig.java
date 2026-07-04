@@ -44,6 +44,7 @@ public class SecurityConfig {
                         auth.requestMatchers("/","/login","/board","/rest/auth/**").permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/page/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/post/**", "GET")).permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/rest/menu/all", "GET")).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form->form
                         .loginProcessingUrl("/rest/auth/login")

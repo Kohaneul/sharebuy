@@ -47,24 +47,15 @@ const longitudeRef = ref<number>();
 
 
 async function fetchData(param: any) {
-  // 1. GUEST 캐시 체크
-  // if (userStore.roleType === ROLES.GUEST) {
-  //   const cachedNav = uiStore.navCache[route.path];
-  //   if (cachedNav) {
-  //     topNavMeta.value = cachedNav;
-  //     uiStore.setGlobalNav(cachedNav); // 캐시된 데이터를 전역으로 승격
-      
-  //   }
-  // }
 
-  // 2. 서버 호출 (캐시가 없거나, 로그인 사용자일 때)
+  // 1. 서버 호출 (캐시가 없거나, 로그인 사용자일 때)
   const res = await commonGet(`/page/${pageId.value}`, param);  
   
   if (res) {
     const navData = res.topNavMeta.topNavItemMetaList || [];
     topNavMeta.value = navData;
     
-    // 🌟 핵심: 어떤 유저든 서버에서 받은 최신 상단바를 '전역'으로 설정
+    // 어떤 유저든 서버에서 받은 최신 상단바를 '전역'으로 설정
     uiStore.setGlobalNav(navData);
 
     // GUEST라면 다음에 또 쓸 수 있게 경로별 캐시에도 저장
@@ -72,7 +63,7 @@ async function fetchData(param: any) {
       uiStore.setNavMeta(route.path, navData);
     }
 
-    // 3. 나머지 페이지 메타 데이터 셋팅
+    // 2. 나머지 페이지 메타 데이터 셋팅
     pageMeta.value = res.pageMeta.pageItemMetaList;
     permissionMeta.value = res.permissionMeta.permissionItemMetaList;
     roleTypeRef.value = res.permissionMeta.roleType;

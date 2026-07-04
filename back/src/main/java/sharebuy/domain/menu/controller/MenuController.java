@@ -1,11 +1,11 @@
 package sharebuy.domain.menu.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.dto.MenuResponse;
 import sharebuy.domain.menu.service.MenuService;
 
@@ -18,8 +18,8 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping("/all")
-    public List<MenuResponse> findAll(@AuthenticationPrincipal CustomUserDetail principal){
-        return menuService.findAll(principal);
+    public Object findAll(@RequestParam("roleType") RoleType roleType){
+        return menuService.findAll(roleType);
     }
 
 }

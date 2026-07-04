@@ -82,10 +82,7 @@ const config = ref();
 const cards = ref<CardData[]>([]);
 
 onMounted(async () => {
-  
-  config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
-
-  const  context = { latitude: props.latitude, longitude: props.longitude };
+   config.value = props.jsonConfig ? JSON.parse(props.jsonConfig): {};
 })
 
 const hasAuthority = (card: CardData) => {

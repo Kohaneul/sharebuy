@@ -3,7 +3,6 @@ package sharebuy.domain.menu.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.menu.dto.MenuChildResponse;
 import sharebuy.domain.menu.dto.MenuResponse;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +32,7 @@ public class MenuService {
     }
 
     @Transactional(readOnly = true)
-    public List<MenuResponse> findAll(CustomUserDetail principal) {
-        RoleType roleType = principal.getRoleType();
+    public List<MenuResponse> findAll(RoleType roleType) {
         List<MenuResponse> menuResponseList = menuCacheService.get(roleType);
         if(menuResponseList == null || menuResponseList.isEmpty()){
             List<Menu> menus = menuRepository.findActiveMenusIsActive();
@@ -52,21 +51,18 @@ public class MenuService {
         List<Menu> accessibleMenus = menus.stream().filter(menu ->roleType.canAccess(menu.getRoleType())).toList();
         Map<UUID, List<Menu>> accessibleChildMap = accessibleMenus.stream().filter(menu -> menu.getParentId() != null).collect(Collectors.groupingBy(Menu::getParentId));
 
+
         return accessibleMenus.stream()
-                .filter(menu->menu.getParentId()==null)
-                .map(parent -> new MenuResponse(
-                        parent.getId(),
-                        parent.getTitle(),
-                        parent.getIcon(),
-                        accessibleChildMap.getOrDefault(parent.getId(), List.of())
-                                .stream()
-                                .map(child -> new MenuChildResponse(
-                                        child.getId(),
-                                        child.getTitle(),
-                                        child.getRouteName()
-                                ))
-                                .toList()
-                ))
+                .filter(menu -> menu.getParentId() == null)
+                .map(parent ->
+                        MenuResponse.from(
+                                parent,
+                                accessibleChildMap.getOrDefault(parent.getId(), List.of())
+                                        .stream()
+                                        .map(MenuChildResponse::from)
+                                        .toList()
+                        )
+                )
                 .toList();
            }
 }

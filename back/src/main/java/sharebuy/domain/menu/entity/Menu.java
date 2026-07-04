@@ -1,9 +1,7 @@
 package sharebuy.domain.menu.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
 import java.util.UUID;
@@ -13,6 +11,8 @@ import static jakarta.persistence.EnumType.STRING;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "menu")
 public class Menu extends BaseTimeEntity {
 

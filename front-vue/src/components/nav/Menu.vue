@@ -1,5 +1,5 @@
 <template>
-  <Button type="text" @click="menuOpen = true" class="nav-icon">
+  <Button type="text" @click="onMenuButtonClick" class="nav-icon">
     <MenuOutlined class="nav-icon" />
   </Button>
 
@@ -15,8 +15,8 @@
     theme="light"
     v-model:openKeys="openKeys"
     v-model:selectedKeys="selectedKeys"
-    @click="onMenuClick"
-  >
+    @click="onMenuClick">
+
     <a-sub-menu
       v-for="menu in menus"
       :key="menu.key"
@@ -41,6 +41,11 @@ import { ref } from 'vue'
 import { Button, Drawer } from 'ant-design-vue'
 import { MenuOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router';
+import { commonGet } from '@/utils/ShareBuyUtil';
+import { useUserStore } from '@/store/user';
+
+
+const userStore = useUserStore();
 
 const menuOpen = ref(false);
 const router = useRouter();
@@ -48,24 +53,15 @@ const router = useRouter();
 
 const openKeys = ref(['inventory']) // 처음 펼칠 메뉴
 const selectedKeys = ref([])
-const menus = [
-  {
-    key: 'inventory',
-    title: '재고관리',
-    children: [
-      {
-        key: 'stock',
-        title: '재고조회',
-        name: 'Stock',
-      },
-      {
-        key: 'move',
-        title: '재고이동',
-        name: 'Move',
-      },
-    ],
-  },
-]
+
+const menus = ref();
+
+async function onMenuButtonClick(){
+  menuOpen.value = true;
+  const roleType = userStore.roleType;
+  menus.value = await commonGet(`/menu/all`,{roleType:roleType});
+  console.log("메뉴클릭");
+}
 const onMenuClick = ({ key }: { key: string }) => {
   const menu = menus.flatMap(menu=>menu.children).find(child=>child.key===key);
   if(!menu) return;
