@@ -18,7 +18,8 @@ public interface MenuRepository extends JpaRepository<Menu, UUID> {
     @Query("""
     SELECT m
     FROM Menu m
+    LEFT JOIN FETCH m.page
     WHERE m.isActive = 1
     ORDER BY m.menuOrder""")
-    List<Menu> findActiveMenusIsActive();
+    List<Menu> findActiveMenus();
 }

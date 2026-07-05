@@ -35,7 +35,7 @@ public class MenuService {
     public List<MenuResponse> findAll(RoleType roleType) {
         List<MenuResponse> menuResponseList = menuCacheService.get(roleType);
         if(menuResponseList == null || menuResponseList.isEmpty()){
-            List<Menu> menus = menuRepository.findActiveMenusIsActive();
+            List<Menu> menus = menuRepository.findActiveMenus();
             menuResponseList = convertMenuResponseList(menus,roleType);
             menuCacheService.save(roleType,menuResponseList);
         };

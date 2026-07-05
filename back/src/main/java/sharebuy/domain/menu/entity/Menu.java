@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.common.domain.RoleType;
+import sharebuy.domain.page.entity.Page;
+
 import java.util.UUID;
 
 import static jakarta.persistence.EnumType.STRING;
@@ -37,10 +39,12 @@ public class Menu extends BaseTimeEntity {
     @Column(name = "menu_order",nullable = false)
     private int menuOrder;
 
-    @Column(name = "route_name",nullable = false)
-    private String routeName;
-
     @Column(name = "title",nullable = false)
     private String title;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "page_id")
+    private Page page;
 
 }

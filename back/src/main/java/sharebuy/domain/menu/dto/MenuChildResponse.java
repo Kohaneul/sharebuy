@@ -14,9 +14,13 @@ import java.util.UUID;
 public class MenuChildResponse{
    private UUID id;
    private String title;
-   private String routeName;
+   private String route;
 
     public static MenuChildResponse from(Menu menu){
-        return new MenuChildResponse(menu.getId(),menu.getTitle(),menu.getRouteName());
+        String route = menu.getPage() != null
+                ? menu.getPage().getRoute()
+                : null;
+
+        return new MenuChildResponse(menu.getId(),menu.getTitle(),route);
     }
 };

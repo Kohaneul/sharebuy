@@ -13,21 +13,19 @@
     class="drawer-menu"
     mode="inline"
     theme="light"
-    v-model:openKeys="openKeys"
-    v-model:selectedKeys="selectedKeys"
-    @click="onMenuClick">
+    v-model:selectedKeys="selectedKeys">
 
     <a-sub-menu
       v-for="menu in menus"
-      :key="menu.key"
-    >
+      :key="menu.id">
       <template #title>
         {{ menu.title }}
       </template>
 
       <a-menu-item
         v-for="child in menu.children"
-        :key="child.key"
+        :key="child.id"
+        @click="onMenuClick(child)"
       >
         {{ child.title }}
       </a-menu-item>
@@ -50,22 +48,26 @@ const userStore = useUserStore();
 const menuOpen = ref(false);
 const router = useRouter();
 
-
-const openKeys = ref(['inventory']) // 처음 펼칠 메뉴
 const selectedKeys = ref([])
 
 const menus = ref();
+
+interface MenuChild {
+  id: string;
+  title: string;
+  route: string;
+}
 
 async function onMenuButtonClick(){
   menuOpen.value = true;
   const roleType = userStore.roleType;
   menus.value = await commonGet(`/menu/all`,{roleType:roleType});
-  console.log("메뉴클릭");
 }
-const onMenuClick = ({ key }: { key: string }) => {
-  const menu = menus.flatMap(menu=>menu.children).find(child=>child.key===key);
-  if(!menu) return;
-    router.push({ name: menu.name })
+
+const onMenuClick = (child:MenuChild) => {
+  if(!child) return;
+  
+  router.push(child.route);
 
   // 메뉴 클릭 시 Drawer 닫기
   menuOpen.value = false

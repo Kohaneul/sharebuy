@@ -26,10 +26,6 @@ public class Page extends BaseTimeEntity {
     @Column(columnDefinition = "uuid", updatable = false, nullable = false)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "menu_id",nullable = false)
-    private Menu menu;
-
     @Column(name = "route",nullable = false)
     private String route;
 
