@@ -31,7 +31,7 @@ public class SecurityConfig {
                 // 1. CORS 설정: 5173(Vite)에서 오는 요청 허용
                 .cors(cors->cors.configurationSource(request->{
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(java.util.List.of("http://localhost:5173")); // Vite 주소 허용
+                    config.setAllowedOrigins(java.util.List.of("http://localhost:5173","http://localhost:5174")); // Vite 주소 허용
                     config.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     config.setAllowedHeaders(java.util.List.of("*"));
                     config.setAllowCredentials(true); // 중요: 세션/쿠키 연동 허용
@@ -42,6 +42,7 @@ public class SecurityConfig {
                 // 3. 권한 설정: 화면 주소와 인증 관련 API는 무조건 통과
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers("/","/login","/board","/rest/auth/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/rest/user/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/page/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/post/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/menu/all", "GET")).permitAll()

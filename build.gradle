@@ -25,6 +25,10 @@ subprojects {
 	java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
 
 	configurations { compileOnly { extendsFrom annotationProcessor } }
+
+	tasks.withType(JavaCompile) {
+		options.compilerArgs << '-parameters'
+	}
 }
 
 // 루트에서 back 모듈 Spring Boot 실행

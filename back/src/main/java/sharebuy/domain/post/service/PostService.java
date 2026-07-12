@@ -1,5 +1,6 @@
 package sharebuy.domain.post.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,19 +29,13 @@ import static sharebuy.common.exception.ErrorCode.*;
 import static sharebuy.domain.post.policy.PostPolicy.DEFAULT_RADIUS_KM;
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
 
     private final PostRepository postRepository;
     private final ParticipationRepository participationRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-
-    public PostService(PostRepository postRepository, ParticipationRepository participationRepository, UserRepository userRepository, ApplicationEventPublisher applicationEventPublisher) {
-        this.postRepository = postRepository;
-        this.participationRepository = participationRepository;
-        this.userRepository = userRepository;
-        this.applicationEventPublisher = applicationEventPublisher;
-    }
 
 
     @Transactional(readOnly = true)
@@ -60,6 +55,7 @@ public class PostService {
         }
         return PostDetailResponse.from(post,canClose);
     }
+
 
     /**
      * 참여

@@ -32,7 +32,7 @@
     <!-- 3. 지도 섹션 (가칭) -->
     <div class="map-section">
       <h3>거래 희망 장소</h3>
-       <KakaoMap 
+       <KakaoStaticMap 
         :latitude="post.latitude" 
         :longitude="post.longitude" 
       />
@@ -107,7 +107,7 @@ import { useUserStore } from '@/store/user';
 import PageWrapper from '@/views/PageWrapper.vue';
 
 import { useLocationStore } from '@/store/location';
-import KakaoMap from '@/components/page/KakaoMap.vue';
+import KakaoStaticMap from '@/components/page/KakaoStaticMap.vue';
 const locationStore = useLocationStore();
 const userStore = useUserStore();
 
@@ -120,13 +120,39 @@ const latitude = ref();
 const longitude = ref();
 
 onMounted(async ()=>{
-    const coords = await locationStore.syncLocation(true); 
+  const isSync = !userStore.isLoggedIn;
+
+  const coords = await locationStore.syncLocation(isSync); 
+
+  latitude.value = coords.latitude;
+  longitude.value = coords.longitude;
+
+  await aboutMe();
+
+  await loadDetail();
+  
+  // modalVisible.value = userStore.isLoggedIn;
     
-    modalVisible.value = userStore.isLoggedIn;
-    latitude.value = coords.latitude;
-    longitude.value = coords.longitude;
-    loadDetail();
 });
+
+const aboutMe = async()=>{
+
+  try{
+   const res = await commonGet(`/user/me`, {latitude:latitude.value, longitude:longitude.value});
+
+      userStore.setUserInfo({
+        loginId: res.loginId,
+        roleType: res.roleType,
+        latitude: res.latitude,
+        longitude: res.longitude
+      });
+
+  }
+  catch(Error){
+    console.log(Error);
+  }
+
+}
 
 // 1. 데이터 로드
 const loadDetail = async () => {
@@ -135,10 +161,13 @@ const loadDetail = async () => {
   try {
     // 상세 조회를 위한 API 호출 (엔드포인트는 실제에 맞게 수정)
     const res = await commonGet(`/post/${id}`, {latitude:latitude.value, longitude:longitude.value});
-    post.value = res;
+    if(res){
+      post.value = res;
+    }
   } catch (error) {
     message.error('데이터를 불러오는데 실패했습니다.');
   }
+
 };
 
 // 2. 상태 관련 로직

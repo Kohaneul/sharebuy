@@ -6,6 +6,7 @@ import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.Place;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.entity.Post;
+import sharebuy.domain.user.dto.ViewerResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

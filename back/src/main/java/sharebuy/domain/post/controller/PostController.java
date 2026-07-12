@@ -35,7 +35,8 @@ public class PostController {
      * @return
      */
     @GetMapping("/{id}")
-    public PostDetailResponse findById(@PathVariable("id") UUID id, @AuthenticationPrincipal CustomUserDetail principal){
+    public PostDetailResponse findById(@PathVariable("id") UUID id,
+                                       @AuthenticationPrincipal CustomUserDetail principal){
         return postService.findById(id,principal);
     }
 

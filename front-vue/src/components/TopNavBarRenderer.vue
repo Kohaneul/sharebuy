@@ -36,7 +36,7 @@
         @action="onAction"
       />
 
-     <div v-if="roleType !== ROLES.GUEST">
+     <div v-if="userStore.isLoggedIn">
       <Button @click="onLogout">로그아웃</Button>
       </div>
       <div v-else>

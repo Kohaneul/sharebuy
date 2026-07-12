@@ -14,14 +14,13 @@ import static sharebuy.domain.page.provider.pagedata.ContextConstants.*;
 
 @Service
 public class UserContextService {
-    private final KakaoMapService kakaoMapService; // 구글 API 호출용 서비스
+    private final KakaoMapService kakaoMapService; // 카카오 API 호출용 서비스
     private final UserService userService;
 
     public UserContextService(KakaoMapService kakaoMapService, UserService userService) {
         this.kakaoMapService = kakaoMapService;
         this.userService = userService;
     }
-
 
     /**
      * User 정보 셋팅(로그인/비로그인 시 )

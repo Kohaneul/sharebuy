@@ -48,7 +48,8 @@ const longitudeRef = ref<number>();
 
 async function fetchData(param: any) {
 
-  // 1. 서버 호출 (캐시가 없거나, 로그인 사용자일 때)
+
+  // 2. 페이지 관련 정보 (캐시가 없거나, 로그인 사용자일 때)
   const res = await commonGet(`/page/${pageId.value}`, param);  
   
   if (res) {

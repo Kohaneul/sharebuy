@@ -1,8 +1,4 @@
 <template>
-  <!-- 
-    1. count 대신 dot 속성을 사용합니다.
-    2. value가 0보다 크거나 'Y'인 경우에만 점이 나오도록 설정하세요.
-  -->
   <a-badge :dot="hasNotification" :offset="[-2, 5]">
     <Button type="text" @click="onNotificationClick">
       <BellOutlined class="nav-icon"/>

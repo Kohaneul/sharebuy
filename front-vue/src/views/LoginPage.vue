@@ -56,7 +56,6 @@ async function loginUser(){
   param.append('password', password.value);
   
    const res= await commonPostLogin(`/auth/login`,param);
-   console.log(res);
 if (res) {
   // 1. 유저 스토어에 통째로 저장 (좌표 포함)
   userStore.setUserInfo(res);
