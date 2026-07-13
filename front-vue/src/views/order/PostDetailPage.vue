@@ -122,52 +122,57 @@ const longitude = ref();
 onMounted(async ()=>{
   const isSync = !userStore.isLoggedIn;
 
-  const coords = await locationStore.syncLocation(isSync); 
+  if (isSync) {
+    // 캐시된 좌표가 있으면 즉시 그걸로 먼저 렌더링 (fire-and-forget 갱신)
+    if (locationStore.latitude && locationStore.longitude) {
+      await aboutMe();
+      await loadDetail();
+      locationStore.syncLocation(true).then(() => {
+        // 필요하면 백그라운드에서 최신 좌표로 재조회
+      });
+      return;
+    }
+  }
 
-  latitude.value = coords.latitude;
-  longitude.value = coords.longitude;
-
+  // 캐시가 없는 최초 진입만 GPS 대기
+  await locationStore.syncLocation(isSync);
   await aboutMe();
-
   await loadDetail();
-  
-  // modalVisible.value = userStore.isLoggedIn;
-    
 });
 
 const aboutMe = async()=>{
-
   try{
-   const res = await commonGet(`/user/me`, {latitude:latitude.value, longitude:longitude.value});
-
-      userStore.setUserInfo({
-        loginId: res.loginId,
-        roleType: res.roleType,
-        latitude: res.latitude,
-        longitude: res.longitude
-      });
-
+    const res = await commonGet(`/user/me`, {
+      latitude: locationStore.latitude,   // ← store에서 직접
+      longitude: locationStore.longitude
+    });
+    userStore.setUserInfo({
+      loginId: res.loginId,
+      roleType: res.roleType,
+      latitude: res.latitude,
+      longitude: res.longitude
+    });
   }
   catch(Error){
     console.log(Error);
   }
-
 }
+
 
 // 1. 데이터 로드
 const loadDetail = async () => {
   const id = route.query.id;
-
   try {
-    // 상세 조회를 위한 API 호출 (엔드포인트는 실제에 맞게 수정)
-    const res = await commonGet(`/post/${id}`, {latitude:latitude.value, longitude:longitude.value});
+    const res = await commonGet(`/post/${id}`, {
+      latitude: locationStore.latitude,   // ← store에서 직접
+      longitude: locationStore.longitude
+    });
     if(res){
       post.value = res;
     }
   } catch (error) {
     message.error('데이터를 불러오는데 실패했습니다.');
   }
-
 };
 
 // 2. 상태 관련 로직

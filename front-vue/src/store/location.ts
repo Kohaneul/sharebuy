@@ -1,17 +1,19 @@
 import { defineStore } from 'pinia';
 import { getCurrentLocation } from '@/utils/CurrentLocationUtil';
-
+// store/location.ts
 export const useLocationStore = defineStore('location', {
   state: () => ({
     latitude: null as number | null,
     longitude: null as number | null,
+    updatedAt: 0, // timestamp 추가
   }),
 
   actions: {
-    // 🌟 위치 정보를 업데이트하는 통합 액션
     async syncLocation(forceRefresh = false) {
-      // 이미 저장된 좌표 정보가 있다면 그대로 사용
-      if (!forceRefresh && this.latitude && this.longitude) {
+      const TTL = 5 * 60 * 1000; // 5분
+      const isFresh = Date.now() - this.updatedAt < TTL;
+
+      if (!forceRefresh && this.latitude && this.longitude && isFresh) {
         return { latitude: this.latitude, longitude: this.longitude };
       }
 
@@ -21,7 +23,7 @@ export const useLocationStore = defineStore('location', {
         return { latitude: pos.latitude, longitude: pos.longitude };
       } catch (error) {
         console.error("위치 획득 실패:", error);
-        // 실패 시 기본값 세팅 (선택 사항)
+        // 실패해도 기존 캐시가 있으면 그걸 씀 (완전 실패 아님)
         return { latitude: this.latitude, longitude: this.longitude };
       }
     },
@@ -29,6 +31,12 @@ export const useLocationStore = defineStore('location', {
     setLocation(lat: number | null, lng: number | null) {
       this.latitude = lat;
       this.longitude = lng;
+      this.updatedAt = Date.now();
     }
-  }
+  },
+
+  persist: {
+    storage: sessionStorage,
+    pick: ['latitude', 'longitude', 'updatedAt'],
+  },
 });
