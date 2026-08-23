@@ -21,9 +21,9 @@ import {computed} from 'vue';
 const props = defineProps<{
   title: string;
   actionType: ActionType;
-  dataUrl: string;
+  routeUrl: string;
   jsonConfig?: string; 
-  targetData?: any;
+  targetData?: string | number | Record<string, unknown>;
 }>();
 
 const buttonStyle = computed(() => {
@@ -39,7 +39,7 @@ const router = useRouter();
 const handleClick = async () => {
   // MOVE 타입이면 그냥 이동 (기존 로직 유지)
   if (props.actionType === ActionType.MOVE) {
-    router.push(props.dataUrl);
+    router.push(props.routeUrl);
     return;
   }
 

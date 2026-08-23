@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import CommonPage from '../views/CommonPage.vue';
 import LoginPage from '../views/LoginPage.vue';
 import PostDetailPage from '../views/order/PostDetailPage.vue';
+import RegisterNewPage from '../views/new/RegisterNewPage.vue';
 
 import { useUserStore } from '@/store/user';
 import { useLocationStore } from '@/store/location';
@@ -12,7 +13,7 @@ const routes = [
   { path: '/', redirect: '/login' }, // 기본 진입
   { path: '/login', component: LoginPage },
   { path: '/board', component: CommonPage },
-  { path: '/new', component: CommonPage },
+  { path: '/new', component: RegisterNewPage },
   { path: '/detail/post', component: PostDetailPage }
 ]
 

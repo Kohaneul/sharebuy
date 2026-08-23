@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import sharebuy.common.domain.Location;
 import sharebuy.domain.user.domain.Address;
 
 import java.util.List;
@@ -50,7 +51,7 @@ public class KakaoMapService {
             Map<String, Object> map = documents.get(0);
             Map<String, Object> address = (Map<String, Object>) map.get(ADDRESS);
             String primaryAddress = (String) address.get(ADDRESS_NAME);
-            return new Address(primaryAddress,null,null,lat,lng);
+            return new Address(primaryAddress,null,null,new Location(lat,lng));
         }
         catch(RuntimeException e){
             log.error("실패 -> **찾을 수 없는 좌표입니다.");

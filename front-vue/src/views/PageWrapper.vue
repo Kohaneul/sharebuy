@@ -38,7 +38,7 @@ const displayNavMeta = computed(() => {
   }
 
   // 2순위: 스토어에 저장된 Global 데이터 (로그인 후 위치 정보 등이 반영된 데이터)
-  // 직접 만든 페이지들은 보통 여기서 걸러집니다.
+  // 직접 만든 페이지들은 보통 여기서 필터링 됨.
   if (uiStore.globalTopNav && uiStore.globalTopNav.length > 0) {
     return uiStore.globalTopNav;
   }

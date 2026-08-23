@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import sharebuy.common.domain.Location;
 import sharebuy.common.domain.RoleType;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
@@ -33,9 +34,10 @@ public class CustomUserDetail implements UserDetails {
         this.loginId = user.getLoginId();
         this.password = user.getPassword();
         this.roleType = user.getRoleType();
-        Address address = user.getAddress();
-        this.latitude = address.getLatitude();
-        this.longitude = address.getLongitude();
+//        Address address = user.getAddress();
+        Location location = user.getAddress().getLocation();
+        this.latitude = location.getLatitude();
+        this.longitude = location.getLongitude();
 
     }
 

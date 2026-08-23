@@ -17,7 +17,6 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
 import { PageComponent, ActionType } from '@/ts/PageComponent';
 import { PageComponentMap } from '../ts/PageComponentMap';
 
@@ -34,9 +33,6 @@ const props = defineProps<{
   latitude?: number | null;
   longitude?: number | null;
 }>();
-
-// 버튼들만 필터링
-const buttons = computed(() => props.items.filter(item => item.type === 'BUTTON'));
 
 </script>
 

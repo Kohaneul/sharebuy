@@ -88,7 +88,7 @@ public class Post extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private PostStatus status;
 
-    @NotNull
+//    @NotNull
     @Column(nullable = false)
     @Embedded
     private Appointment appointment;

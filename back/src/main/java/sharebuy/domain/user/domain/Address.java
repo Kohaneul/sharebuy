@@ -2,8 +2,10 @@ package sharebuy.domain.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import sharebuy.common.domain.Location;
 
 import java.io.Serializable;
 
@@ -14,24 +16,22 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class Address implements Serializable {
 
-    @NotBlank(message = "주소1은 필수입니다.")
-    @Column(name = "primary_address", nullable = false)
+//    @NotBlank(message = "주소1은 필수입니다.")
+    @Column(name = "primary_address")
     private String primaryAddress;
 
-    @NotBlank(message = "상세 주소는 필수입니다.")
-    @Column(name = "detail_address", nullable = false)
+//    @NotBlank(message = "상세 주소는 필수입니다.")
+    @Column(name = "detail_address")
     private String detailAddress;
 
-    @NotBlank(message = "우편번호는 필수입니다.")
-    @Column(name = "zip_code", nullable = true)
+//    @NotBlank(message = "우편번호는 필수입니다.")
+    @Column(name = "zip_code")
     private String zipCode;
 
     // --- 좌표 정보 추가 ---
-    @Column(name = "latitude")
-    private Double latitude;
+    @Embedded
+    private Location location;
 
-    @Column(name = "longitude")
-    private Double longitude;
 
     @Override
     public String toString() {
@@ -40,7 +40,7 @@ public class Address implements Serializable {
 
 
     public static Address getDefaultAddress(){
-        return new Address("경기도 군포시 금정동","1234","1234",1232.11,23231.11);
+        return new Address("경기도 군포시 금정동","1234","1234",new Location(1232.11,23231.11));
     }
 
 

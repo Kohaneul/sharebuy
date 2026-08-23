@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.domain.Location;
 import sharebuy.domain.context.service.KakaoMapService;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.dto.ViewerResponse;
@@ -28,7 +29,8 @@ public class UserService {
         if(principal==null){
             Address guestAddress = kakaoMapService.convertAddressFromKakaoApi(latitude, longitude);
             User guest = User.guest(guestAddress);
-            return new ViewerResponse(guest.getLoginId(),guest.getRoleType(),guestAddress.getLatitude(), guestAddress.getLongitude());
+            Location location = guest.getAddress().getLocation();
+            return new ViewerResponse(guest.getLoginId(),guest.getRoleType(),location.getLatitude(), location.getLongitude());
         }
         return  new ViewerResponse(principal.getLoginId(), principal.getRoleType(), principal.getLatitude(), principal.getLongitude());
     }

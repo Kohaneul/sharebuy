@@ -6,6 +6,7 @@ import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.Place;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.entity.Post;
+import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.dto.ViewerResponse;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ public record PostDetailResponse(
         String title,
         String content,
         String placeName,
+        String address,
         double latitude,
         double longitude,
         LocalDateTime appointmentTime,
@@ -36,8 +38,10 @@ public record PostDetailResponse(
         Appointment appointment = post.getAppointment();
         LocalDateTime appointmentTime = appointment.getAppointmentTime();
         Place place = appointment.getPlace();
-        Location location = place.getLocation();
-        return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName()
+        Address address = place.getAddress();
+        String addrStr = address.getPrimaryAddress() + " " + address.getDetailAddress();
+        Location location = place.getAddress().getLocation();
+        return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName(),addrStr
                    ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl()
                     ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPerPrice(),post.getPurchaseAt()
                     ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory(),canClose);

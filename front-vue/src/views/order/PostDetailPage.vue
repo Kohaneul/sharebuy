@@ -31,7 +31,7 @@
 
     <!-- 3. 지도 섹션 (가칭) -->
     <div class="map-section">
-      <h3>거래 희망 장소</h3>
+      <h3>거래 희망 장소 :  {{ post.address }} </h3>
        <KakaoStaticMap 
         :latitude="post.latitude" 
         :longitude="post.longitude" 
@@ -159,7 +159,7 @@ const aboutMe = async()=>{
 }
 
 
-// 1. 데이터 로드
+// 1. 데이터 로드1  
 const loadDetail = async () => {
   const id = route.query.id;
   try {

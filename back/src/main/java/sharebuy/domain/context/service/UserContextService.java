@@ -3,6 +3,7 @@ package sharebuy.domain.context.service;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.domain.Location;
 import sharebuy.domain.page.dto.UserContextParam;
 import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
@@ -63,8 +64,9 @@ public class UserContextService {
         Double lat;
         if(paramMap.isEmpty()){
             Address address = user.getAddress();
-            lat = address.getLatitude();
-            lng = address.getLongitude();
+            Location location = address.getLocation();
+            lat = location.getLatitude();
+            lng = location.getLongitude();
             paramMap.put(LAT,String.valueOf(lat));
             paramMap.put(LNG,String.valueOf(lng));
         }
