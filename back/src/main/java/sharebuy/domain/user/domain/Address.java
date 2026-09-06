@@ -32,6 +32,11 @@ public class Address implements Serializable {
     @Embedded
     private Location location;
 
+    public Address(String primaryAddress, String detailAddress, Location location) {
+        this.primaryAddress = primaryAddress;
+        this.detailAddress = detailAddress;
+        this.location = location;
+    }
 
     @Override
     public String toString() {

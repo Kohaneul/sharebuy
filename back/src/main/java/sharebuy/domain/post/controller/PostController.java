@@ -6,6 +6,7 @@ import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.dto.PostDetailResponse;
+import sharebuy.domain.post.dto.PostSaveDto;
 import sharebuy.domain.post.service.PostService;
 import java.util.List;
 import java.util.UUID;
@@ -47,8 +48,8 @@ public class PostController {
      * @return
      */
     @PostMapping("/add")
-    public PostDetailResponse add(@AuthenticationPrincipal CustomUserDetail principal){
-        return postService.addPost(principal);
+    public BaseResponse add(@AuthenticationPrincipal CustomUserDetail principal, @RequestBody PostSaveDto postSaveDto){
+        return postService.addPost(principal,postSaveDto);
     }
 
     @PostMapping("/{postId}/join")

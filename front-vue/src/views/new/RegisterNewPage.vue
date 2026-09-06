@@ -7,8 +7,6 @@
       @finish="handleSubmit"
     >
       <!-- 기본 정보 -->
-      <!-- <a-divider>기본 정보</a-divider> -->
-
       <a-row :gutter="16">
         <a-col :span="24">
           <a-form-item
@@ -48,34 +46,27 @@
             </a-select>
           </a-form-item>
         </a-col>
-
+        
         <a-col :span="12">
           <a-form-item
-            label="구매 방식"
-            name="purchaseType"
+            label="구매 일시"
+            name="purchaseAt"
             :rules="[
-              { required: true, message: '구매 방식을 선택해주세요.' }
+              { required: true, message: '구매 일시를 선택해주세요.' }
             ]"
           >
-            <a-select
-              v-model:value="form.purchaseType"
-              placeholder="구매 방식을 선택해주세요."
-            >
-              <a-select-option
-                v-for="type in purchaseTypeOptions"
-                :key="type.value"
-                :value="type.value"
-              >
-                {{ type.label }}
-              </a-select-option>
-            </a-select>
+            <a-date-picker
+              v-model:value="form.purchaseAt"
+              show-time
+              format="YYYY-MM-DD"
+              style="width: 100%"
+            />
           </a-form-item>
         </a-col>
+
       </a-row>
 
       <!-- 상품 정보 -->
-      <!-- <a-divider>상품 정보</a-divider> -->
-
       <a-row :gutter="16">
         <a-col :span="12">
           <a-form-item
@@ -127,7 +118,7 @@
             label="총 구매 금액"
             name="totalPrice"
             :rules="[
-              { required: true, message: '총 구매 금액을 입력해주세요.' }
+              { required: true, message: '구매 금액을 입력해주세요.' }
             ]"
           >
             <a-input-number
@@ -176,27 +167,9 @@
           </a-form-item>
         </a-col>
 
-        <a-col :span="12">
-          <a-form-item
-            label="구매 일시"
-            name="purchaseAt"
-            :rules="[
-              { required: true, message: '구매 일시를 선택해주세요.' }
-            ]"
-          >
-            <a-date-picker
-              v-model:value="form.purchaseAt"
-              show-time
-              format="YYYY-MM-DD HH:mm"
-              style="width: 100%"
-            />
-          </a-form-item>
-        </a-col>
       </a-row>
 
       <!-- 약속 정보 -->
-      <!-- <a-divider>약속 정보</a-divider> -->
-
      <a-form-item
         name="appointment.place.placeName"
         :rules="[
@@ -215,6 +188,28 @@
             placeholder="주소 찾기를 눌러주세요."
             readonly
         />
+     </a-form-item>
+
+     <a-form-item
+        name="appointment.place.placeName"
+        :rules="[
+            { required: true, message: '만나는 시간을 입력해주세요.' }
+        ]"
+        >
+          <a-form-item
+            label="약속 일정"
+            name="purchaseAt"
+            :rules="[
+              { required: true, message: '만날 일정을 선택해주세요.' }
+            ]"
+          >
+            <a-date-picker
+              v-model:value="form.purchaseAt"
+              show-time
+              format="YYYY-MM-DDTHH:MM:ss"
+              style="width: 100%"
+            />
+          </a-form-item>
         </a-form-item>
 
 
@@ -264,7 +259,7 @@ import { message } from 'ant-design-vue';
 import { useUserStore } from '@/store/user';
 import PageWrapper from '@/views/PageWrapper.vue';
 import { useLocationStore } from '@/store/location';
-import KakaoStaticMap from '@/components/page/KakaoStaticMap.vue';
+import { PurchaseType,purchaseTypeOptions,categoryOptions,Category } from '@/views/new/registerNew';
 import AddressSearch from './AddressSearch.vue';
 const locationStore = useLocationStore();
 const userStore = useUserStore();
@@ -276,21 +271,10 @@ const latitude = ref();
 const longitude = ref();
 
 
-enum Category {
-  FOOD = 'FOOD',
-  DAILY = 'DAILY',
-  ETC = 'ETC'
-}
-
-enum PurchaseType {
-  GROUP = 'GROUP',
-  INDIVIDUAL = 'INDIVIDUAL'
-}
-
 interface PostCreateRequest {
   title: string;
   content: string;
-  purchaseType: PurchaseType;
+  purchaseType:PurchaseType|null;
   purchasePlace: string;
   productCode: string;
   purchaseUrl: string;
@@ -304,6 +288,8 @@ interface PostCreateRequest {
         longitude: number | null;
       };
       placeName: string;
+      primaryAddress:string;
+      detialAddress:string;
     };
     appointmentTime: string;
   };
@@ -315,7 +301,7 @@ interface PostCreateRequest {
 interface PostForm {
   title: string;
   content: string;
-  purchaseType: PurchaseType | undefined;
+  purchaseType:PurchaseType|null;
   purchasePlace: string;
   productCode: string;
   purchaseUrl: string;
@@ -329,6 +315,8 @@ interface PostForm {
         longitude: number | null;
       };
       placeName: string;
+      primaryAddress:string;
+      detialAddress:string;
     };
     appointmentTime: Dayjs | null;
   };
@@ -343,21 +331,22 @@ const loading = ref(false);
 const form = reactive<PostForm>({
   title: '',
   content: '',
-  purchaseType: undefined,
+  purchaseType: null,
   purchasePlace: '',
   productCode: '',
   purchaseUrl: '',
   totalPrice: null,
   perPrice: null,
   purchaseAt: null,
-
   appointment: {
     place: {
       location: {
         latitude: null,
         longitude: null
       },
-      placeName: ''
+      placeName: '',
+      primaryAddress:'',
+      detialAddress:''
     },
     appointmentTime: null
   },
@@ -367,16 +356,8 @@ const form = reactive<PostForm>({
   category: undefined
 });
 
-const categoryOptions = [
-  { label: '식품', value: Category.FOOD },
-  { label: '생활', value: Category.DAILY },
-  { label: '기타', value: Category.ETC }
-];
 
-const purchaseTypeOptions = [
-  { label: '공동구매', value: PurchaseType.GROUP },
-  { label: '개별구매', value: PurchaseType.INDIVIDUAL }
-];
+
 
 const handleSubmit = async () => {
   loading.value = true;
@@ -385,13 +366,13 @@ const handleSubmit = async () => {
     const request: PostCreateRequest = {
       title: form.title,
       content: form.content,
-      purchaseType: form.purchaseType!,
+      purchaseType: form.purchaseType,
       purchasePlace: form.purchasePlace,
       productCode: form.productCode,
       purchaseUrl: form.purchaseUrl,
       totalPrice: form.totalPrice,
       perPrice: form.perPrice,
-      purchaseAt: form.purchaseAt!.format('YYYY-MM-DDTHH:mm:ss'),
+      purchaseAt: form.purchaseAt!.format('YYYY-MM-DD'),
 
       appointment: {
         place: {
@@ -399,11 +380,13 @@ const handleSubmit = async () => {
             latitude: form.appointment.place.location.latitude,
             longitude: form.appointment.place.location.longitude
           },
-          placeName: form.appointment.place.placeName
+          placeName: form.appointment.place.placeName,
+          primaryAddress:form.appointment.place.primaryAddress,
+          detialAddress:form.appointment.place.detialAddress,
         },
         appointmentTime:
           form.appointment.appointmentTime!.format(
-            'YYYY-MM-DDTHH:mm:ss'
+            'YYYY-MM-DD'
           )
       },
 

@@ -4,10 +4,9 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import sharebuy.common.domain.Location;
+import sharebuy.domain.user.domain.Address;
 
 import java.time.LocalDateTime;
 
@@ -27,4 +26,19 @@ public class Appointment{
 //    @NotNull(message = "약속 일시는 필수입니다.")
     @Column(name = "appointment_time")
     private LocalDateTime appointmentTime;
+
+    public static Appointment create(
+            String placeName,
+            String primaryAddress,
+            String detailAddress,
+            double latitude,
+            double longitude,
+            LocalDateTime appointmentTime
+    ) {
+        Address address = new Address(primaryAddress,detailAddress,new Location(latitude,longitude));
+
+        Place place = Place.create(placeName, address);
+
+        return new Appointment(place, appointmentTime);
+    }
 }

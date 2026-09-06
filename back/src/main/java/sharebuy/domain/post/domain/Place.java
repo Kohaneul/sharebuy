@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.*;
+import org.springframework.security.core.parameters.P;
 import sharebuy.common.domain.Location;
 import sharebuy.domain.user.domain.Address;
 
@@ -19,5 +20,9 @@ public class Place {
 
     @Embedded
     private Address address;
+
+    public static Place create(String placeName,Address address){
+        return new Place(placeName,address);
+    }
 
 }

@@ -12,6 +12,7 @@ import sharebuy.common.payload.CardResponse;
 import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.dto.PostDetailResponse;
+import sharebuy.domain.post.dto.PostSaveDto;
 import sharebuy.domain.post.entity.Participation;
 import sharebuy.domain.post.entity.Post;
 import sharebuy.domain.post.event.PostEndEvent;
@@ -65,7 +66,7 @@ public class PostService {
      */
     @Transactional
     public BaseResponse participate(UUID postId, UUID userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
+        User user = findByUser(userId);
         user.validateUserActive();
 
         Post post = postRepository.findByIdWithLock(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
@@ -112,7 +113,7 @@ public class PostService {
      */
     @Transactional
     public BaseResponse orderEnd(UUID postId,UUID userId){
-        User user = userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
+        User user = findByUser(userId);
         Post post = postRepository.findByIdWithLock(postId).orElseThrow(() -> new ShareBuyException(POST_NOT_FOUND));
 
         //validation
@@ -129,6 +130,10 @@ public class PostService {
         return new BaseResponse(true,null);
     }
 
+    private User findByUser(UUID userId) {
+        return  userRepository.findById(userId).orElseThrow(() -> new ShareBuyException(USER_NOT_FOUND));
+    }
+
 
     private void existsByPostIdAndUserId(User user, Post post){
         //이미 등록한 상황이라면
@@ -138,7 +143,11 @@ public class PostService {
 
     }
 
-    public PostDetailResponse addPost(CustomUserDetail principal) {
+    @Transactional
+    public BaseResponse addPost(CustomUserDetail principal, PostSaveDto postSaveDto) {
+        User user = findByUser(principal.getId());
+        Post post = Post.createPost(user, postSaveDto);
+        postRepository.save(post);
         return null;
     }
 }

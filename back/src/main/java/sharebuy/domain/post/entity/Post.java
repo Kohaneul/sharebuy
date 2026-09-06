@@ -5,13 +5,18 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.parameters.P;
+import sharebuy.common.domain.Location;
 import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.Appointment;
+import sharebuy.domain.post.domain.Place;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.post.domain.PurchaseType;
+import sharebuy.domain.post.dto.PostSaveDto;
+import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -148,6 +153,39 @@ public class Post extends BaseTimeEntity {
         this.getUser().validateUserActive();
     }
 
+    public static Post createPost(User user, PostSaveDto dto) {
+        return Post.builder()
+                .user(user)
+                .title(dto.title())
+                .content(dto.content())
+                .purchaseType(dto.purchaseType())
+                .purchasePlace(dto.purchasePlace())
+                .productCode(dto.productCode())
+                .purchaseUrl(dto.purchaseUrl())
+                .totalPrice(dto.totalPrice())
+                .perPrice(dto.perPrice())
+                .purchaseAt(dto.purchaseAt())
+                .status(PostStatus.RECRUITING)
+                .imgUrl(dto.imgUrl())
+                .currentParticipants(
+                        dto.currentParticipants() != null
+                                ? dto.currentParticipants()
+                                : 0
+                )
+                .maxParticipants(dto.maxParticipants())
+                .category(dto.category())
+                .appointment(
+                        Appointment.create(
+                                dto.placeName(),
+                                dto.primaryAddress(),
+                                dto.detailAddress(),
+                                dto.latitude(),
+                                dto.longitude(),
+                                dto.appointmentTime()
+                        )
+                )
+                .build();
+    }
 
 }
 
