@@ -184,22 +184,22 @@
         </template>
 
         <a-input
-            v-model:value="form.appointment.place.primaryAddress"
+            v-model:value="form.appointment.place.address.primaryAddress"
             placeholder="주소 찾기를 눌러주세요."
             readonly
         />
      </a-form-item>
 
      <a-form-item
-        v-if="form.appointment.place.primaryAddress"
+        v-if="form.appointment.place.address.primaryAddress"
         name="appointment.place.detailAddress"
         :rules="[
             { required: true, message: '상세 주소를 입력해주세요.' }
         ]"
         >
 
-        <a-input v-if="form.appointment.place.primaryAddress"
-            v-model:value="form.appointment.place.detialAddress"
+        <a-input 
+            v-model:value="form.appointment.place.address.detailAddress"
             placeholder="상세 장소를 입력해주세요."
         />
      </a-form-item>
@@ -220,7 +220,7 @@
             <a-date-picker
               v-model:value="form.purchaseAt"
               show-time
-              format="YYYY-MM-DDTHH:MM:ss"
+              format="YYYY-MM-DD HH:mm"
               style="width: 100%"
             />
           </a-form-item>
@@ -265,9 +265,7 @@
 
 <script setup lang="ts">
 import { ref,  onMounted,reactive } from 'vue';
-import { Dayjs } from 'dayjs';
 import { useRouter } from 'vue-router';
-import { useRoute } from 'vue-router';
 import { commonGet, commonPost } from '@/utils/ShareBuyUtil'; // 기존 유틸 활용
 import { message } from 'ant-design-vue';
 import { useUserStore } from '@/store/user';
@@ -279,12 +277,6 @@ import AddressSearch from './AddressSearch.vue';
 const locationStore = useLocationStore();
 const userStore = useUserStore();
 
-const route = useRoute();
-const post = ref<any>(null);
-const latitude = ref();
-const longitude = ref();
-const addressRef = ref<string>();
-
 
 interface PostForm {
   title: string;
@@ -293,7 +285,7 @@ interface PostForm {
     place: {
       address:{
         primaryAddress:string;
-        detialAddress:string;
+        detailAddress:string;
         zipCode:string;
       },
     };
@@ -323,7 +315,7 @@ const form = reactive<PostForm>({
     place: {
       address:{
         primaryAddress:'',
-        detialAddress:'',
+        detailAddress:'',
         zipCode:''
       },
     },
@@ -349,45 +341,41 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    const request: PostCreateRequest = {
+    const request: PostForm = {
       title: form.title,
       content: form.content,
+      appointment: {
+        place: {
+          address: {
+            primaryAddress:form.appointment.place.address.primaryAddress,
+            detailAddress:form.appointment.place.address.detailAddress,
+            zipCode:form.appointment.place.address.zipCode
+          },
+        },
+        appointmentTime:form.appointment.appointmentTime
+      },
       purchaseType: form.purchaseType,
       purchasePlace: form.purchasePlace,
       productCode: form.productCode,
       purchaseUrl: form.purchaseUrl,
       totalPrice: form.totalPrice,
       perPrice: form.perPrice,
-      purchaseAt: form.purchaseAt!.format('YYYY-MM-DD'),
-
-      appointment: {
-        place: {
-          location: {
-            latitude: form.appointment.place.location.latitude,
-            longitude: form.appointment.place.location.longitude
-          },
-          primaryAddress:form.appointment.place.primaryAddress,
-          detialAddress:form.appointment.place.detialAddress,
-        },
-        appointmentTime:
-          form.appointment.appointmentTime!.format(
-            'YYYY-MM-DD'
-          )
-      },
-
+      purchaseAt: form.purchaseAt,
+      postStatus:PostStatus.RECRUITING,
       imgUrl: form.imgUrl,
       maxParticipants: form.maxParticipants,
       category: form.category
     };
-
     console.log('등록 요청:', request);
 
     // 실제 API 연결
-    // await commonPost('/api/posts', request);
+    const response = await commonPost('/api/post/add', request);
 
-    message.success('게시글이 등록되었습니다.');
-
+    if(response.result){
+      message.success('게시글이 등록되었습니다.');
+    }
     await router.push('/post');
+
   } catch (error) {
     console.error(error);
     message.error('게시글 등록에 실패했습니다.');

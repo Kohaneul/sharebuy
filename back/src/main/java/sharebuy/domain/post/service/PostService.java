@@ -148,6 +148,6 @@ public class PostService {
         User user = findByUser(principal.getId());
         Post post = Post.createPost(user, postSaveDto);
         postRepository.save(post);
-        return null;
+        return new BaseResponse(true, null);
     }
 }
