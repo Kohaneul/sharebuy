@@ -1,6 +1,7 @@
 package sharebuy.domain.post.dto;
 
 import sharebuy.domain.order.domain.Category;
+import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.domain.PurchaseType;
 
@@ -10,12 +11,7 @@ import java.util.List;
 public record PostSaveDto(
         String title,
         String content,
-        String placeName,
-        String primaryAddress,
-        String detailAddress,
-        double latitude,
-        double longitude,
-        LocalDateTime appointmentTime,
+        Appointment appointment,
         PostStatus status,
         List<String> imgUrl,
         String purchasePlace,

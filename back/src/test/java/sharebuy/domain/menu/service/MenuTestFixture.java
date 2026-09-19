@@ -29,7 +29,7 @@ public class MenuTestFixture {
                 .id(id)
                 .userStatus(userStatus)
                 .password("ABC")
-                .address(new Address("주소1","주소2","우편번호",10.1,10.2))
+                .address(new Address("주소1","주소2","우편번호",new Location(10.1,10.2)))
                 .email(emailGenerate())
                 .telephone(telephoneGenerator())
                 .birth(LocalDate.now())
@@ -43,7 +43,7 @@ public class MenuTestFixture {
         return User.builder()
                 .userStatus(userStatus)
                 .password("ABC")
-                .address(new Address("주소1","주소2","우편번호",10.1,10.2))
+                .address(new Address("주소1","주소2","우편번호",new Location(10.1,10.2)))
                 .email(emailGenerate())
                 .telephone(telephoneGenerator())
                 .birth(LocalDate.now())
@@ -112,8 +112,8 @@ public class MenuTestFixture {
                 .withSecond(0)
                 .withNano(0);
         ;
-        Appointment appointment = new Appointment(new Place(new Location(10.1,10.2),"장소1"),localDateTime);
-        return appointment;
+        Address address = new Address("경기도 군포시 금정동 849","105",new Location(10.1,10.2));
+        return new Appointment(new Place("장소1",address),localDateTime);
     }
 
     public static Participation participation(

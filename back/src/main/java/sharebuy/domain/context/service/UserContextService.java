@@ -42,7 +42,9 @@ public class UserContextService {
         //CASE 2) 로그인 x
         //위도, 경도 정보가 없으면 현위치 기반으로 뽑아온다.
         if(!paramMap.isEmpty()){
-            Address guestAddress = kakaoMapService.convertAddressFromKakaoApi(userContextParam.getLat(), userContextParam.getLng());
+            Location location = new Location(userContextParam.getLat(), userContextParam.getLng());
+            String primaryAddress = kakaoMapService.getAddressByCoordinate(location);
+            Address guestAddress = new Address(primaryAddress,null,location);
             session.setAttribute(GUEST_ADDRESS,guestAddress);
             User guest = User.guest(guestAddress);
 

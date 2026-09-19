@@ -5,18 +5,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.security.core.parameters.P;
-import sharebuy.common.domain.Location;
 import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.Appointment;
-import sharebuy.domain.post.domain.Place;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.common.domain.BaseTimeEntity;
 import sharebuy.domain.post.domain.PurchaseType;
 import sharebuy.domain.post.dto.PostSaveDto;
-import sharebuy.domain.user.domain.Address;
 import sharebuy.domain.user.entity.User;
 
 import java.time.LocalDateTime;
@@ -101,6 +97,7 @@ public class Post extends BaseTimeEntity {
     @OneToMany(mappedBy = "post", cascade = ALL)
     private List<Purchase> purchases;
 
+
     @ElementCollection
     @Column(name = "img_url")
     private List<String> imgUrl;
@@ -174,16 +171,7 @@ public class Post extends BaseTimeEntity {
                 )
                 .maxParticipants(dto.maxParticipants())
                 .category(dto.category())
-                .appointment(
-                        Appointment.create(
-                                dto.placeName(),
-                                dto.primaryAddress(),
-                                dto.detailAddress(),
-                                dto.latitude(),
-                                dto.longitude(),
-                                dto.appointmentTime()
-                        )
-                )
+                .appointment(dto.appointment())
                 .build();
     }
 

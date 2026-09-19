@@ -3,6 +3,14 @@ export enum PurchaseType {
   OFFLINE = 'OFFLINE'
 }
 
+export enum PostStatus {
+  RECRUITING = 'RECRUITING',
+  EDITING = 'EDITING',
+  CLOSED = 'CLOSED',
+  CANCELED = 'CANCELED'
+
+}
+
 export const purchaseTypeOptions = [
   { label: '온라인 구매', value: PurchaseType.ONLINE },
   { label: '오프라인 구매', value: PurchaseType.OFFLINE }

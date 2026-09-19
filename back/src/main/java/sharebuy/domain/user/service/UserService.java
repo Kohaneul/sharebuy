@@ -27,9 +27,10 @@ public class UserService {
     @Transactional(readOnly = true)
     public ViewerResponse getViewerResponse(CustomUserDetail principal, Double latitude, Double longitude) {
         if(principal==null){
-            Address guestAddress = kakaoMapService.convertAddressFromKakaoApi(latitude, longitude);
+            Location location = new Location(latitude,longitude);
+            String primaryAddress = kakaoMapService.getAddressByCoordinate(location);
+            Address guestAddress = new Address(primaryAddress,null,location);
             User guest = User.guest(guestAddress);
-            Location location = guest.getAddress().getLocation();
             return new ViewerResponse(guest.getLoginId(),guest.getRoleType(),location.getLatitude(), location.getLongitude());
         }
         return  new ViewerResponse(principal.getLoginId(), principal.getRoleType(), principal.getLatitude(), principal.getLongitude());

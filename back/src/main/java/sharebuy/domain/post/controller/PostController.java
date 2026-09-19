@@ -41,7 +41,6 @@ public class PostController {
         return postService.findById(id,principal);
     }
 
-
     /**
      * 신규 등록
      * @param principal
@@ -52,6 +51,12 @@ public class PostController {
         return postService.addPost(principal,postSaveDto);
     }
 
+    /**
+     * 참여
+     * @param postId
+     * @param principal
+     * @return
+     */
     @PostMapping("/{postId}/join")
     public BaseResponse participate(@PathVariable("postId") UUID postId
             , @AuthenticationPrincipal CustomUserDetail principal){

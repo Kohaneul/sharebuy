@@ -179,14 +179,28 @@
         <template #label>
             <div class="place-label">
             <span>약속 장소</span>
-            <AddressSearch></AddressSearch>
+            <AddressSearch @select="addressResult"></AddressSearch>
             </div>
         </template>
 
         <a-input
-            v-model:value="form.appointment.place.placeName"
+            v-model:value="form.appointment.place.primaryAddress"
             placeholder="주소 찾기를 눌러주세요."
             readonly
+        />
+     </a-form-item>
+
+     <a-form-item
+        v-if="form.appointment.place.primaryAddress"
+        name="appointment.place.detailAddress"
+        :rules="[
+            { required: true, message: '상세 주소를 입력해주세요.' }
+        ]"
+        >
+
+        <a-input v-if="form.appointment.place.primaryAddress"
+            v-model:value="form.appointment.place.detialAddress"
+            placeholder="상세 장소를 입력해주세요."
         />
      </a-form-item>
 
@@ -250,8 +264,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref,  computed,onMounted,reactive } from 'vue';
-import dayjs, { Dayjs } from 'dayjs';
+import { ref,  onMounted,reactive } from 'vue';
+import { Dayjs } from 'dayjs';
 import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 import { commonGet, commonPost } from '@/utils/ShareBuyUtil'; // 기존 유틸 활용
@@ -259,71 +273,45 @@ import { message } from 'ant-design-vue';
 import { useUserStore } from '@/store/user';
 import PageWrapper from '@/views/PageWrapper.vue';
 import { useLocationStore } from '@/store/location';
-import { PurchaseType,purchaseTypeOptions,categoryOptions,Category } from '@/views/new/registerNew';
+import { PurchaseType,categoryOptions,Category, PostStatus } from '@/views/new/registerNew';
 import AddressSearch from './AddressSearch.vue';
+
 const locationStore = useLocationStore();
 const userStore = useUserStore();
-
 
 const route = useRoute();
 const post = ref<any>(null);
 const latitude = ref();
 const longitude = ref();
+const addressRef = ref<string>();
 
-
-interface PostCreateRequest {
-  title: string;
-  content: string;
-  purchaseType:PurchaseType|null;
-  purchasePlace: string;
-  productCode: string;
-  purchaseUrl: string;
-  totalPrice: number | null;
-  perPrice: number | null;
-  purchaseAt: string;
-  appointment: {
-    place: {
-      location: {
-        latitude: number | null;
-        longitude: number | null;
-      };
-      placeName: string;
-      primaryAddress:string;
-      detialAddress:string;
-    };
-    appointmentTime: string;
-  };
-  imgUrl: string[];
-  maxParticipants: number | null;
-  category: Category | undefined;
-}
 
 interface PostForm {
   title: string;
   content: string;
+  appointment: {
+    place: {
+      address:{
+        primaryAddress:string;
+        detialAddress:string;
+        zipCode:string;
+      },
+    };
+    appointmentTime: string;
+  };
   purchaseType:PurchaseType|null;
   purchasePlace: string;
   productCode: string;
   purchaseUrl: string;
-  totalPrice: number | null;
-  perPrice: number | null;
-  purchaseAt: Dayjs | null;
-  appointment: {
-    place: {
-      location: {
-        latitude: number | null;
-        longitude: number | null;
-      };
-      placeName: string;
-      primaryAddress:string;
-      detialAddress:string;
-    };
-    appointmentTime: Dayjs | null;
-  };
+  totalPrice: number | 0;
+  perPrice: number | 0;
+  purchaseAt: string;
+  postStatus:PostStatus;
   imgUrl: string[];
   maxParticipants: number | null;
   category: Category | undefined;
 }
+
 
 const router = useRouter();
 const loading = ref(false);
@@ -331,26 +319,24 @@ const loading = ref(false);
 const form = reactive<PostForm>({
   title: '',
   content: '',
-  purchaseType: null,
+  appointment: {
+    place: {
+      address:{
+        primaryAddress:'',
+        detialAddress:'',
+        zipCode:''
+      },
+    },
+    appointmentTime: ''
+  },
+  purchaseType:null,
   purchasePlace: '',
   productCode: '',
   purchaseUrl: '',
-  totalPrice: null,
-  perPrice: null,
-  purchaseAt: null,
-  appointment: {
-    place: {
-      location: {
-        latitude: null,
-        longitude: null
-      },
-      placeName: '',
-      primaryAddress:'',
-      detialAddress:''
-    },
-    appointmentTime: null
-  },
-
+  totalPrice: 0,
+  perPrice: 0,
+  purchaseAt: '',
+  postStatus:PostStatus.RECRUITING,
   imgUrl: [],
   maxParticipants: null,
   category: undefined
@@ -380,7 +366,6 @@ const handleSubmit = async () => {
             latitude: form.appointment.place.location.latitude,
             longitude: form.appointment.place.location.longitude
           },
-          placeName: form.appointment.place.placeName,
           primaryAddress:form.appointment.place.primaryAddress,
           detialAddress:form.appointment.place.detialAddress,
         },
@@ -452,8 +437,13 @@ const aboutMe = async()=>{
   }
 }
 
-function findAddress(){
+const zipCodeRef = ref<string>();
 
+function addressResult(data:any){
+  if(data){
+    form.appointment.place.primaryAddress = data.address;
+    zipCodeRef.value = data.zonecode;
+  }
 }
 
 
