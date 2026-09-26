@@ -34,7 +34,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.login_id as loginId,
             u.avatar as avatar,
             p.content as content,
-            i.imageurl as imgUrl,
+            i.imagePath as imagePath,
             p.status as status,
             COALESCE(COUNT(pu.id), 0) as currentParticipants,
             COALESCE(p.max_participants,0) as maxParticipants
@@ -48,7 +48,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             AND pu.status = 'RECRUITING'
 
         LEFT JOIN (
-            SELECT post_id, MIN(imageurl) AS imageurl
+            SELECT post_id, MIN(imagePath) AS imagePath
             FROM image
             GROUP BY post_id
         ) i
@@ -80,7 +80,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             @Param("radius") double radius
     );
 
-    @Query("select p from Post p left join fetch p.imgUrl where p.id = :id")
+    @Query("select p from Post p left join fetch p.imagePath where p.id = :id")
     Optional<Post> findByIdWithImages(@Param("id")UUID id);
 
 

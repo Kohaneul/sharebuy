@@ -22,7 +22,7 @@ public record PostDetailResponse(
         double longitude,
         LocalDateTime appointmentTime,
         PostStatus status,
-        List<String> imgUrl,
+        List<String> imagePath,
         String purchasePlace,
         String productCode,
         String purchaseUrl,
@@ -42,7 +42,7 @@ public record PostDetailResponse(
         String addrStr = address.getPrimaryAddress() + " " + address.getDetailAddress();
         Location location = place.getAddress().getLocation();
         return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName(),addrStr
-                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImgUrl()
+                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImagePath()
                     ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPerPrice(),post.getPurchaseAt()
                     ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory(),canClose);
     }

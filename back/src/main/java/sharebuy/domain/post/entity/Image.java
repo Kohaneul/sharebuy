@@ -25,8 +25,8 @@ public class Image {
     private Post post;
 
     @NotBlank
-    @Column(nullable = false,unique = true)
-    private String imageUrl;
+    @Column(name = "image_path", nullable = false,unique = true)
+    private String imagePath;
 
 
 }

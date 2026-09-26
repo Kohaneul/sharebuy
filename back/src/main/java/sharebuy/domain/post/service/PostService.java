@@ -1,14 +1,17 @@
 package sharebuy.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.domain.RoleType;
 import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.common.payload.CardResponse;
+import sharebuy.common.storage.FileStorageService;
 import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.dto.PostDetailResponse;
@@ -27,6 +30,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import static sharebuy.common.exception.ErrorCode.*;
+import static sharebuy.domain.post.entity.Post.createPost;
 import static sharebuy.domain.post.policy.PostPolicy.DEFAULT_RADIUS_KM;
 
 @Service
@@ -37,7 +41,7 @@ public class PostService {
     private final ParticipationRepository participationRepository;
     private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
-
+    private final FileStorageService fileStorageService;
 
     @Transactional(readOnly = true)
     public List<CardResponse> findAllData(double latitude, double longitude){
@@ -146,8 +150,24 @@ public class PostService {
     @Transactional
     public BaseResponse addPost(CustomUserDetail principal, PostSaveDto postSaveDto) {
         User user = findByUser(principal.getId());
-        Post post = Post.createPost(user, postSaveDto);
+        List<String> savedFile = saveImageFiles(postSaveDto);
+
+        Post post = createPost(user, postSaveDto,savedFile);
         postRepository.save(post);
         return new BaseResponse(true, null);
+    }
+
+    /**
+     * 이미지가 있으면 저장
+     * @param postSaveDto
+     * @return
+     */
+    private List<String> saveImageFiles(PostSaveDto postSaveDto) {
+        final String board = "board";
+        List<MultipartFile> multipartFiles = postSaveDto.imagePath();
+        if(multipartFiles == null){
+            return List.of();
+        }
+        return fileStorageService.save(postSaveDto.imagePath(), board);
     }
 }

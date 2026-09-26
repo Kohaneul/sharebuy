@@ -8,7 +8,7 @@ public interface CardResponse {
     String getLoginId();
     String getAvatar();
     String getContent();
-    String getImgUrl();
+    String getImagePath();
     String getStatus();
     Integer getCurrentParticipants();
     Integer getMaxParticipants();

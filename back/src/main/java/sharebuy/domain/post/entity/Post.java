@@ -99,8 +99,8 @@ public class Post extends BaseTimeEntity {
 
 
     @ElementCollection
-    @Column(name = "img_url")
-    private List<String> imgUrl;
+    @Column(name = "image_path")
+    private List<String> imagePath;
 
     @Column(name = "current_participants",nullable = false)
     private Integer currentParticipants = 0;
@@ -150,7 +150,7 @@ public class Post extends BaseTimeEntity {
         this.getUser().validateUserActive();
     }
 
-    public static Post createPost(User user, PostSaveDto dto) {
+    public static Post createPost(User user, PostSaveDto dto,List<String> imagePath) {
         return Post.builder()
                 .user(user)
                 .title(dto.title())
@@ -163,7 +163,7 @@ public class Post extends BaseTimeEntity {
                 .perPrice(dto.perPrice())
                 .purchaseAt(dto.purchaseAt())
                 .status(PostStatus.RECRUITING)
-                .imgUrl(dto.imgUrl())
+                .imagePath(imagePath)
                 .currentParticipants(
                         dto.currentParticipants() != null
                                 ? dto.currentParticipants()
