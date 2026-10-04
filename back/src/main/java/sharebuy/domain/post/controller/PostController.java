@@ -1,7 +1,9 @@
 package sharebuy.domain.post.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sharebuy.common.auth.config.CustomUserDetail;
 import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.payload.CardResponse;
@@ -46,9 +48,17 @@ public class PostController {
      * @param principal
      * @return
      */
-    @PostMapping("/add")
-    public BaseResponse add(@AuthenticationPrincipal CustomUserDetail principal, @RequestBody PostSaveDto postSaveDto){
-        return postService.addPost(principal,postSaveDto);
+    @PostMapping(
+            value = "/add",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public BaseResponse add(
+            @AuthenticationPrincipal CustomUserDetail principal,
+            @RequestPart("request") PostSaveDto postSaveDto,
+            @RequestPart(value = "imagePath", required = false)
+            List<MultipartFile> imagePath
+    ) {
+        return postService.addPost(principal, postSaveDto, imagePath);
     }
 
     /**

@@ -100,10 +100,29 @@
 
         <a-col :span="24">
           <a-form-item
+            label="구매 타입"
+            name="purchaseType"
+            :rules="[
+              { required: true, message: '구매 타입을 선택해주세요.' }
+            ]"
+          >
+            <a-radio-group v-model:value="form.purchaseType">
+              <a-radio :value="PurchaseType.OFFLINE">
+                오프라인
+              </a-radio>
+              <a-radio :value="PurchaseType.ONLINE">
+                온라인
+              </a-radio>
+            </a-radio-group>
+          </a-form-item>
+        </a-col>
+
+        <a-col :span="24" v-if="form.purchaseType ==PurchaseType.ONLINE">
+          <a-form-item
             label="상품 구매 URL"
             name="purchaseUrl"
             :rules="[
-              { required: true, message: '상품 URL을 입력해주세요.' }
+              { required: false, message: '상품 URL을 입력해주세요.' }
             ]"
           >
             <a-input
@@ -186,7 +205,7 @@
         <a-input
             v-model:value="form.appointment.place.address.primaryAddress"
             placeholder="주소 찾기를 눌러주세요."
-            readonly
+            
         />
      </a-form-item>
 
@@ -226,7 +245,14 @@
           </a-form-item>
         </a-form-item>
 
-
+    <a-form-item label="이미지">
+      <input
+        type="file"
+        multiple
+        accept="image/*"
+        @change="handleFileChange"
+      />
+    </a-form-item>
       <!-- 내용 -->
       <a-divider>게시글 내용</a-divider>
 
@@ -254,6 +280,7 @@
           type="primary"
           html-type="submit"
           :loading="loading"
+          @click="handleSubmit"
         >
           등록
         </a-button>
@@ -264,9 +291,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref,  onMounted,reactive } from 'vue';
+import { ref,  onMounted,reactive,watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { commonGet, commonPost } from '@/utils/ShareBuyUtil'; // 기존 유틸 활용
+import { commonGet, commonPostFile } from '@/utils/ShareBuyUtil'; // 기존 유틸 활용
 import { message } from 'ant-design-vue';
 import { useUserStore } from '@/store/user';
 import PageWrapper from '@/views/PageWrapper.vue';
@@ -291,7 +318,7 @@ interface PostForm {
     };
     appointmentTime: string;
   };
-  purchaseType:PurchaseType|null;
+  purchaseType:PurchaseType;
   purchasePlace: string;
   productCode: string;
   purchaseUrl: string;
@@ -299,7 +326,7 @@ interface PostForm {
   perPrice: number | 0;
   purchaseAt: string;
   postStatus:PostStatus;
-  imgUrl: string[];
+  imagePath: File[];
   maxParticipants: number | null;
   category: Category | undefined;
 }
@@ -321,7 +348,7 @@ const form = reactive<PostForm>({
     },
     appointmentTime: ''
   },
-  purchaseType:null,
+  purchaseType:PurchaseType.OFFLINE,
   purchasePlace: '',
   productCode: '',
   purchaseUrl: '',
@@ -329,7 +356,7 @@ const form = reactive<PostForm>({
   perPrice: 0,
   purchaseAt: '',
   postStatus:PostStatus.RECRUITING,
-  imgUrl: [],
+  imagePath: [],
   maxParticipants: null,
   category: undefined
 });
@@ -341,35 +368,52 @@ const handleSubmit = async () => {
   loading.value = true;
 
   try {
-    const request: PostForm = {
-      title: form.title,
-      content: form.content,
-      appointment: {
-        place: {
-          address: {
-            primaryAddress:form.appointment.place.address.primaryAddress,
-            detailAddress:form.appointment.place.address.detailAddress,
-            zipCode:form.appointment.place.address.zipCode
-          },
-        },
-        appointmentTime:form.appointment.appointmentTime
+  const request = {
+    title: form.title,
+    content: form.content,
+    appointment: {
+      place: {
+        address: {
+          primaryAddress: form.appointment.place.address.primaryAddress,
+          detailAddress: form.appointment.place.address.detailAddress,
+          zipCode: form.appointment.place.address.zipCode
+        }
       },
-      purchaseType: form.purchaseType,
-      purchasePlace: form.purchasePlace,
-      productCode: form.productCode,
-      purchaseUrl: form.purchaseUrl,
-      totalPrice: form.totalPrice,
-      perPrice: form.perPrice,
-      purchaseAt: form.purchaseAt,
-      postStatus:PostStatus.RECRUITING,
-      imgUrl: form.imgUrl,
-      maxParticipants: form.maxParticipants,
-      category: form.category
-    };
-    console.log('등록 요청:', request);
+      appointmentTime: form.appointment.appointmentTime
+    },
+    purchaseType: form.purchaseType,
+    purchasePlace: form.purchasePlace,
+    productCode: form.productCode,
+    purchaseUrl: form.purchaseUrl,
+    totalPrice: form.totalPrice,
+    perPrice: form.perPrice,
+    purchaseAt: form.purchaseAt,
+    postStatus: PostStatus.RECRUITING,
+    maxParticipants: form.maxParticipants,
+    category: form.category
+  };
 
-    // 실제 API 연결
-    const response = await commonPost('/api/post/add', request);
+  const formData = new FormData();
+
+  formData.append(
+    'request',
+    new Blob(
+      [JSON.stringify(request)],
+      { type: 'application/json' }
+    )
+  );
+
+  form.imagePath.forEach((file) => {
+    formData.append('imagePath', file);
+  });
+  
+  for (const [key, value] of formData.entries()) {
+  console.log(key, value);
+}
+
+console.log(formData);
+  // 실제 API 연결
+  const response = await commonPostFile('/post/add', formData);
 
     if(response.result){
       message.success('게시글이 등록되었습니다.');
@@ -425,15 +469,33 @@ const aboutMe = async()=>{
   }
 }
 
-const zipCodeRef = ref<string>();
 
 function addressResult(data:any){
+  console.log(data);
   if(data){
-    form.appointment.place.primaryAddress = data.address;
-    zipCodeRef.value = data.zonecode;
+    form.appointment.place.address.primaryAddress = data.address;
+    form.appointment.place.address.zipCode = data.zonecode;
   }
 }
 
+const handleFileChange = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+
+  if (target.files) {
+    form.imagePath = Array.from(target.files);
+  }
+};
+
+watch(
+  [() => form.totalPrice, () => form.perPrice],
+  ([totalPrice, perPrice]) => {
+    if (totalPrice > 0 && perPrice > 0) {
+      form.maxParticipants = Math.floor(totalPrice / perPrice);
+    } else {
+      form.maxParticipants = null;
+    }
+  }
+);
 
 </script>
 

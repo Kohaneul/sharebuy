@@ -1,20 +1,17 @@
 package sharebuy.domain.post.dto;
 
-import org.springframework.web.multipart.MultipartFile;
 import sharebuy.domain.order.domain.Category;
 import sharebuy.domain.post.domain.Appointment;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.domain.PurchaseType;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record PostSaveDto(
         String title,
         String content,
         Appointment appointment,
         PostStatus status,
-        List<MultipartFile> imagePath,
         String purchasePlace,
         String productCode,
         PurchaseType purchaseType,

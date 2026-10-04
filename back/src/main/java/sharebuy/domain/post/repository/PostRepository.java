@@ -34,7 +34,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.login_id as loginId,
             u.avatar as avatar,
             p.content as content,
-            i.imagePath as imagePath,
+            i.image_path as imagePath,
             p.status as status,
             COALESCE(COUNT(pu.id), 0) as currentParticipants,
             COALESCE(p.max_participants,0) as maxParticipants
@@ -46,13 +46,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
         LEFT JOIN purchase pu
             ON p.id = pu.post_id
             AND pu.status = 'RECRUITING'
-
-        LEFT JOIN (
-            SELECT post_id, MIN(imagePath) AS imagePath
-            FROM image
-            GROUP BY post_id
-        ) i
-            ON p.id = i.post_id
+        
+        LEFT JOIN post_image_path i
+             ON p.id = i.post_id
 
         WHERE p.status IN ('RECRUITING', 'CLOSED')
           AND (6371 * acos(
@@ -70,7 +66,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.login_id,
             u.avatar,
             p.content,
-            i.imageurl,
+            i.image_path,
             p.status,
             p.max_participants
 """, nativeQuery = true)

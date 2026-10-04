@@ -148,9 +148,9 @@ public class PostService {
     }
 
     @Transactional
-    public BaseResponse addPost(CustomUserDetail principal, PostSaveDto postSaveDto) {
+    public BaseResponse addPost(CustomUserDetail principal, PostSaveDto postSaveDto,List<MultipartFile> imagePath) {
         User user = findByUser(principal.getId());
-        List<String> savedFile = saveImageFiles(postSaveDto);
+        List<String> savedFile = saveImageFiles(imagePath);
 
         Post post = createPost(user, postSaveDto,savedFile);
         postRepository.save(post);
@@ -159,15 +159,14 @@ public class PostService {
 
     /**
      * 이미지가 있으면 저장
-     * @param postSaveDto
+     * @param multipartFiles
      * @return
      */
-    private List<String> saveImageFiles(PostSaveDto postSaveDto) {
+    private List<String> saveImageFiles(List<MultipartFile> multipartFiles) {
         final String board = "board";
-        List<MultipartFile> multipartFiles = postSaveDto.imagePath();
         if(multipartFiles == null){
             return List.of();
         }
-        return fileStorageService.save(postSaveDto.imagePath(), board);
+        return fileStorageService.save(multipartFiles, board);
     }
 }

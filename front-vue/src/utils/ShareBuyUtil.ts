@@ -49,6 +49,8 @@ export async function commonPost<T, D = any>(url: string, data: D,  headers?: Re
         throw error;
     }
 }
+
+
 /**
  * [commonPost] 범용적인 POST 요청 유틸리티 함수
  */
@@ -67,3 +69,31 @@ export async function commonPostLogin<T, D = any>(url: string, data: D): Promise
         throw error;
     }
 }
+
+
+export async function commonPostFile<T>(
+  url: string,
+  formData: FormData
+): Promise<T> {
+  const combinedUrl = url.startsWith('/')
+    ? `${API_PREFIX}${url}`
+    : `${API_PREFIX}/${url}`;
+
+  try {
+    const response: AxiosResponse<T> = await api.post(
+      combinedUrl,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    // ...
+    throw error;
+  }
+}
+

@@ -68,16 +68,15 @@ public class Post extends BaseTimeEntity {
     @Column(name = "product_code",nullable = false)
     private String productCode;
 
-    @NotBlank(message = "상품 구매 url은 필수입니다.")
     @Column(name = "purchase_url")
     private String purchaseUrl;
 
     @NotNull(message = "총 구매 금액은 필수입니다.")
-    @Column(name = "total_price",nullable = false)
+    @Column(name = "total_price")
     private Integer totalPrice;
 
     @NotNull(message = "인당 참여 금액은 필수입니다.")
-    @Column(name = "per_price", nullable = false)
+    @Column(name = "per_price")
     private Integer perPrice;
 
     @NotNull(message = "구매 시점은 필수입니다.")
@@ -99,14 +98,19 @@ public class Post extends BaseTimeEntity {
 
 
     @ElementCollection
+    @CollectionTable(
+            name = "post_image_path",
+            joinColumns = @JoinColumn(name = "post_id")
+    )
     @Column(name = "image_path")
     private List<String> imagePath;
 
     @Column(name = "current_participants",nullable = false)
     private Integer currentParticipants = 0;
 
+    @NotNull(message = "인당 참여 금액은 필수입니다.")
     @Column(nullable = false,name = "max_participants")
-    private Integer maxParticipants;@NotNull(message = "인당 참여 금액은 필수입니다.")
+    private Integer maxParticipants;
 
     @NotNull
     @Column(nullable = false, updatable = false)
