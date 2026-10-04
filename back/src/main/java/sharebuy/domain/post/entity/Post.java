@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
+import sharebuy.common.domain.Location;
 import sharebuy.common.exception.ErrorCode;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.domain.order.domain.Category;
@@ -108,7 +109,7 @@ public class Post extends BaseTimeEntity {
     @Column(name = "current_participants",nullable = false)
     private Integer currentParticipants = 0;
 
-    @NotNull(message = "인당 참여 금액은 필수입니다.")
+    @NotNull(message = "최대 참여 인원은 필수입니다.")
     @Column(nullable = false,name = "max_participants")
     private Integer maxParticipants;
 
@@ -154,7 +155,8 @@ public class Post extends BaseTimeEntity {
         this.getUser().validateUserActive();
     }
 
-    public static Post createPost(User user, PostSaveDto dto,List<String> imagePath) {
+    public static Post createPost(User user, PostSaveDto dto, List<String> imagePath, Location location) {
+        dto.appointment().getPlace().getAddress().saveLocation(location);
         return Post.builder()
                 .user(user)
                 .title(dto.title())

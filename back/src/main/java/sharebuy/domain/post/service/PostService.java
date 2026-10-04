@@ -1,17 +1,18 @@
 package sharebuy.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import sharebuy.common.auth.config.CustomUserDetail;
+import sharebuy.common.domain.Location;
 import sharebuy.common.domain.RoleType;
 import sharebuy.common.entity.BaseResponse;
 import sharebuy.common.exception.ShareBuyException;
 import sharebuy.common.payload.CardResponse;
 import sharebuy.common.storage.FileStorageService;
+import sharebuy.domain.context.service.KakaoMapService;
 import sharebuy.domain.post.domain.ParticipationStatus;
 import sharebuy.domain.post.domain.PostStatus;
 import sharebuy.domain.post.dto.PostDetailResponse;
@@ -42,6 +43,8 @@ public class PostService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final FileStorageService fileStorageService;
+    private final KakaoMapService kakaoMapService;
+
 
     @Transactional(readOnly = true)
     public List<CardResponse> findAllData(double latitude, double longitude){
@@ -151,8 +154,12 @@ public class PostService {
     public BaseResponse addPost(CustomUserDetail principal, PostSaveDto postSaveDto,List<MultipartFile> imagePath) {
         User user = findByUser(principal.getId());
         List<String> savedFile = saveImageFiles(imagePath);
-
-        Post post = createPost(user, postSaveDto,savedFile);
+        String primaryAddress = postSaveDto.appointment().getPlace().getAddress().getPrimaryAddress();
+        Location location = kakaoMapService.getCoordinateByAddress(primaryAddress);
+        if (location == null) {
+            throw new ShareBuyException(INVALID_ADDRESS);
+        }
+        Post post = createPost(user, postSaveDto,savedFile,location);
         postRepository.save(post);
         return new BaseResponse(true, null);
     }

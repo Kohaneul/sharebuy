@@ -28,37 +28,41 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
      */
     @Query(value = """
         SELECT
-            p.id as id,
-            p.title as title,
-            u.nick_name as nickName,
-            u.login_id as loginId,
-            u.avatar as avatar,
-            p.content as content,
-            i.image_path as imagePath,
-            p.status as status,
-            COALESCE(COUNT(pu.id), 0) as currentParticipants,
-            COALESCE(p.max_participants,0) as maxParticipants
+            p.id AS id,
+            p.title AS title,
+            u.nick_name AS nickName,
+            u.login_id AS loginId,
+            u.avatar AS avatar,
+            p.content AS content,
+            (
+                SELECT i.image_path
+                FROM post_image_path i
+                WHERE i.post_id = p.id
+                LIMIT 1
+            ) AS imagePath,
+            p.status AS status,
+            COUNT(pu.id) AS currentParticipants,
+            COALESCE(p.max_participants, 0) AS maxParticipants
         FROM post p
-
+        
         INNER JOIN users u
             ON p.user_id = u.id
-
+        
         LEFT JOIN purchase pu
             ON p.id = pu.post_id
             AND pu.status = 'RECRUITING'
         
-        LEFT JOIN post_image_path i
-             ON p.id = i.post_id
-
         WHERE p.status IN ('RECRUITING', 'CLOSED')
-          AND (6371 * acos(
-              LEAST(1.0, GREATEST(-1.0,
-                  cos(radians(:latitude)) * cos(radians(p.latitude)) *
-                  cos(radians(p.longitude) - radians(:longitude)) +
-                  sin(radians(:latitude)) * sin(radians(p.latitude))
-              ))
-          )) < :radius
-
+          AND (
+              6371 * acos(
+                  LEAST(1.0, GREATEST(-1.0,
+                      cos(radians(:latitude)) * cos(radians(p.latitude)) *
+                      cos(radians(p.longitude) - radians(:longitude)) +
+                      sin(radians(:latitude)) * sin(radians(p.latitude))
+                  ))
+              )
+          ) < :radius
+        
         GROUP BY
             p.id,
             p.title,
@@ -66,10 +70,9 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             u.login_id,
             u.avatar,
             p.content,
-            i.image_path,
             p.status,
             p.max_participants
-""", nativeQuery = true)
+    """, nativeQuery = true)
     List<CardResponse> findNearbyPosts(
             @Param("latitude") double latitude,
             @Param("longitude") double longitude,

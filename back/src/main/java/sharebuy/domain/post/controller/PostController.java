@@ -48,10 +48,7 @@ public class PostController {
      * @param principal
      * @return
      */
-    @PostMapping(
-            value = "/add",
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
-    )
+    @PostMapping(value = "/add",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public BaseResponse add(
             @AuthenticationPrincipal CustomUserDetail principal,
             @RequestPart("request") PostSaveDto postSaveDto,

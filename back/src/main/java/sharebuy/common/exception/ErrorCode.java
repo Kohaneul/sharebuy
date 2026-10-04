@@ -21,7 +21,8 @@ public enum ErrorCode {
     PAGE_ACCESS_DENIED(HttpStatus.FORBIDDEN,"페이지를 접근할 수 없습니다."),
     INVALID_COMPONENT_PROVIDER(HttpStatus.INTERNAL_SERVER_ERROR, "존재하지 않는 provider 입니다."),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR,"파일을 저장 실패하였습니다."),
-    FILE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR,"파일을 찾을 수 없습니다.");
+    FILE_NOT_EXIST(HttpStatus.INTERNAL_SERVER_ERROR,"파일을 찾을 수 없습니다."),
+    INVALID_ADDRESS(HttpStatus.NOT_FOUND,"변환할 주소가 존재하지 않습니다." );
     private final HttpStatus httpStatus;
     private final String message;
 }

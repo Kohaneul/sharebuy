@@ -418,7 +418,7 @@ console.log(formData);
     if(response.result){
       message.success('게시글이 등록되었습니다.');
     }
-    await router.push('/post');
+    await router.push('/board');
 
   } catch (error) {
     console.error(error);

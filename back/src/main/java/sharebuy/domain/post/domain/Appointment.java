@@ -27,6 +27,7 @@ public class Appointment{
     @Column(name = "appointment_time")
     private LocalDateTime appointmentTime;
 
+
     public static Appointment create(
             String placeName,
             String primaryAddress,
