@@ -43,6 +43,9 @@ public class Address implements Serializable {
         return primaryAddress;
     }
 
+    public void saveLocation(Location savedLocation){
+        location = savedLocation;
+    }
 
     public static Address getDefaultAddress(){
         return new Address("경기도 군포시 금정동","1234","1234",new Location(1232.11,23231.11));
