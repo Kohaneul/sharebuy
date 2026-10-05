@@ -407,11 +407,7 @@ const handleSubmit = async () => {
     formData.append('imagePath', file);
   });
   
-  for (const [key, value] of formData.entries()) {
-  console.log(key, value);
-}
 
-console.log(formData);
   // 실제 API 연결
   const response = await commonPostFile('/post/add', formData);
 
