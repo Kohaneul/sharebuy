@@ -79,7 +79,7 @@ public interface PostRepository extends JpaRepository<Post, UUID> {
             @Param("radius") double radius
     );
 
-    @Query("select p from Post p left join fetch p.imagePath where p.id = :id")
+    @Query("select distinct p from Post p left join fetch p.imagePath where p.id = :id")
     Optional<Post> findByIdWithImages(@Param("id")UUID id);
 
 

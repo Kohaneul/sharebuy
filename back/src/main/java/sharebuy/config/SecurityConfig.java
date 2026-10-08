@@ -42,6 +42,7 @@ public class SecurityConfig {
                 // 3. 권한 설정: 화면 주소와 인증 관련 API는 무조건 통과
                 .authorizeHttpRequests(auth->
                         auth.requestMatchers("/","/login","/board","/rest/auth/**").permitAll()
+                        .requestMatchers(new AntPathRequestMatcher("/images/**", "GET")).permitAll()   // 추가
                         .requestMatchers(new AntPathRequestMatcher("/rest/user/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/page/**", "GET")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/rest/post/**", "GET")).permitAll()

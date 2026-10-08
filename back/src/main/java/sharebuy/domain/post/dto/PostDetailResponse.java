@@ -34,7 +34,7 @@ public record PostDetailResponse(
         Category category,
         boolean canClose
 ) {
-    public static PostDetailResponse from(Post post,boolean canClose){
+    public static PostDetailResponse from(Post post,List<String> imagePath, boolean canClose){
         Appointment appointment = post.getAppointment();
         LocalDateTime appointmentTime = appointment.getAppointmentTime();
         Place place = appointment.getPlace();
@@ -42,7 +42,7 @@ public record PostDetailResponse(
         String addrStr = address.getPrimaryAddress() + " " + address.getDetailAddress();
         Location location = place.getAddress().getLocation();
         return new PostDetailResponse(post.getId(),post.getTitle(),post.getContent(),place.getPlaceName(),addrStr
-                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),post.getImagePath()
+                   ,location.getLatitude(), location.getLongitude(), appointmentTime,post.getStatus(),imagePath
                     ,post.getPurchasePlace(),post.getProductCode(),post.getPurchaseUrl(),post.getTotalPrice(),post.getPerPrice(),post.getPurchaseAt()
                     ,post.getCurrentParticipants(),post.getMaxParticipants(),post.getCategory(),canClose);
     }

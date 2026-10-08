@@ -2,8 +2,6 @@ package sharebuy.common.storage;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import sharebuy.common.exception.ShareBuyException;
@@ -26,11 +24,23 @@ public class LocalFileStorageService implements FileStorageService {
     @Value("${file.upload-path}")
     private String uploadPath;
 
+    private final ImageFileValidator imageFileValidator;
+
+    public LocalFileStorageService(ImageFileValidator imageFileValidator) {
+        this.imageFileValidator = imageFileValidator;
+    }
+
 
     @Override
     public List<String> save(List<MultipartFile> file, String directory) {
         String year = String.valueOf(LocalDate.now().getYear());
         return file.stream().map(f->saveFile(f,directory,year)).toList();
+    }
+
+    @Override
+    public List<String> getPath(List<String> paths) {
+        final String imagePath="/images/";
+        return paths.stream().map(path->imagePath+path).toList();
     }
 
     /**
@@ -46,7 +56,7 @@ public class LocalFileStorageService implements FileStorageService {
             String year)
     {
         //해당 파일의 확장자 추출
-        String extension = getExtension(file.getOriginalFilename());
+        String extension = imageFileValidator.validateAndGetExtension(file);
 
         //파일이름 -> uuid 로
         String filename = UUID.randomUUID() +extension;
@@ -67,55 +77,23 @@ public class LocalFileStorageService implements FileStorageService {
         }
     }
 
-    /**
-     * 확장자 추출
-     * @param fileName
-     * @return
-     */
-    private String getExtension(String fileName) {
-        if(fileName ==null){
-            return "";
-        }
-        int idx = fileName.lastIndexOf(".");
-
-        if (idx == -1) {
-            return "";
-        }
-        return fileName.substring(idx);
-    }
-
-    /**
-     * path를 통해서 파일 조회
-     * @param paths
-     * @return
-     */
-    @Override
-    public List<Resource> load(List<String> paths) {
-        return paths.stream()
-                .map(this::loadFile).toList();
-    }
-
-    private Resource loadFile(String path) {
-        Path filePath = Paths.get(uploadPath,path);
-        try{
-            if(!Files.exists(filePath)){
-              throw new ShareBuyException(FILE_NOT_EXIST);
-            }
-        }
-        catch(Exception e){
-            throw new ShareBuyException(FILE_NOT_EXIST);
-        }
-        return new FileSystemResource(filePath);
-    }
 
     @Override
     public void delete(String imagePath) {
-        Path filePath = Paths.get(uploadPath, imagePath);
         try {
-            Files.deleteIfExists(filePath);
+            Files.deleteIfExists(resolveSafe(imagePath));
         } catch (IOException e) {
             throw new ShareBuyException(FILE_NOT_EXIST);
         }
-
     }
+
+    private Path resolveSafe(String relativePath) {
+        Path base = Paths.get(uploadPath).toAbsolutePath().normalize();
+        Path resolved = base.resolve(relativePath).normalize();
+        if (!resolved.startsWith(base)) {
+            throw new ShareBuyException(FILE_UPLOAD_FAILED);
+        }
+        return resolved;
+    }
+
 }

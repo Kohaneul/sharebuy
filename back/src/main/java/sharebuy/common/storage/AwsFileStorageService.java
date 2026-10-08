@@ -1,7 +1,6 @@
 package sharebuy.common.storage;
 
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,9 +16,10 @@ public class AwsFileStorageService implements FileStorageService {
     }
 
     @Override
-    public List<Resource> load(List<String> paths) {
+    public List<String> getPath(List<String> path) {
         return List.of();
     }
+
 
     @Override
     public void delete(String path) {

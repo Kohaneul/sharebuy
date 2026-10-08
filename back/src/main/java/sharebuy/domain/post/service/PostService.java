@@ -58,10 +58,14 @@ public class PostService {
         if(principal != null){
             UUID userId = principal.getId();
             UUID postOwnerId = post.getUser().getId();
-
             canClose = userId.equals(postOwnerId) || principal.getRoleType()== RoleType.ADMIN;
         }
-        return PostDetailResponse.from(post,canClose);
+
+        List<String> imagePaths = post.getImagePath();
+        if (imagePaths != null && !imagePaths.isEmpty()) {
+            imagePaths = fileStorageService.getPath(imagePaths);
+        }
+        return PostDetailResponse.from(post,imagePaths,canClose);
     }
 
 
