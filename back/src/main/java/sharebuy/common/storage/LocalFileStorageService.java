@@ -24,6 +24,9 @@ public class LocalFileStorageService implements FileStorageService {
     @Value("${file.upload-path}")
     private String uploadPath;
 
+    @Value("${file.base-url}")
+    private String baseUrl;
+
     private final ImageFileValidator imageFileValidator;
 
     public LocalFileStorageService(ImageFileValidator imageFileValidator) {
@@ -40,7 +43,7 @@ public class LocalFileStorageService implements FileStorageService {
     @Override
     public List<String> getPath(List<String> paths) {
         final String imagePath="/images/";
-        return paths.stream().map(path->imagePath+path).toList();
+        return paths.stream().map(path->baseUrl+imagePath+path).toList();
     }
 
     /**

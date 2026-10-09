@@ -53,13 +53,28 @@
         </a-row>
       </a-card>
     </div>
-    <div class="content-section">
-      <img 
-          v-if="post.imgUrl" 
-          :src="post.imgUrl" 
-          class="main-image" 
-        />
+    <div class="image-grid">
+      <img
+        v-for="(image, index) in post.imagePath"
+        :key="index"
+        :src="image"
+        class="main-image"
+        @click="openImage(image)"
+      />
     </div>
+
+    <a-modal
+      v-model:open="previewVisible"
+      :footer="null"
+      :closable="true"
+      centered
+      width="80%"
+    >
+      <img
+        :src="selectedImage"
+        class="preview-image"
+      />
+    </a-modal>
 
     <!-- 5. 하단 고정 액션 바 -->
     <div class="action-bar" v-if="userStore.roleType != 'GUEST'">
@@ -236,6 +251,15 @@ const formatDate = (dateString) => {
 
   return `${yy}.${mm}.${dd} ${hh}:${min}`;
 };
+
+
+const previewVisible = ref(false);
+const selectedImage = ref("");
+
+const openImage = (image: string) => {
+  selectedImage.value = image;
+  previewVisible.value = true;
+};
 </script>
 
 <style scoped>
@@ -319,5 +343,39 @@ const formatDate = (dateString) => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.main-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.preview-image {
+  display: block;
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .image-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 </style>
